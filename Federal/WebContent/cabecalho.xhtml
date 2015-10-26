@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Federal Convênios</title>
+<link rel="stylesheet" type="text/css" href="css/theme.css" />
+<h:outputScript name="locale.js" library="js"/>
+<link rel="shortcut icon" href="images/icon.ico" />
+</h:head>
+<h:body>
+
+<ui:insert name="cabecalho">
+<p:menubar id="menu" update="messages">
+<p:submenu label="Cadastro" icon="ui-icon-pencil">
+<p:menuitem value="Contrato" url="contratoNovo.xhtml" />
+<p:menuitem value="Beneficiários" url="adicionarBeneficiario.xhtml"/>
+<p:menuitem value="Vendedores" url="adicionarVendedor.xhtml"/>
+<p:menuitem value="Registrar Atendimento" url="registrarAtendimento.xhtml"/>
+<p:menuitem value="Adicionar Preços" url="adicionarPreco.xhtml"/>
+</p:submenu>
+<p:submenu label="Editar" icon="ui-icon-search">
+<p:menuitem value="Cliente" url="alterarCliente.xhtml" />
+<p:menuitem value="Beneficiário" url="alterarBeneficiario.xhtml"/>
+<p:menuitem value="Vendedor" url="alterarVendedor.xhtml"/>
+</p:submenu>
+<p:submenu label="CNRs" icon="ui-icon-document">
+<p:submenu label="Emissão de CNRs">
+<p:menuitem value="Emissão de carnes" url="gerarCNR.xhtml"/>
+<p:submenu label="Emissão de 2ª Via">
+<p:menuitem value="2ª via de Carne" url="2viaCarne.xhtml"/>
+<p:menuitem value="2ª via de Mensalidade" url="2via.xhtml"/>
+</p:submenu>
+</p:submenu>
+<p:submenu label="Cadastro de CNRs">
+<p:menuitem value="Cadastrar código de barras" url=""/>
+</p:submenu>
+<p:menuitem value="Baixa manual de CNRs" url="baixaManual.xhtml"/>
+<p:menuitem value="Extorno de CNRs" url=""/>
+<p:menuitem value="Consulta a CNRs" url="consultaCNR.xhtml"/>
+<p:menuitem value="CNRs antigas" url=""/>
+<p:menuitem value="Exclusão de CNRs" url="excluirCNR.xhtml"/>
+</p:submenu>
+<p:submenu label="Exibir">
+<p:menuitem value="Consulta para Atendimento" url="fichaGeral.xhtml"/>
+<p:submenu label="Cliente">
+<p:menuitem value="Clientes Ativos" url="listarCliente.xhtml"/>
+<p:menuitem value="Clientes cancelados" url="listarClientesCancelados.xhtml"/>
+<p:menuitem value="Clientes com CPF Válidos" url="ClientesCPFValido.xhtml"/>
+</p:submenu>
+<p:menuitem value="Vendedores" url="listarVendedor.xhtml"/>
+<p:menuitem value="Beneficiários" url="listarBeneficiario.xhtml"/>
+</p:submenu>
+<p:submenu label="Usuário">
+<p:menuitem value="Adicionar" url="adicionarFuncionario.xhtml"/>
+<p:menuitem value="Buscar" url="alterarFuncionario.xhtml"/>
+<p:menuitem value="Listar" url="listarFuncionario.xhtml"/>
+</p:submenu>
+<p:submenu label="Opções">
+<p:menuitem value="Importar Arquivo" url="importarArquivo.xhtml"/>
+<p:menuitem value="Comunicar Erro" url="informe.xhtml"/>
+<p:menuitem value="Início" url="index.xhtml"/>
+</p:submenu>
+<f:facet name="options">
+<h:outputText value="Funcionário: #{funcionario.funcionarioNovo.login}"/>
+            <p:commandButton type="button" actionListener="#{funcionario.sair()}" ajax="false" value="Sair" icon="ui-icon-extlink" />
+        </f:facet>
+</p:menubar>
+<p:sticky target="menu"/>
+
+<br></br>
+</ui:insert>
+        <ui:insert name="conteudo">
+
+        </ui:insert>
+       
+</h:body>
+</html>

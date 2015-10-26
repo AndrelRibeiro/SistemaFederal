@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>Listar Beneficiarios</title>
+</h:head>
+<ui:composition template="/cabecalho.xhtml">
+	<ui:define name="conteudo">
+		<h:body>
+			<h:form id="form">
+				<p:growl id="message"  showDetail="true" />
+				<p:dataTable id="listar"
+					value="#{beneficiario.listarAtivos()}" var="ben"
+					stickyHeader="true" paginator="true" scrollable="true"
+					scrollWidth="100%"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15,20,25,30,50,75,100,200,500,750,1000"
+					rows="25">
+					<f:facet name="header">
+					Foram encontrados  #{fn:length(beneficiario.beneficiarios)} Beneficiarios
+					</f:facet>
+					<p:column style="width:32px;text-align: center">
+						<p:commandButton  action="#{beneficiario.carregar()}" icon="ui-icon-search" title="Editar">
+							<f:setPropertyActionListener value="#{ben}"	target="#{beneficiario.beneficiarioNovo}" />
+						</p:commandButton>
+					</p:column>
+					<p:column width="45">
+						<f:facet name="header">
+							<h:outputText value="Contrato" />
+						</f:facet>
+						<h:outputText value="#{ben.contrato}" />
+					</p:column>
+					<p:column width="180">
+						<f:facet name="header">
+							<h:outputText value="Nome" />
+						</f:facet>
+						<h:outputText value="#{ben.nome}" />
+					</p:column>
+					<p:column width="60">
+						<f:facet name="header">
+							<h:outputText value="Estado Civil" />
+						</f:facet>
+						<h:outputText value="#{ben.estadoCivil}" />
+					</p:column>
+					<p:column width="45">
+						<f:facet name="header">
+							<h:outputText value="Falecido" />
+						</f:facet>
+						<h:outputText value="#{ben.falecimento}" />
+					</p:column>
+					<p:column width="60">
+						<f:facet name="header">
+							<h:outputText value="Nascimento" />
+						</f:facet>
+						<h:outputText value="#{ben.dataNascimento}" >
+						 <f:convertDateTime locale="pt,BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+						</h:outputText>
+					</p:column>
+					<p:column width="65">
+						<f:facet name="header">
+							<h:outputText value="Classificação" />
+						</f:facet>
+						<h:outputText value="#{ben.classificacao}" />
+					</p:column>
+					<p:column width="80">
+						<f:facet name="header">
+							<h:outputText value="Observação" />
+						</f:facet>
+						<h:outputText value="#{ben.observacao}" />
+					</p:column>
+				</p:dataTable>
+				<p:dialog header="Beneficiario" widgetVar="benDialog" modal="true"
+					showEffect="fade" hideEffect="fade" resizable="false">
+					<p:outputPanel id="benDetalhe" style="text-align:center;">
+						<p:panelGrid columns="2" rendered="#{not empty beneficiario.beneficiarioNovo.nome}"	columnClasses="label,value">
+							<f:facet name="header">
+
+							</f:facet>
+
+							<h:outputText value="Nome:" />
+							<h:outputText value="#{beneficiario.beneficiarioNovo.nome}" />
+
+							<h:outputText value="Nascimento:" />
+							<h:outputText value="#{beneficiairo.beneficiarioNovo.nascimento}" />
+
+							<h:outputText value="Contrato:" />
+							<h:outputText value="#{beneficiario.beneficiarioNovo.contrato}" />
+
+							<h:outputText value="Classificação:" />
+							<h:outputText value="#{beneficiario.beneficiarioNovo.classificacao}" />
+						</p:panelGrid>
+					</p:outputPanel>
+				</p:dialog>
+			</h:form>
+		</h:body>
+	</ui:define>
+</ui:composition>
+</html>

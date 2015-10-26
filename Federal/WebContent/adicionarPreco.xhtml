@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<style>
+table#t01 tr:nth-child(even) {
+    background-color: #eee;
+}
+table#t01 tr:nth-child(odd) {
+   background-color:#fff;
+}
+table#t01 th	{
+    background-color: black;
+    color: white;
+}
+</style>
+
+</h:head>
+<ui:composition template="/cabecalho.xhtml">
+	<ui:define name="conteudo">
+		<h:body>
+			<center> 
+			<h:form>
+				<p:growl id="message" sticky="true" showDetail="true" />
+		
+			<p:panel header="Adicionar Preços">
+			<table id="t01" cellspacing="5" >
+			<tr><td colspan="4" align="center"><p:outputLabel value="Atualização de valores"/></td></tr>
+            <tr><td colspan="4"><p:separator style="width:100%; height:5px"/></td></tr>
+            <tr><td><p:outputLabel for="reajuste" value="Reajuste %" /></td>
+			<td><p:inputText id="reajuste" value="#{preco.precoNovo.porcentagem}"  title="Insira a porcentagem de reajuste" width="10" size="10" required="true" onfocus="this.value=''"/></td>
+			<td><p:outputLabel for="Adesao" value="Adesão R$"/></td>
+			<td><p:inputText id="Adesao" value="#{preco.precoNovo.sadesao}" onkeypress="mascara(this,valor)" title="Valor da Adesão" width="10" size="10" required="true" onfocus="this.value=''"/></td></tr>
+			
+			<tr><td><p:outputLabel for="salario" value="Salário Mímimo R$" /></td>
+			<td><p:inputText id="salario" value="#{preco.precoNovo.sminimo}"  onkeypress="mascara(this,valor)" title="Insira o valor do salário mínimo" width="10" size="10" required="true" onfocus="this.value=''"/></td>
+			<td><p:outputLabel for="crematorio" value="Crematório R$"/></td>
+			<td><p:inputText id="crematorio" value="#{preco.precoNovo.scrematorio}" onkeypress="mascara(this,valor)" title="Valor da Urna Especial" width="10" size="10" required="true" onfocus="this.value=''"/></td></tr>
+			
+			<tr><td><p:outputLabel for="especial" value="Plano Especial R$"/></td>
+			<td><p:inputText id="especial" value="#{preco.precoNovo.sespecial}" onkeypress="mascara(this,valor)" title="Valor do Plano Especial" width="10" size="10" required="true" onfocus="this.value=''"/></td>
+			<td><p:outputLabel for="urna" value="Urna Especial R$"/></td>
+			<td><p:inputText id="urna" value="#{preco.precoNovo.surna}" onkeypress="mascara(this,valor)" title="Valor da Urna Especial" width="10" size="10" required="true" onfocus="this.value=''"/></td></tr>
+			
+			<tr><td><p:outputLabel for="executivo" value="Executivo R$"/></td>
+			<td><p:inputText id="executivo" value="#{preco.precoNovo.sexecutivo}" onkeypress="mascara(this,valor)" title="Valor do Plano Executivo" width="10" size="10" required="true" onfocus="this.value=''"/></td>
+			<td><p:outputLabel for="sepulta" value="Sepultamento R$"/></td>
+			<td><p:inputText id="sepulta" value="#{preco.precoNovo.ssepultamento}" onkeypress="mascara(this,valor)" title="Valor do Sepultamento" width="10" size="10" required="true" onfocus="this.value=''"/></td></tr>
+			<tr><td colspan="4"><p:separator style="width:100%; height:10px"/></td></tr>
+			<tr><td colspan="2" align="center"><p:outputLabel value="Dependentes:"/></td><td colspan="2" align="center"> <p:outputLabel value="Avulsos:"/></td></tr>
+			<tr><td colspan="4"><p:separator style="width:100%; height:5px"/></td></tr>
+			<tr><td></td><td></td><td><p:outputLabel for="a65" value="Até 65 anos R$"/></td>
+			<td><p:inputText id="a65" value="#{preco.precoNovo.savu65}" onkeypress="mascara(this,valor)" title="" width="10" size="10" required="true" onfocus="this.value=''"/></td></tr>
+			
+			<tr><td><p:outputLabel for="d66" value="De 66 à 75 anos R$"/></td>
+			<td><p:inputText id="d66" value="#{preco.precoNovo.sdep66}" onkeypress="mascara(this,valor)" title="" width="10" size="10" required="true" onfocus="this.value=''"/></td>
+			<td><p:outputLabel for="a66" value="De 66 à 75 anos R$"/></td>
+			<td><p:inputText id="a66" value="#{preco.precoNovo.savu66}" onkeypress="mascara(this,valor)" title="" width="10" size="10" required="true" onfocus="this.value=''"/></td></tr>
+			
+			<tr><td><p:outputLabel for="d76" value="De 76 à 85 anos R$"/></td>
+			<td><p:inputText id="d76" value="#{preco.precoNovo.sdep76}" onkeypress="mascara(this,valor)" title="" width="10" size="10" required="true" onfocus="this.value=''"/></td>
+			<td><p:outputLabel for="a76" value="De 76 à 85 anos R$"/></td>
+			<td><p:inputText id="a76" value="#{preco.precoNovo.savu76}" onkeypress="mascara(this,valor)" title="" width="10" size="10" required="true" onfocus="this.value=''"/></td></tr>
+			
+			<tr><td><p:outputLabel for="d86" value="De 86 à 90 anos R$"/></td>
+			<td><p:inputText id="d86" value="#{preco.precoNovo.sdep86}" onkeypress="mascara(this,valor)" title="" width="10" size="10" required="true" onfocus="this.value=''"/></td>
+			<td><p:outputLabel for="a86" value="De 86 à 90 anos R$"/></td>
+			<td><p:inputText id="a86" value="#{preco.precoNovo.savu86}" onkeypress="mascara(this,valor)" title="" width="10" size="10" required="true" onfocus="this.value=''"/></td></tr>
+			
+			<tr><td><p:outputLabel for="d91" value="Apartir de 91 anos R$"/></td>
+			<td><p:inputText id="d91" value="#{preco.precoNovo.sdep91}" onkeypress="mascara(this,valor)" title="" width="10" size="10" required="true" onfocus="this.value=''"/></td>
+			<td><p:outputLabel for="a91" value="Apartir de 91 anos R$"/></td>
+			<td><p:inputText id="a91" value="#{preco.precoNovo.savu91}" onkeypress="mascara(this,valor)" title="" width="10" size="10" required="true" onfocus="this.value=''"/></td></tr>
+			<tr><td colspan="4"><p:separator style="width:100%; height:5px"/></td></tr>
+			<tr><td></td><td colspan="2" align="center"><p:commandButton id="gravar" value="Gravar" update="message" icon="ui-icon-disk" action="#{preco.adicionar}"/><p:commandButton id="voltar" value="Voltar" icon="ui-icon-arrowreturnthick-1-w" action="/index.xhtml"/></td><td></td></tr>
+			</table>
+			</p:panel></h:form>
+			<script>
+                function mascara(o, f) {
+                    v_obj = o;
+                    v_fun = f;
+                    setTimeout("execmascara()", 1);
+                }
+
+                function execmascara() {
+                    v_obj.value = v_fun(v_obj.value);
+                }
+
+                function valor(v) {
+                    v = v.replace(/\D/g, "");
+                    v = v.replace(/[0-9]{15}/, "invalido");
+                    v = v.replace(/(\d{1})(\d{11})$/, "$1.$2"); // coloca ponto antes dos  
+                    // Ãºltimos 11 digitos  
+                    v = v.replace(/(\d{1})(\d{8})$/, "$1.$2"); // coloca ponto antes dos  
+                    // Ãºltimos 8 digitos  
+                    v = v.replace(/(\d{1})(\d{5})$/, "$1.$2"); // coloca ponto antes dos  
+                    // Ãºltimos 5 digitos  
+                    v = v.replace(/(\d{1})(\d{1,2})$/, "$1,$2"); // coloca virgula antes dos  
+                    // Ãºltimos 2 digitos  
+                    return v;
+                }
+
+        </script></center>
+		</h:body></ui:define></ui:composition>
+</html>

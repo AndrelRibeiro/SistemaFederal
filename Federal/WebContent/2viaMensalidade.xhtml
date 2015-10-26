@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+</h:head>
+<ui:composition template="/cabecalho.xhtml">
+	<ui:define name="conteudo">
+<h:body>
+
+<p:panel id="panel" header="Geração manual de Mensalidades">
+<h:form id="form">
+<p:panel>
+<table align="center">
+<tr><td width="150"><p:outputLabel value="Contrato" for="contrato" style="font-weight:bold"/></td>
+<td><p:inputText id="contrato" value="#{mensalidade.contrato.nContrato}" update="form" ajax="false" render="form" onfocus="this.value=''" actionListener="#{mensalidade.via2Mensalidade}" size="20" maxlenght="20" required="true"/>
+<p:commandButton action="#{mensalidade.via2Mensalidade}" id="buscar" value="Buscar" update="form" ajax="false"/></td></tr>
+</table></p:panel>
+<p:panel>
+<table align="center">
+<tr><td><p:outputLabel value="Titular" for="titular" style="font-weight:bold"/></td>
+<td colspan="2"><p:outputLabel id="titular" value="#{mensalidade.cliente.nome}" title="Nome do Titular" size="60" readonly="true"/></td></tr>
+<tr><td><p:outputLabel for="periodo" value="Periodicidade " style="font-weight:bold"/></td>
+<td><h:outputText id="periodo" value="#{mensalidade.contrato.periodicidade}"/></td></tr>
+<tr><td><p:outputLabel for="dia" value="Dia de pagamento " style="font-weight:bold"/></td>
+<td><h:outputText id="dia" value="#{mensalidade.contrato.diaVencimento}"/></td></tr>
+<tr><td><p:outputLabel for="valor" value="Valor da mensalidade " style="font-weight:bold"/></td>
+<td><h:outputText id="valor" value="#{mensalidade.contrato.mensalidade}">
+<f:convertNumber currencyCode="BRL" type="currency" />
+</h:outputText></td></tr>
+<tr><td align="center" colspan="2"><p:commandButton title="Apagar pesquisa" tipe="reset" value="Apagar" update="form"/>
+<p:commandButton value="Cancelar" title="Cancelar" action="/index.xhtml"  icon="ui-icon-arrowreturnthick-1-w"/></td></tr>
+</table></p:panel><p:panel>
+<p:dataTable id="lista" style="width:100%" emptyMessage="Sem Registro"	 value="#{mensalidade.mensalidades}" var="men" selectionMode="single" select="#{mensalidade.mensalidadeNova}" rowKey="#{men.nossoNumero}">
+							<f:facet name="header">
+					Mensalidades do cliente  #{fn:length(mensalidade.mensalidades)}
+					</f:facet>
+					<p:ajax event="rowSelect" listener="#{mensalidade.imprime2Via}" update="growl"/>
+							<p:column width="15">
+								<f:facet name="header">
+									<h:outputText value="Contrato" />
+								</f:facet>
+								<h:outputText value="#{men.contrato}" />
+							</p:column>
+							<p:column width="20">
+								<f:facet name="header">
+									<h:outputText value="Nosso Número" />
+								</f:facet>
+								<h:outputText value="#{men.nossoNumero}" />
+							</p:column>
+							<p:column width="20">
+								<f:facet name="header">
+									<h:outputText value="Vencimento" />
+								</f:facet>
+								<h:outputText value="#{men.dataVencimento}" >
+								<f:convertDateTime locale="pt,BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+								</h:outputText>
+							</p:column>
+							<p:column width="20">
+								<f:facet name="header">
+									<h:outputText value="Pagamento" />
+								</f:facet>
+								<h:outputText value="#{men.dataPagamento}">
+								<f:convertDateTime locale="pt,BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+								</h:outputText>
+							</p:column>
+							<p:column width="20">
+								<f:facet name="header">
+									<h:outputText value="Carência" />	
+								</f:facet>
+								<h:outputText value="#{men.dataCarencia}" >
+								<f:convertDateTime locale="pt,BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+								</h:outputText>
+							</p:column>
+							<p:column width="20">
+								<f:facet name="header">
+									<h:outputText value="Situação" />
+								</f:facet>
+								<h:outputText value="#{men.situacao}" />
+							</p:column>
+							<p:column width="20">
+								<f:facet name="header">
+									<h:outputText value="Valor" />
+								</f:facet>
+								<h:outputText value="#{men.valorParcela}">
+								<f:convertNumber currencyCode="BRL" type="currency" />
+                               </h:outputText>
+							</p:column>
+<p:growl id="growl" showDetail="true" life="8000"/>
+						</p:dataTable>
+						
+</p:panel></h:form></p:panel>
+</h:body>
+	</ui:define>
+</ui:composition>
+</html>

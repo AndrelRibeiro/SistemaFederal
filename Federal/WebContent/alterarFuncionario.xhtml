@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Adicionar Funcionário</title>
+
+</h:head>
+<ui:composition template="/cabecalho.xhtml">
+            <ui:define name="conteudo">
+<h:body><center><br></br>
+<p:panel header="Editar Funcionário">
+<h:form>
+<table align="center">
+<tr>
+<td width="150"><p:outputLabel for="select" value="Funcionarios" /></td>
+				<td width="350" style="align:left">
+			<p:selectOneMenu id="select"   style="width:350px"	value="#{funcionario.funcionarioNovo.idFuncionario}">
+                <f:selectItems value="#{funcionario.listar()}" var="fun" itemValue="#{fun.idFuncionario}" itemLabel="#{fun.nome}" />
+			</p:selectOneMenu></td>
+			<td style="align:left" width="220">
+			<p:commandButton id="busca" ajax="false" action="#{funcionario.buscar}"  value="Buscar"/></td>
+					</tr>
+					</table></h:form><h:form><table align="center">
+<tr><td width="150">
+<p:outputLabel for="nome" value="Funcionario"/>
+
+</td><td colspan="3" width="500"><p:inputText id="nome" value="#{funcionario.funcionarioNovo.nome}" required="true" maxlenght="100" size="60" title="Insira o nome do funcionario" /></td></tr>
+
+<tr><td><p:outputLabel for="email" value="Email"/></td>
+
+<td colspan="3"><p:inputText id="email" value="#{funcionario.funcionarioNovo.email}" required="false" maxlenght="100" size="60" title="Insira o email"/></td></tr>
+
+<tr><td><p:outputLabel for="celular" value="Celular"/></td>
+
+<td><p:inputMask id="celular" value="#{funcionario.funcionarioNovo.celular}" required="false" maxlenght="14" size="14" title="Insira o Número de celular" mask="(99)99999-9999"/></td>
+
+<td><p:outputLabel for="telefone" value="Telefone"/></td>
+
+<td><p:inputMask id="telefone" value="#{funcionario.funcionarioNovo.telefone}" required="false" maxlenght="14" size="14" title="Insira o telefone" mask="(99)9999-9999"/></td></tr>
+
+<tr><td><p:outputLabel for="usuario" value="Usuário"/></td>
+
+<td><p:inputText id="usuario" value="#{funcionario.funcionarioNovo.login}" required="true" maxlenght="20" size="14" title="Insira o usuário"/></td>
+
+<td><p:outputLabel for="nivel" value="Nível"/></td>
+
+<td><p:selectOneMenu id="nivel" value="#{funcionario.funcionarioNovo.nivel}" required="true">
+
+<f:selectItem itemLabel="Selecione" itemValue="0"/>
+<f:selectItem itemLabel="Administrador" itemValue="1"/>
+<f:selectItem itemLabel="Consultor" itemValue="4"/>
+<f:selectItem itemLabel="Vendedor" itemValue="2"/>
+<f:selectItem itemLabel="Operador" itemValue="3"/>
+
+</p:selectOneMenu></td></tr>
+
+<tr><td><p:outputLabel for="senha" value="Senha"/></td>
+
+<td><p:password id="senha" value="#{funcionario.funcionarioNovo.senha}" required="true" maxlenght="20" size="14" title="Insira a senha" feedback="true"/></td>
+
+<td><p:outputLabel for="repsenha" value="Senha"/></td>
+
+<td><p:password id="repsenha" value="#{funcionario.funcionarioNovo.repsenha}" required="true" maxlenght="20" size="14" title="Insira a senha novamente" feedback="true"/></td></tr>
+
+</table></h:form><h:form>
+<table align="center">
+<tr><td><p:commandButton id="alterar" value="Alterar" icon="ui-icon-disk" update="message" action="#{funcionario.alterar}" /></td>
+
+<td> <p:commandButton	value="Excluir" actionListener="#{funcionario.addMessage}"	update="message"  icon="ui-icon-trash">
+		<p:confirm header="Confirmação"	message="Deseja excluir este funcionario?" icon="ui-icon-alert" />
+	 </p:commandButton>
+	  
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+	 <p:commandButton value="Sim" type="button"	styleClass="ui-confirmdialog-yes" action="#{funcionario.excluir}" ajax="false" update=":@form"/>
+	 <p:commandButton value="Não" type="button"	styleClass="ui-confirmdialog-no" />
+		</p:confirmDialog></td>
+		
+<td><p:commandButton id="cancelar" value="Cancelar" action="/index.xhtml" icon="ui-icon-arrowreturnthick-1-w"/></td></tr>
+
+<p:growl id="message" showDetail="true" showSummary="true" /> 
+</table>
+</h:form></p:panel></center>
+</h:body>
+</ui:define>
+</ui:composition>
+</html>

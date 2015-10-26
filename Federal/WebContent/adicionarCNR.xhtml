@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Adicionar Carnê</title>
+</head>
+<ui:composition template="/cabecalho.xhtml">
+	<ui:define name="conteudo">
+<body><center>
+<h3>Adicionar CNR</h3>
+<h:form align="center">
+<p:dataTable id="listar" value="#{mensalidade.mensalidades}" var="men" rows="12"  style="width:70%">
+					<f:facet name="header">
+					Foram encontrados  #{fn:length(mensalidade.mensalidades)} Mensalidades
+					</f:facet>
+					<p:column style="width:45px">
+						<f:facet name="header">
+							<h:outputText value="Contrato" />
+						</f:facet>
+						<h:outputText value="#{men.contrato}" />
+					</p:column>
+					<p:column style="width:45px">
+						<f:facet name="header">
+							<h:outputText value="Parcela" />
+						</f:facet>
+						<h:outputText value="#{men.parcela_carne_ano}" />
+					</p:column>
+					<p:column style="width:145px">
+						<f:facet name="header">
+							<h:outputText value="Valor" />
+						</f:facet>
+						<h:outputText value="#{men.valorParcela}" />
+					</p:column>
+					<p:column style="width:145px">
+						<f:facet name="header">
+							<h:outputText value="Vencimento" />
+						</f:facet>
+						<h:outputText value="#{men.dataVencimento}" />
+					</p:column>
+					<p:column style="width:245px">
+						<f:facet name="header">
+							<h:outputText value="Código de Barras" />
+						</f:facet>
+						<h:outputText value="#{men.cnr}" />
+					</p:column>
+				</p:dataTable>
+<br></br><br></br>
+<table align="center">
+<tr><td><p:commandButton value="Gravar" title="Salvar CNRs geradas" action="#{mensalidade.salvar()}"/><p:commandButton value="Cancelar" title="Cancelar" action="/index.xhtml"/></td>
+</tr>
+</table>
+</h:form></center>
+</body>
+	</ui:define>
+</ui:composition>
+</html>

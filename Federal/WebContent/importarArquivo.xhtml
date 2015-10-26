@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+	
+	</h:head>
+	<ui:composition template="/cabecalho.xhtml">
+	<ui:define name="conteudo">
+	<h:body>
+
+		<h:form enctype="multipart/form-data">  
+  <p:panel header="Selecione o arquivo">
+    <p:fileUpload fileUploadListener="#{upload.fileUpload}"  
+            label="Procurar"
+            cancelLabel="Cancelar"
+            uploadLabel="Carregar"
+            mode="advanced"  
+            update="messages listar listaMensalidades"   
+            multiple="true"    
+            style="width:600px" 
+            allowTypes="/(\.|\/)(RET)$/"/>  
+  
+    <p:growl id="messages"  showDetail="true"/>
+    <br></br><center>
+   <p:commandButton value="Imprimir Registros" type="button" icon="ui-icon-print" style="display:block;margin-bottom: 20px">
+    <p:printer target="listar" />
+</p:commandButton>
+    <p:dataTable id="listar" style="width:99%"
+					value="#{upload.registros}" var="reg">
+					<f:facet name="header">
+					Foram encontrados  #{fn:length(upload.registros)} Títulos no arquivo importado
+					</f:facet>
+					<p:column width="10">
+						<f:facet name="header">
+							<h:outputText value="Registro" />
+						</f:facet>
+						<h:outputText value="#{reg.numeroSequencial-1}" />
+					</p:column>
+					<p:column width="20">
+						<f:facet name="header">
+							<h:outputText value="Nosso Número" />
+						</f:facet>
+						<h:outputText value="#{reg.nossoNumero}" />
+					</p:column>
+					<p:column width="60">
+						<f:facet name="header">
+							<h:outputText value="Ocorrência" />
+						</f:facet>
+						<h:outputText value="#{reg.codOcorrencia}" />
+					</p:column>
+					<p:column width="20">
+						<f:facet name="header">
+							<h:outputText value="Data de Pagamento" />
+						</f:facet>
+						<h:outputText value="#{reg.dataOcorrencia}" >
+						<f:convertDateTime locale="pt,BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+						</h:outputText>
+					</p:column>
+					<p:column width="20">
+						<f:facet name="header">
+							<h:outputText value="Valor" />
+						</f:facet>
+						<h:outputText value="#{reg.valorTitulo}" >
+						<f:convertNumber currencyCode="BRL" type="currency" />
+						</h:outputText>
+					</p:column>
+										
+				</p:dataTable> 
+				<br></br>
+				<p:commandButton value="Imprimir Pagos" type="button" icon="ui-icon-print" style="display:block;margin-bottom: 20px">
+    <p:printer target="listaMensalidades" />
+</p:commandButton>
+				<p:dataTable id="listaMensalidades" style="width:99%"
+					value="#{upload.mensalidades}" var="men">
+					<f:facet name="header">
+					Foram liquidadas  #{fn:length(upload.mensalidades)} Mensalidades
+					</f:facet>
+					<p:column width="15">
+						<f:facet name="header">
+							<h:outputText value="Contrato" />
+						</f:facet>
+						<h:outputText value="#{men.contrato}" />
+					</p:column>
+					<p:column width="20">
+						<f:facet name="header">
+							<h:outputText value="Nosso Número" />
+						</f:facet>
+						<h:outputText value="#{men.nossoNumero}" />
+					</p:column>
+					<p:column width="20">
+						<f:facet name="header">
+							<h:outputText value="Vencimento" />
+						</f:facet>
+						<h:outputText value="#{men.dataVencimento}" >
+						<f:convertDateTime locale="pt,BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+								</h:outputText>
+					</p:column>
+					<p:column width="20">
+						<f:facet name="header">
+							<h:outputText value="Pagamento" />
+						</f:facet>
+						<h:outputText value="#{men.dataPagamento}" >
+						<f:convertDateTime locale="pt,BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+								</h:outputText>
+					</p:column>	
+					<p:column width="20">
+						<f:facet name="header">
+							<h:outputText value="Carência" />
+						</f:facet>
+						<h:outputText value="#{men.dataCarencia}" >
+						<f:convertDateTime locale="pt,BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+								</h:outputText>
+					</p:column>	
+					<p:column width="20">
+						<f:facet name="header">
+							<h:outputText value="Situação" />
+						</f:facet>
+						<h:outputText value="#{men.situacao}" />
+					</p:column>
+					<p:column width="20">
+						<f:facet name="header">
+							<h:outputText value="Valor" />
+						</f:facet>
+						<h:outputText value="#{men.valorParcela}" >
+						<f:convertNumber currencyCode="BRL" type="currency" />
+								</h:outputText>
+					</p:column>
+									
+				</p:dataTable>  </center>
+  </p:panel>
+</h:form> 
+		
+	</h:body>
+	</ui:define>
+	</ui:composition>
+</html>

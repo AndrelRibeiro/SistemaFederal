@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+
+</h:head>
+<ui:composition template="/cabecalho.xhtml">
+	<ui:define name="conteudo">
+		<h:body>
+			<br></br>
+			<center>
+			<p:panel id="panel" header="2ª Via de Carnê">
+				<h:form>
+					<p:growl id="growl" showDetail="true" life="8000" autoUpdate="true"/>
+					<p:messages id="msg"/>
+					<p:panel>
+					<table>
+						<tr>
+						<td width="200"><p:outputLabel for="contrato" value="Contrato:" /></td>
+						<td width="450"><p:inputText id="contrato" value="#{mensalidade.mensalidadeNova.contrato}"
+							actionListener="#{mensalidade.listarContrato()}" update="listaMensalidades Inpcontrato Inpcliente growl"	onfocus="this.value=''"/> 
+						<p:commandButton
+										id="buscar" value="Buscar" action="#{mensalidade.listarContrato()}"	update="listaMensalidades Inpcontrato Inpcliente growl" />
+						<p:selectOneRadio id="cl" rendered="false" value="#{mensalidade.listar}">
+    	      				  <f:selectItem  itemValue="1"  />
+           				 </p:selectOneRadio> </td>
+							</tr>
+						</table>
+					</p:panel>
+					<br></br>
+					<p:panel>
+						<table id="confirm">
+							<tr>
+								<td width="200"><p:outputLabel for="Inpcontrato" value="Contrato" /></td>
+								
+								<td width="450"><p:outputLabel  id="Inpcontrato" value="#{mensalidade.cliente.numeroContrato}" readonly="true" maxlenght="10"
+										size="20" title="Número do contrato" /></td>
+							</tr>
+
+							<tr>
+								<td><p:outputLabel for="Inpcliente" value="Cliente" /></td>
+								<td><p:outputLabel id="Inpcliente" value="#{mensalidade.cliente.nome}"  readonly="true" maxlength="200" size="55"
+										title="Nome do cliente" /></td>
+							</tr>
+						</table>
+					</p:panel>
+					<br></br>
+					<p:panel>
+						<table>
+						<tr><td></td>
+								<td> 
+										<p:commandButton id="gerar" value="Gerar Carne" action="#{mensalidade.via2Carne}" icon="ui-icon-disk"/>
+										<p:commandButton id="cancelar" value="Cancelar" icon="ui-icon-trash" title="Cancelar" action="/index.xhtml" /></td>
+							</tr>
+						</table>
+					</p:panel>
+					<br></br>
+					<p:panel>
+						<p:dataTable id="listaMensalidades" style="width:100%" value="#{mensalidade.mensalidades}" emptyMessage="Sem registros" var="men">
+							<f:facet name="header">
+					Mensalidades deste cliente:  #{fn:length(mensalidade.mensalidades)}
+					</f:facet>
+							<p:column width="15">
+								<f:facet name="header">
+									<h:outputText value="Contrato" />
+								</f:facet>
+								<h:outputText value="#{men.contrato}" />
+							</p:column>
+							<p:column width="20">
+								<f:facet name="header">
+									<h:outputText value="Nosso Número" />
+								</f:facet>
+								<h:outputText value="#{men.nossoNumero}" />
+							</p:column>
+							<p:column width="20">
+								<f:facet name="header">
+									<h:outputText value="Vencimento" />
+								</f:facet>
+								<h:outputText value="#{men.dataVencimento}" >
+								<f:convertDateTime locale="pt_BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+								</h:outputText>
+							</p:column>
+							<p:column width="20">
+								<f:facet name="header">
+									<h:outputText value="Pagamento" />
+								</f:facet>
+								<h:outputText value="#{men.dataPagamento}" >
+								<f:convertDateTime locale="pt_BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+								</h:outputText>
+							</p:column>
+							<p:column width="20">
+								<f:facet name="header">
+									<h:outputText value="Carência" />
+								</f:facet>
+								<h:outputText value="#{men.dataCarencia}" >
+								<f:convertDateTime locale="pt_BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+								</h:outputText>
+							</p:column>
+							<p:column width="20">
+								<f:facet name="header">
+									<h:outputText value="Situação" />
+								</f:facet>
+								<h:outputText value="#{men.situacao}" />
+							</p:column>
+							<p:column width="20">
+								<f:facet name="header">
+									<h:outputText value="Valor" />
+								</f:facet>
+								<h:outputText value="#{men.valorParcela}" >
+								<f:convertNumber currencyCode="BRL" type="currency" />
+                               </h:outputText>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					
+				</h:form>
+			</p:panel> </center>
+		</h:body>
+	</ui:define>
+</ui:composition>
+</html>

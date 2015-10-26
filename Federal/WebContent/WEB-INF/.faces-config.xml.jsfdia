@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:#adicionarCliente.xhtml"
+  PATH="/adicionarCliente.xhtml" SHAPE="32,48,50,41" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#adicionarCliente.xhtml:0" NAME="item"
+   PATH="/adicionarCliente.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="proxima::#adicionarBeneficiario.xhtml"
+    NAME="output" PATH="/adicionarBeneficiario.xhtml"
+    TARGET="rules:#adicionarBeneficiario.xhtml" TITLE="proxima" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#adicionarBeneficiario.xhtml"
+  PATH="/adicionarBeneficiario.xhtml" SHAPE="248,72,50,25" model-entity="JSFProcessGroup"/>
+</PROCESS>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Cadastro de Beneficiário</title>
+</h:head>
+<ui:composition template="/cabecalho.xhtml">
+            <ui:define name="conteudo">
+<h:body><br></br>
+<center>
+
+<h:form><p:growl id="message" autoUpdate="true" showSummary="false"/>
+<p:panel header="Adicionar Beneficiário"><p:messages/><p:growl id="msgs" />
+<table align="center">
+<tr><td width="200"><p:outputLabel for="numContrato" value="Contrato" style="font-weight:bold"/></td>
+<td colspan="3"><p:inputText id="numContrato" title="Insira o número do contrato" required="true" maxlenght="30" size="10" value="#{beneficiario.beneficiarioNovo.contrato}" update="message titular" onfocus="this.value=''">
+<p:ajax event="blur" listener="#{beneficiario.pesquisa}" update="message titular" />
+</p:inputText>
+</td></tr>
+<tr>
+<td width="160"><p:outputLabel for="titular" value="Titular"  style="font-weight:bold"/></td>
+
+<td colspan="3" width="480"><p:inputText id="titular" required="" maxlength="100" size="60" readonly="true"
+	value="${beneficiario.cliente.nome}" colspan="2" style="text-transform:uppercase" rendered="true" /></td>
+</tr>
+<tr><td><p:outputLabel for="nome" value="Nome" style="font-weight:bold"/></td>
+
+<td colspan="3"><p:inputText id="nome" title="Digite o Nome"	required="true" maxlength="100" size="60" value="#{beneficiario.beneficiarioNovo.nome}" colspan="2"  onfocus="#{beneficiario.buscarContrato()}" update="msgs"/></td></tr>
+
+<tr><td><p:outputLabel for="email" value="Email" style="font-weight:bold"/></td>
+
+<td colspan="3"><p:inputText id="email" title="Digite o Email" required="" maxlength="100" size="40" value="#{beneficiario.beneficiarioNovo.email}" colspan="2"/></td></tr>
+
+<tr><td><p:outputLabel for="nascimento" value="Data de Nascimento" style="font-weight:bold"/></td>
+
+<td><p:inputMask id="nascimento" value="#{beneficiario.beneficiarioNovo.dataNascimento}" maxlenght="10" size="13" mask="99/99/9999" pattern="dd/MM/yyyy"/></td>
+
+<td><p:outputLabel for="classificacao" value="Classificação" style="font-weight:bold"/></td> 
+
+<td><p:selectOneMenu id="classificacao" value="#{beneficiario.beneficiarioNovo.classificacao}" >
+<f:selectItem itemLabel="Selecione" itemValue="#{null}" />
+		<f:selectItem itemLabel="Titular" itemValue="Titular"/>
+		<f:selectItem itemLabel="Conjuge" itemValue="Conjuge" />
+		<f:selectItem itemLabel="Filho(a)" itemValue="Filho(a)" />
+		<f:selectItem itemLabel="Enteado(a)" itemValue="Enteado(a)" />
+		<f:selectItem itemLabel="Primo(a)" itemValue="Primo(a)" />
+		<f:selectItem itemLabel="Sobrinho(a)" itemValue="Sobrinho(a)" />
+		<f:selectItem itemLabel="Tio(a)" itemValue="Tio(a)" />
+		<f:selectItem itemLabel="Avô(a)" itemValue="Avô(a)" />
+		<f:selectItem itemLabel="Outros" itemValue="Outros" />
+</p:selectOneMenu></td></tr>
+
+<tr><td><p:outputLabel for="estado_civil" value="Estado Civil" style="font-weight:bold"/></td>
+
+<td><p:selectOneMenu id="estado_civil" value="#{beneficiario.beneficiarioNovo.estadoCivil}" >
+		<f:selectItem itemLabel="Selecione" itemValue="#{null}" />
+		<f:selectItem itemLabel="Casado(a)" itemValue="Casado(a)" />
+		<f:selectItem itemLabel="Solteiro(a)" itemValue="Solteiro(a)" />
+		<f:selectItem itemLabel="Separado(a)" itemValue="Separado(a)" />
+		<f:selectItem itemLabel="Divorciado(a)" itemValue="Divorciado(a)" />
+		<f:selectItem itemLabel="Viuvo(a)" itemValue="Viuvo(a)" />
+		<f:selectItem itemLabel="Outros" itemValue="Outros" />
+</p:selectOneMenu></td>
+
+<td><p:outputLabel for="sexo" value="Sexo" style="font-weight:bold"/></td>
+<td>
+<p:selectOneRadio id="sexo" value="#{beneficiario.beneficiarioNovo.sexo}">
+		<f:selectItem itemLabel="Masculino" itemValue="Masculino" />
+		<f:selectItem itemLabel="Feminino" itemValue="Feminino" />
+</p:selectOneRadio></td></tr>
+
+<tr><td><p:outputLabel for="religiao" value="Religião" style="font-weight:bold"/></td>
+
+<td><p:inputText id="religiao" title="Digite a religião" maxlength="100" size="13" value="#{beneficiario.beneficiarioNovo.religiao}"/></td>
+
+<td><p:outputLabel for="profissao" value="Profissão" style="font-weight:bold"/></td>
+
+<td><p:inputText id="profissao" title="Digite a Profissão" maxlength="100" size="30" value="#{beneficiario.beneficiarioNovo.profissao}"/></td></tr>
+
+<tr><td><p:outputLabel for="profissional" value="Cadastrado por" style="font-weight:bold"/></td>
+
+<td colspan="3"><p:selectOneMenu id="profissional" value="#{beneficiario.beneficiarioNovo.idFuncionario}" >
+		<f:selectItem itemLabel="Selecione" itemValue="" />
+		<f:selectItems value="#{funcionario.listar()}" var="fun" itemValue="#{fun.idFuncionario}" itemLabel="#{fun.login}"/>
+</p:selectOneMenu>
+</td></tr>
+
+<tr><td><p:outputLabel for="observacao" value="Observação" style="font-weight:bold"/></td>
+
+<td colspan="3"><p:inputTextarea id="observacao" title="Digite observações a serem feitas" value="#{beneficiario.beneficiarioNovo.observacao}" maxlength="200" counterTemplate="{0} caracteres restantes" size="98" autoResize="true" rows="4" cols="62"/></td></tr>
+</table><br></br>
+<p:separator style="width:100%; height:5px"/>
+<table align="center">
+
+					
+<tr><td align="center"><p:commandButton id="Adicionar" value="Adicionar"	icon="ui-icon-disk" update="message" title="Adicionar Beneficiário" action="#{beneficiario.adicionar()}"/></td>
+<td align="center"><p:commandButton id="cancelar" value="Cancelar" icon="ui-icon-trash" title="Cancelar" action="/index.xhtml"/></td></tr>
+
+</table></p:panel>
+</h:form></center>
+</h:body>
+</ui:define>
+</ui:composition>
+</html>

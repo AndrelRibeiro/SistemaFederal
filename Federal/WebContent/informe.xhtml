@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Informação</title>
+</h:head>
+<ui:composition template="/cabecalho.xhtml">
+	<ui:define name="conteudo">
+<h:body>
+<br></br><center>
+				<p:panel header="Comunicação de Falhas">
+<h:form>
+<table align="center">
+<tr><td  width="150"><p:outputLabel for="contrato" value="Contrato" title="Se estava trabalhando com contrato, mensalidade, cliente ou beneficiário, insira o número do contrato." style="font-weight:bold" /></td>
+<td><p:inputText id="contrato" value="#{notifica.infoNova.contrato}" onfocus="this.value=''" required="false" title="É importante você preencher este campo"/></td></tr>
+<tr><td><p:outputLabel for="trabalho" value="Objeto de Trabalho" title="Em que você estava trabalhando" style="font-weight:bold"/></td>
+<td><p:selectOneMenu id="trabalho" value="#{notifica.infoNova.objeto}" required="true" requiredMessage="Você deve preencher este campo">
+<f:selectItem itemValue="Atendimento" itemLabel="Atendimento"/>
+<f:selectItem itemValue="Beneficiario" itemLabel="Beneficiario"/>
+<f:selectItem itemValue="Contrato" itemLabel="Contrato"/>
+<f:selectItem itemValue="Cliente" itemLabel="Cliente"/>
+<f:selectItem itemValue="Funcionario" itemLabel="Funcionario"/>
+<f:selectItem itemValue="Mensalidade" itemLabel="Mensalidade"/>
+<f:selectItem itemValue="Preco" itemLabel="Preço"/>
+<f:selectItem itemValue="Vendedor" itemLabel="Vendedor"/>
+</p:selectOneMenu></td></tr>
+<tr><td><p:outputLabel for="tarefa" value="Tarefa" title="Tarefa que estava realizando" style="font-weight:bold"/></td>
+<td><p:selectOneMenu id="tarefa" value="#{notifica.infoNova.casoDeUso}" required="true" requiredMessage="Você deve preencher este campo">
+<f:selectItem itemValue="Cadastro" itemLabel="Cadastro"/>
+<f:selectItem itemValue="Exclusão" itemLabel="Exclusão"/>
+<f:selectItem itemValue="Atualização" itemLabel="Atualização"/>
+<f:selectItem itemValue="Listar" itemLabel="Listar"/>
+<f:selectItem itemValue="Baixa" itemLabel="Baixa"/>
+<f:selectItem itemValue="Impressão" itemLabel="Impressão"/>
+<f:selectItem itemValue="Login" itemLabel="Login"/>
+</p:selectOneMenu></td></tr>
+<tr>
+						<td><p:outputLabel for="observacao" value="Observação"  style="font-weight:bold" /></td>
+						<td colspan="3"><p:inputTextarea id="observacao" required="true"
+								title="Digite observações a serem feitas" maxlength="200"
+								counterTemplate="{0} caracteres restantes" size="100"
+								autoResize="true" rows="4" cols="56"
+								value="#{notifica.infoNova.descricao}" /></td>
+					</tr>
+</table>
+</h:form>
+				<p:growl id="messages" autoUpdate="true" showSummary="false" />
+<h:form>
+<table align="center">
+<tr><td width="150"></td>
+<td><p:commandButton id="gravar" value="Gravar" action="#{notifica.adicionar}" title="Salvar informação" icon="ui-icon-disk"/>
+<p:commandButton id="reset" type="reset" value="Apagar" title="Limpar formulário" icon="ui-icon-trash"/>
+<p:commandButton id="voltar" value="Cancelar" action="/index.xhtml" title="Voltar para tela inicial" icon="ui-icon-arrowreturnthick-1-w"/></td></tr>
+</table>
+</h:form></p:panel></center>
+</h:body>
+	</ui:define>
+</ui:composition>
+</html>

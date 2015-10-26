@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+
+<title>Inicio</title>
+</h:head>
+<ui:composition template="/cabecalho.xhtml">
+	<ui:define name="conteudo">
+<h:body>
+<p:layout style="min-width:400px;min-height:550px;">
+<p:layoutUnit position="north" size="110">
+<CENTER><p:growl id="messages" showDetail="true" />
+<h1>FEDERAL CONVÊNIOS</h1></CENTER>
+
+</p:layoutUnit>
+   
+ 
+    <p:layoutUnit position="center" size="50%">
+        <h:form>
+        <p:dataTable id="listar" value="#{infoMB.listar()}" var="inf" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,20,25,30,50,75,100,200,500" rows="15">
+        <p:column width="50">
+			<f:facet name="header">
+				<h:outputText value="Relevância" />
+			</f:facet>
+				<h:outputText value="#{inf.tipo}" />
+		</p:column>
+        <p:column width="50">
+			<f:facet name="header">
+				<h:outputText value="Informação" />
+			</f:facet>
+				<h:outputText value="#{inf.titulo}" />
+		</p:column>
+		 <p:column width="200">
+			<f:facet name="header">
+				<h:outputText value="Descrição" />
+			</f:facet>
+				<h:outputText value="#{inf.descricao}" />
+		</p:column>
+        </p:dataTable>
+        </h:form>
+    </p:layoutUnit>
+    <p:layoutUnit position="east" size="20%">
+    <table>
+    <tr><td style="width:216px"><a href="http://www.accuweather.com/pt/br/sao-paulo/45881/weather-forecast/45881" class="aw-widget-legal">
+
+</a><div id="awcc1438555009247" class="aw-widget-current"  
+		 data-locationkey="" data-unit="c" data-language="pt" 
+		 data-useip="true" data-uid="awcc1438555009247"></div>
+		 <script type="text/javascript" src="http://oap.accuweather.com/launch.js"></script>
+</td></tr>
+<tr><td><p:commandButton value="Cadastrar Código de Barras" id="link" actionListener="#{mensalidade.cadastrarBarras}"/>
+ </td></tr>
+ <tr><td><p:commandButton value="Imprimir Boletos Pendentes" id="link2" actionListener="#{mensalidade.cadastrarBarras}"/>
+ </td></tr>
+ <tr><td><p:commandButton value="Gerar 2ª Via de carnês" id="link3" action="/2viaCarne.xhtml"/></td></tr>
+ <tr><td><p:commandButton value="Gerar 2ª Via de Boletos" id="link4" action="/2via.xhtml"/></td></tr>
+</table></p:layoutUnit>
+
+</p:layout>
+
+
+
+</h:body>
+</ui:define>
+</ui:composition>
+</html>

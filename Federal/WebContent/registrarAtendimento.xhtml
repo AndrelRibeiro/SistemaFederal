@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+
+</h:head>
+<ui:composition template="/cabecalho.xhtml">
+	<ui:define name="conteudo">
+		<h:body><br></br><center>
+			<h:form id="busca">
+				<p:panel id="formulario" header="Registrar Atendimento">
+				<table align="center">
+					<tr>
+						<td width="200"><p:outputLabel for="numContrato" value="Contrato" /></td>
+						<td colspan="3"><p:inputText id="numContrato" onfocus="this.value=''"
+								actionListener="#{beneficiario.buscar()}"
+								title="Insira o número do contrato" required="true" maxlenght="30"
+								size="10" value="#{beneficiario.beneficiarioNovo.contrato}" style="margin-right:10px"/>
+							<p:commandButton id="buscar" value="Buscar"
+								title="Pesquisar número do contrato"
+								action="#{beneficiario.buscar}" update="display" ajax="true" /></td>
+					</tr></table><p:panel>
+					<table align="center">
+					<tr>
+						<td width="200"><p:outputLabel for="display" value="Beneficiários" /></td>
+						<td colspan="3"><p:selectOneMenu id="display" style="width:400px"	value="#{atendimento.atendimentoNovo.idBeneficiario}" >
+
+								<f:selectItems value="#{beneficiario.beneficiarios}" var="ben"	itemValue="#{ben.idBeneficiario}" itemLabel="#{ben.nome}"/>
+								
+							</p:selectOneMenu></td></tr>
+					<tr><td><p:outputLabel for="falecimento" value="Data do Falecimento" required="true"/></td>
+					<td><p:calendar id="falecimento" value="#{atendimento.atendimentoNovo.falecimento}" maxdate="#{atendimento.data}" pattern="dd/MM/yyyy" showOn="focus" locale="pt" onblur="true" update="msg"/></td></tr>
+					<tr><td><p:outputLabel for="dtAtendimento" value="Data do Atendimento" required="true"/></td>
+					<td><p:calendar id="dtAtendimento" value="#{atendimento.atendimentoNovo.data_atendimento}" pattern="dd/MM/yyyy" showOn="focus" locale="pt" onblur="true" update="msg"/></td></tr>
+					</table></p:panel><p:panel id="atend">
+					<table align="center">
+        <p:outputPanel id="customPanel" style="margin-bottom:10px">
+        <p:selectOneRadio id="customRadio" value="#{atendimento.radio}" layout="custom">
+            <f:selectItem itemValue="1" />
+            <f:selectItem itemValue="2" />
+            <f:ajax render="atend" />
+        </p:selectOneRadio>
+         <tr><td width="200">
+            <p:radioButton id="opt2" for="customRadio" itemIndex="1" />
+            <p:outputLabel for="opt2" value="Serviço:" /></td>
+            <td><p:outputLabel value="Nº Nota:"/></td><td>
+            <p:inputText value="#{atendimento.atendimentoNovo.numNota}" size="8" style="margin-right:12px" disabled="#{atendimento.radio=='2'}" onfocus="this.value=''"/>
+            </td></tr><tr><td></td><td><p:outputLabel value="Agência:"/></td>
+            <td><p:inputText value="#{atendimento.atendimentoNovo.agencia}" disabled="#{atendimento.radio == '2'}" size="30"/></td>
+ </tr>
+ <tr><td>
+            <p:radioButton id="opt1" for="customRadio" itemIndex="0" />
+            <p:outputLabel for="opt1" value="Ressarcimento:" /></td><td>
+            <p:outputLabel value="Valor: R$"/></td><td><p:inputText onkeypress="mascara(this,valor)" value="#{atendimento.atendimentoNovo.ressarcimento}" disabled="#{atendimento.radio == '1'}" size="30" onfocus="this.value=''"/></td>
+ </tr>
+ <tr><td><p:outputLabel for="observacao" value="Observação"/></td>
+ <td colspan="2"><p:inputTextarea id="observacao" value="#{atendimento.atendimentoNovo.observacao}" title="Digite observações a serem feitas" maxlength="200"
+	counterTemplate="{0} caracteres restantes" size="100" autoResize="true" rows="4" cols="38"  />
+ </td></tr>
+    </p:outputPanel>
+    </table>
+    </p:panel>
+					<p:messages id="msg"/>
+					<br></br>
+				<p:separator style="width:100%; height:5px"/>	
+				
+				<table align="center">
+					<tr><td></td>
+					
+					<td><p:commandButton id="gravar" value="Gravar" title="Registrar Atendimento" action="#{beneficiario.atender}" ajax="true"/>
+					<p:commandButton value="Limpar" update="formulario" process="@this">
+					<p:resetInput target="busca"/>
+					</p:commandButton>
+					<p:commandButton id="cancelar" value="Cancelar" title="Cancelar" action="/index.xhtml"/></td></tr>
+					</table>
+					</p:panel>
+					</h:form></center>
+					<script>
+                function mascara(o, f) {
+                    v_obj = o;
+                    v_fun = f;
+                    setTimeout("execmascara()", 1);
+                }
+
+                function execmascara() {
+                    v_obj.value = v_fun(v_obj.value);
+                }
+
+                function valor(v) {
+                    v = v.replace(/\D/g, "");
+                    v = v.replace(/[0-9]{15}/, "invÃ¡lido");
+                    v = v.replace(/(\d{1})(\d{11})$/, "$1.$2"); // coloca ponto antes dos  
+                    // Ãºltimos 11 digitos  
+                    v = v.replace(/(\d{1})(\d{8})$/, "$1.$2"); // coloca ponto antes dos  
+                    // Ãºltimos 8 digitos  
+                    v = v.replace(/(\d{1})(\d{5})$/, "$1.$2"); // coloca ponto antes dos  
+                    // Ãºltimos 5 digitos  
+                    v = v.replace(/(\d{1})(\d{1,2})$/, "$1,$2"); // coloca virgula antes dos  
+                    // Ãºltimos 2 digitos  
+                    return v;
+                }
+
+        </script>
+</h:body>
+	</ui:define>
+</ui:composition>
+</html>

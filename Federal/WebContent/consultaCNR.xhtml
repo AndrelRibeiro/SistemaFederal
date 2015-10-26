@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+</h:head>
+<ui:composition template="/cabecalho.xhtml">
+            <ui:define name="conteudo">
+<h:body><p:panel><center>
+<h:form>
+<h3>Pesquisar por:</h3>
+<p:separator style="width:100%; height:5px"/>
+<p:outputPanel id="pesquisa" style="margin-bottom:10px">
+        <p:selectOneRadio id="customRadio" value="#{mensalidade.opc}" layout="custom">
+            <f:selectItem itemLabel="Contrato:" itemValue="1"/>
+            <f:selectItem itemLabel="Atrasadas apartir de:" itemValue="2" />
+            <f:selectItem itemLabel="Pagas apartir de:" itemValue="3" />
+            <f:selectItem itemLabel="Todas Atrasadas:" itemValue="4" />
+            <f:selectItem itemLabel="Todas Pagas:" itemValue="5" />
+            <f:ajax render="pesquisa" />
+        </p:selectOneRadio>
+ 
+        <h:panelGrid columns="5" cellpadding="5">
+            <p:radioButton id="opt1" for="customRadio" itemIndex="0" />
+            <h:outputLabel for="opt1" value="Contrato:" />
+            <p:inputText  id="opt11" size="12" value="#{mensalidade.mensalidadeNova.contrato}" disabled="#{mensalidade.opc != '1'}" onfocus="this.value=''"/>
+            <h:inputHidden/>
+            <h:inputHidden/>
+ 
+            <p:radioButton id="opt2" for="customRadio" itemIndex="1" />
+            <h:outputLabel for="opt2" value="Atrasadas apartir de:" />
+    		<p:calendar id="apartir"	value="#{mensalidade.atrasadasInicio}" disabled="#{mensalidade.opc != '2'}" pattern="dd/MM/yyyy" showOn="focus" locale="pt" size="12"/>
+    		<p:outputLabel for="ate" value="Até"/>
+    		<p:calendar id="ate"	value="#{mensalidade.atrasadasFim}" disabled="#{mensalidade.opc != '2'}" pattern="dd/MM/yyyy" showOn="focus" locale="pt" size="12"/>
+ 
+            <p:radioButton id="opt3" for="customRadio" itemIndex="2" />
+            <h:outputLabel for="opt3" value="Pagas apartir de:" />
+    		<p:calendar id="apartir2"	value="#{mensalidade.pagasInicio}" disabled="#{mensalidade.opc != '3'}" pattern="dd/MM/yyyy" showOn="focus" locale="pt" size="12"/>
+    		<p:outputLabel for="ate2" value="Até"/>
+    		<p:calendar id="ate2"	value="#{mensalidade.pagasFim}" disabled="#{mensalidade.opc != '3'}" pattern="dd/MM/yyyy" showOn="focus" locale="pt" size="12"/>
+            
+            <p:radioButton id="opt4" for="customRadio" itemIndex="3" colspan="3"/>
+            <h:outputLabel for="opt4" value="Todas Atrasadas" />
+            <h:inputHidden/>
+            <h:inputHidden/>
+            <h:inputHidden/>
+ 
+            <p:radioButton id="opt5" for="customRadio" itemIndex="4" />
+            <h:outputLabel for="opt5" value="Todas Pagas" />
+            <h:inputHidden/>
+            <h:inputHidden/>
+            <h:inputHidden/>
+            
+        </h:panelGrid>
+    </p:outputPanel>
+    
+    <p:commandButton ajax="false" id="buscar" value="Buscar" action="#{mensalidade.buscar()}" style="margin-left:130px"/>
+    <p:commandButton  id="cancelar" value="Cancelar" action="/index.xhtml" style="margin-left:22px"/>
+</h:form>
+<p:separator style="width:100%; height:5px"/>
+<br></br>
+<br></br>
+
+<p:dataTable  id="lista" value="#{mensalidade.mensalidades}" rendered="#{not empty mensalidade.mensalidades}" var="cnr" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,20,25,30,50,75,100,200,500" rows="15">
+					<f:facet name="header">
+					Cliente: #{mensalidade.cliente.nome} --> #{fn:length(mensalidade.mensalidades)} Mensalidades Encontradas
+					</f:facet>					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Contrato" />
+						</f:facet>
+						<h:outputText value="#{cnr.contrato}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="CNR" />
+						</f:facet>
+						<h:outputText value="#{cnr.nossoNumero}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Vencimento" />
+						</f:facet>
+						<h:outputText value="#{cnr.dataVencimento}" >
+						<f:convertDateTime locale="pt,BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Pagamento" />
+						</f:facet>
+						<h:outputText value="#{cnr.dataPagamento}" >
+						<f:convertDateTime locale="pt_BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Carência" />
+						</f:facet>
+						<h:outputText value="#{cnr.dataCarencia}" >
+						<f:convertDateTime locale="pt_BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Valor" />
+						</f:facet>
+						<h:outputText value="#{cnr.valorParcela}" >
+						<f:convertNumber currencyCode="BRL" type="currency" />
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Situação"/>
+						</f:facet>
+						<h:outputText value="#{cnr.situacao}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Parcela"/>
+						</f:facet>
+						<h:outputText value="#{cnr.parcela_carne_ano}"/>
+					</p:column>
+					</p:dataTable></center>
+				</p:panel>	
+					</h:body>
+</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+
+</h:head>
+<ui:composition template="/cabecalho.xhtml">
+	<ui:define name="conteudo">
+		<h:body>
+			<br></br><h:form>
+			<p:commandButton value="Imprimir" type="button" icon="ui-icon-print" style="display:block;margin-bottom: 20px">
+    <p:printer target="pes:dados " />
+</p:commandButton></h:form>
+			<center>
+			<p:panel id="panel" header="Visualização de dados para Atendimento">
+				<p:growl id="growl" showDetail="true" life="15000" showSummary="false" autoUpdate="true"/>
+				<h:form id="pes">
+				
+				<p:panel id="panel2">
+				<p:focus context="panel2"/>
+				<table>
+				<tr><td><p:outputLabel for="contrato" value="Contrato" /></td>
+				<td><p:inputText id="contrato" value="#{contrato.contratoNovo.nContrato}" actionListener="#{contrato.atendimento()}" required="true" requiredMessage="Você deve informar o número do contrato" onfocus="this.value=''"/>
+				<p:commandButton id="buscar" value="Buscar" icon="ui-icon-disk" ajax="false" action="#{contrato.atendimento()}" update="dados" /></td></tr>
+				</table>
+				<br></br>
+				</p:panel>
+				<p:panel id="dados">
+				<table border="1" cellspacing="3" rules="all" cellpadding="5" width="100%">
+				<tr><td><p:outputLabel for="informacao" value="Aviso:"/></td>
+				<td colspan="3"><p:outputLabel id="informacao" value="#{contrato.situacao}" readonly="true" size="100" style="color:red"/></td></tr>
+				<tr><td><p:outputLabel for="contratob" value="Contrato:"/></td>
+				<td colspan="3"><p:outputLabel id="contratob" value="#{contrato.contratoNovo.nContrato}" readonly="true" size="20"/></td></tr>
+				<tr><td><p:outputLabel for="nome" value="Nome:"/></td>
+				<td colspan="3"><p:outputLabel id="nome" value="#{contrato.cliente.nome}" readonly="true" size="100"/></td></tr>
+				<tr><td><p:outputLabel for="endereco" value="Endereço"/></td>
+				<td colspan="3"><p:outputLabel id="endereco" value="#{contrato.cliente.logradouro}" readonly="true" size="100"/></td></tr>
+				<tr><td><p:outputLabel for="bairro" value="Bairro:"/></td>
+				<td><p:outputLabel id="bairro" value="#{contrato.cliente.bairro}" readonly="true" size="50"/></td>
+				<td><p:outputLabel for="cep" value="Cep:"/></td>
+				<td><p:outputLabel id="cep" value="#{contrato.cliente.cep}" readonly="true" size="20"/></td></tr>
+				<tr><td><p:outputLabel for="estado" value="Estado:"/></td>
+				<td><p:outputLabel id="estado" value="#{contrato.cliente.estado}" readonly="true" size="40"/></td>
+				<td><p:outputLabel for="cidade" value="Cidade:"/></td>
+				<td><p:outputLabel id="cidade" value="#{contrato.cliente.cidade}" readonly="true" size="40"/></td></tr>
+				<tr><td><p:outputLabel for="referencia" value="Ponto de Referência:"/></td>
+				<td colspan="3"><p:outputLabel id="referencia" value="#{contrato.cliente.pontoRef}" readonly="true" size="100"/></td></tr>
+				<tr><td><p:outputLabel for="telefone" value="Telefone:"/></td>
+				<td><p:outputLabel id="telefone" value="#{contrato.cliente.telefone}" readonly="true" size="20"/></td>
+				<td><p:outputLabel for="celular" value="Celular:"/></td>
+				<td><p:outputLabel id="celular" value="#{contrato.cliente.celular}" readonly="true" size="20"/></td></tr>
+				<tr><td><p:outputLabel for="carencia" value="Carencia até:"/></td>
+				<td colspan="3"><p:outputLabel id="carencia" value="#{contrato.contratoNovo.carencia}" readonly="true" size="20"/></td></tr>
+				<tr><td><p:outputLabel for="plano" value="Plano:"/></td>
+				<td colspan="3"><p:outputLabel id="plano" value="#{contrato.contratoNovo.plano}" readonly="true" size="100"/></td></tr>
+				<tr><td><p:outputLabel for="situacao" value="Situação:"/></td>
+				<td colspan="3"><p:outputLabel id="situacao" value="#{contrato.contratoNovo.situacao}" readonly="true" size="40"/></td></tr>
+				</table>
+				<p:dataTable id="listaM" style="width:100%" emptyMessage="Sem Registro"	value="#{contrato.mensalidades}" var="men">
+							<f:facet name="header">
+					Mensalidades:  #{fn:length(contrato.mensalidades)}
+					</f:facet>
+							<p:column width="15">
+								<f:facet name="header">
+									<h:outputText value="Contrato" />
+								</f:facet>
+								<h:outputText value="#{men.contrato}" />
+							</p:column>
+							<p:column width="20">
+								<f:facet name="header">
+									<h:outputText value="Vencimento" />
+								</f:facet>
+								<h:outputText value="#{men.dataVencimento}" >
+								<f:convertDateTime locale="pt_BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+								</h:outputText>
+							</p:column>
+							<p:column width="20">
+								<f:facet name="header">
+									<h:outputText value="Pagamento" />
+								</f:facet>
+								<h:outputText value="#{men.dataPagamento}">
+								<f:convertDateTime locale="pt_BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+								</h:outputText>
+							</p:column>
+							<p:column width="20">
+								<f:facet name="header">
+									<h:outputText value="Carência" />	
+								</f:facet>
+								<h:outputText value="#{men.dataCarencia}" >
+								<f:convertDateTime locale="pt_BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+								</h:outputText>
+							</p:column>
+							<p:column width="20">
+								<f:facet name="header">
+									<h:outputText value="Situação" />
+								</f:facet>
+								<h:outputText value="#{men.situacao}" />
+							</p:column>
+							<p:column width="20">
+								<f:facet name="header">
+									<h:outputText value="Valor" />
+								</f:facet>
+								<h:outputText value="#{men.valorParcela}">
+								<f:convertNumber currencyCode="BRL" type="currency" />
+                               </h:outputText>
+							</p:column>
+							<p:column width="20">
+								<f:facet name="header">
+									<h:outputText value="Nosso Número" />
+								</f:facet>
+								<h:outputText value="#{men.nossoNumero}" />
+							</p:column>
+						</p:dataTable>
+				</p:panel>
+				</h:form>
+				</p:panel>
+				</center>
+				</h:body>
+				</ui:define>
+				</ui:composition>
+</html>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf14293846276900" configfile="/Federal/WebContent/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="adicionarCliente.xhtml" id="pf14299928978716" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf14299928978717" path="/adicionarCliente.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="adicionarBeneficiario.xhtml" id="pf14299928978718" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf14299928978717" path="/adicionarBeneficiario.xhtml"/>
+  <links id="pf14299928978717" target="pf14299928978718" source="pf14299928978716" outcome="proxima"/>
+</pageflow:Pageflow>

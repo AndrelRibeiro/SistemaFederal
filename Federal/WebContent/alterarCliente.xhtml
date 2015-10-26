@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	
+</h:head>
+<ui:composition template="/cabecalho.xhtml">
+	<ui:define name="conteudo">
+		<h:body><br></br><center>
+			
+			<p:panel id="display" header="Editar Cliente">
+			<p:panel id="busca">
+			<h:form>
+				<table align="center">
+					<tr><left>
+						<td width="100"><p:outputLabel for="numContrato" value="Contrato" style="font-weight:bold"/></td>
+						<td colspan="3"><p:inputText id="numContrato" onfocus="this.value=''"
+								title="Insira o número do contrato" required="true" maxlenght="20" update="dadosC"
+								size="15" value="#{cliente.clienteNovo.numeroContrato}" actionListener="#{cliente.buscar()}" />
+								<p:commandButton id="buscar" value="Buscar" ajax="true" update="dadosC" action="#{cliente.buscar()}" /></td>
+					</left></tr>
+					</table>
+					</h:form>
+					</p:panel><h:form id="dadosC">
+					<p:panel id="dados">
+					
+					<table align="center">
+					<tr>
+						<td><p:outputLabel for="nome" value="Titular" style="font-weight:bold"/></td>
+						<p:tooltip id="toolTipFocus" for="nome" showEffect="clip"
+							hideEffect="explode" />
+						<td colspan="3"><p:inputText id="nome" title="Digite o Nome"
+								required="true" maxlength="100" size="70"
+								value="#{cliente.clienteNovo.nome}" colspan="2" >
+								<f:validateLength minimum="5" maximum="100"/>
+								</p:inputText>
+						<p:message for="nome" severity="info,warn" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel for="email" value="Email" /></td>
+						<td colspan="3"><p:inputText id="email"
+								title="Digite o Email" required="" maxlength="100" size="40"
+								value="#{cliente.clienteNovo.email}" colspan="2" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel for="cpf" value="CPF" /></td>
+						<td><p:inputMask id="cpf" title="Digite o CPF" maxlength="14"
+								size="19" required="" mask="999.999.999-99"
+								value="#{cliente.clienteNovo.cpf}" /></td>
+						<td><p:outputLabel for="rg" value="RG" /></td>
+						<td colspan="2"><p:inputMask id="rg" title="Digite o RG"
+								maxlength="12" size="19" required="" 
+								value="#{cliente.clienteNovo.rg}" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel for="nascimento"
+								value="Data de Nascimento" /></td>
+						<td><p:inputMask id="nascimento" required="true" value="#{cliente.clienteNovo.nascimento}"   mask="99/99/9999"	pattern="dd/MM/yyyy" maxlenght="10" size="14" >
+								<f:convertDateTime locale="pt_BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+								</p:inputMask></td>
+								
+								<td><p:outputLabel for="natural" value="Naturalidade"/></td>
+								<td><p:selectOneMenu id="natural" value="#{cliente.clienteNovo.naturalidade}" style="width:250px">
+								<f:selectItem itemLabel="Selecione" itemValue="#{null}" />
+								<f:selectItems value="#{estadoCidade.buscarEstados()}" var="est" itemLabel="#{est.nome}" itemValue="#{est.nome}"/>
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel for="estado_civil" value="Estado Civil" /></td>
+						<td><p:selectOneMenu id="estado_civil"  style="width:150px"
+								value="#{cliente.clienteNovo.estadoCivil}">
+								<f:selectItem itemLabel="Selecione" itemValue="#{null}" />
+								<f:selectItem itemLabel="Casado(a)" itemValue="Casado(a)" />
+								<f:selectItem itemLabel="Solteiro(a)" itemValue="Solteiro(a)" />
+								<f:selectItem itemLabel="Separado(a)" itemValue="Separado(a)" />
+								<f:selectItem itemLabel="Divorciado(a)" itemValue="Divorciado(a)" />
+								<f:selectItem itemLabel="Viuvo(a)" itemValue="Viuvo(a)" />
+								<f:selectItem itemLabel="Outros" itemValue="Outros" />
+							</p:selectOneMenu></td>
+						<td><p:outputLabel for="sexo" value="Sexo" /></td>
+						<td><p:selectOneRadio id="sexo" required="true"
+								value="#{cliente.clienteNovo.sexo}">
+								<f:selectItem itemLabel="MASCULINO" itemValue="MASCULINO" />
+								<f:selectItem itemLabel="FEMININO" itemValue="FEMININO" />
+							</p:selectOneRadio></td>
+					</tr>
+					<tr><td><p:outputLabel value=""/></td><td><p:outputLabel value="#{cliente.clienteNovo.celular}"/></td>
+					<td><p:outputLabel value=""/></td><td><p:outputLabel value="#{cliente.clienteNovo.telefone}"/></td></tr>
+					<tr>
+						<td><p:outputLabel for="celular" value="Celular" /></td>
+						<td><p:inputMask id="celular" title="Digite o celular"
+								maxlenght="13" size="19" mask="(99)99999-9999"
+								value="#{cliente.clienteNovo.celular}" /></td>
+						<td><p:outputLabel for="telefone" value="Telefone" /></td>
+						<td><p:inputMask id="telefone" title="Digite o telefone"
+								maxlenght="12" size="19" mask="(99)9999-9999"
+								value="#{cliente.clienteNovo.telefone}" /></td>
+					</tr>
+
+					<tr>
+						<td><p:outputLabel for="cep" value="CEP" /></td>
+						<td colspan="3"><p:inputMask id="cep" title="Digite o CEP"
+								maxlenght="9" size="14" mask="99999-999"
+								value="#{cliente.clienteNovo.cep}" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel for="endereco" value="Endereço" /></td>
+						<td colspan="3"><p:inputText id="endereco"
+								title="Digite o Endereco" required="true" maxlength="255" size="70"
+								value="#{cliente.clienteNovo.logradouro}" colspan="2" /></td>
+					</tr>
+
+					<tr>
+						<td><p:outputLabel for="complemento" value="Complemento" /></td>
+						<td colspan="3"><p:inputText id="complemento" maxlenght="60" size="40"
+								required="" title="Insira um complemento do endereço"
+								value="#{cliente.clienteNovo.complemento}" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel for="bairro" value="Bairro" /></td>
+						<td colspan="3"><p:inputText id="bairro"
+								title="Digite o Bairro" required="true" maxlength="50" size="40"
+								value="#{cliente.clienteNovo.bairro}" colspan="2" /></td>
+					</tr>
+
+					<tr>
+						<td><p:outputLabel for="estado" value="Estado" /></td>
+						<td><p:inputText id="estado" value="#{cliente.clienteNovo.estado}"  style="width:250px"/>
+								</td>
+						<td><p:outputLabel for="cidade" value="Cidade" /></td>
+						<td><p:inputText id="cidade" value="#{cliente.clienteNovo.cidade}" style="width:250px"/>
+								</td>
+					</tr>
+					<tr>
+						<td><p:outputLabel for="ponto" value="Ponto Ref." /></td>
+						<td colspan="3"><p:inputText id="ponto"
+								title="Digite um ponto de referência" maxlength="100" size="70"
+								value="#{cliente.clienteNovo.pontoRef}" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel for="religiao" value="Religião" /></td>
+						<td><p:inputText id="religiao" title="Digite a religião"
+								maxlength="100" size="20"
+								value="#{cliente.clienteNovo.religiao}" /></td>
+						<td><p:outputLabel for="profissao" value="Profissão" /></td>
+						<td><p:inputText id="profissao" title="Digite a Profissão"
+								maxlength="100" size="19"
+								value="#{cliente.clienteNovo.profissao}" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel for="profissional" value="Cadastrado por" /></td>
+						<td colspan="2"><p:selectOneMenu id="profissional"
+								value="#{cliente.clienteNovo.idFuncionario}">
+								<f:selectItem itemLabel="Selecione" itemValue="" />
+								<f:selectItems value="#{funcionario.listar()}" var="fun"
+									itemValue="#{fun.idFuncionario}" itemLabel="#{fun.login}" />
+							</p:selectOneMenu></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel for="observacao" value="Observação" /></td>
+						<td colspan="3"><p:inputTextarea id="observacao"
+								title="Digite observações a serem feitas" maxlength="200"
+								counterTemplate="{0} caracteres restantes" size="100"
+								autoResize="true|false" rows="4" cols="56"
+								value="#{cliente.clienteNovo.observacao}" /></td>
+					</tr>
+				</table>
+				</p:panel>
+				<p:panel>
+				<table align="center">
+					<tr>
+						<td align="center"><p:commandButton id="Alterar"
+								value="Alterar" title="Alterar Cliente"
+								action="#{cliente.atualizar()}" icon="ui-icon-disk"/></td>
+								
+								<td><p:growl id="message" showDetail="false" autoUpdate="true"/>
+     <p:commandButton value="Excluir"  update="message" icon="ui-icon-trash">
+        <p:confirm header="Confirmação" message="Deseja excluir este cliente?" icon="ui-icon-alert" />
+    </p:commandButton> 
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">    
+        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" action="#{cliente.remover}"/>
+        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" action="/index.xhtml"/>
+    </p:confirmDialog></td>
+						
+						<td align="center"><p:commandButton value="Cancelar" title="Cancelar" action="/index.xhtml" icon="ui-icon-arrowreturnthick-1-w"/></td>
+					</tr>
+					<tr><td><h:inputHidden value="#{cliente.clienteNovo.numeroContrato}"/></td><td><h:inputHidden value="#{cliente.clienteNovo.idCliente}"/></td></tr>
+					<tr><td><h:inputHidden value="#{cliente.clienteNovo.situacao}"/></td><td></td></tr>
+				</table>
+			</p:panel></h:form></p:panel></center>
+		</h:body>
+	</ui:define>
+</ui:composition>
+</html>
