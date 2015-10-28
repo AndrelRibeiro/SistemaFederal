@@ -17,7 +17,6 @@ import beans.Funcionario;
 @ManagedBean
 @SessionScoped
 public class FuncionarioMB implements Serializable{
-
 	/**
 	 * 
 	 */

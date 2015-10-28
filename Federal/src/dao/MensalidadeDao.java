@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import beans.Mensalidade;
+import beans.Remessa;
 
 public interface MensalidadeDao {
 public boolean adicionar(Mensalidade m);
@@ -20,4 +21,5 @@ public List<Mensalidade> listarCarnes();
 public List<Mensalidade> listarSemCNR();
 Mensalidade buscaUltimoPgm(int contrato);
 boolean adicionarPagas(Mensalidade m);
+public List<Remessa> gerarRemessa();
 }

@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import beans.Mensalidade;
+import beans.Remessa;
 import controle.CalculoDatas;
 
 public class MensalidadeDaoImplementation implements MensalidadeDao, Serializable{
@@ -553,5 +554,39 @@ CalculoDatas cp=new CalculoDatas();
 		
 		return m;
 	}
-
+public List<Remessa> gerarRemessa(){
+	Remessa remessa=new Remessa();
+	List<Remessa>remessas=new ArrayList<Remessa>();
+	Connection con=null;
+	PreparedStatement ps;
+	ResultSet rs;
+	String sql="SELECT C.NOME, C.CPF, C.ENDERECO, C.BAIRRO, C.CIDADE, C.ESTADO, C.CEP, C.CONTRATO, M.VALOR, M.VENCIMENTO FROM CLIENTE C INNER JOIN MENSALIDADE M 	ON (C.CONTRATO=M.CONTRATO) WHERE M.SITUACAO='CADASTRAR' ORDER BY CONTRATO";
+	try {
+		con=ConnectionFactory.getConnection();
+		ps=con.prepareStatement(sql);
+		rs=ps.executeQuery();
+		while(rs.next()){
+			remessa=new Remessa();
+			remessa.setContrato(rs.getInt("CONTRATO"));
+			remessa.setNome(rs.getString("NOME"));
+			remessa.setCpf(rs.getString("CPF"));
+			remessa.setEndereco(rs.getString("ENDERECO"));
+			remessa.setBairro(rs.getString("BAIRRO"));
+			remessa.setCidade(rs.getString("CIDADE"));
+			remessa.setEstado(rs.getString("ESTADO"));
+			remessa.setCep(rs.getString("CEP"));
+			remessa.setVencimento(new java.util.Date(rs.getDate("VENCIMENTO").getTime()));
+			remessa.setValor(rs.getDouble("VALOR"));
+			remessas.add(remessa);
+		}
+		rs.close();
+		ps.close();
+		con.close();
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	return remessas;
+}
 }
