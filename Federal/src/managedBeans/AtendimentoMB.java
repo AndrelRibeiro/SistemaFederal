@@ -2,17 +2,21 @@ package managedBeans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
+import beans.Atendimento;
+import beans.Beneficiario;
 import dao.AtendimentoDao;
 import dao.AtendimentoDaoImplementation;
-import beans.Atendimento;
+import dao.BeneficiarioDao;
+import dao.BeneficiarioDaoImplementation;
 @ManagedBean
 @RequestScoped
 public class AtendimentoMB implements Serializable{
@@ -22,12 +26,16 @@ public class AtendimentoMB implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 private Atendimento atendimentoNovo=new Atendimento();
+private Beneficiario beneficiarioNovo=new Beneficiario();
+private List<Beneficiario>beneficiarios;
 private List<Atendimento>atendimentos;
+private String tipo;
+private String mensagem;
 private String radio;
 private Date data;
 public AtendimentoMB(){
-	Calendar c=Calendar.getInstance();
-	data=c.getTime();System.out.println(data);
+	//Calendar c=Calendar.getInstance();
+	//data=c.getTime();System.out.println(data);
 }
 @PostConstruct 
 public void init() {
@@ -58,7 +66,7 @@ public String getRadio() {
 public void setRadio(String radio) {
 	this.radio = radio;
 }
-public void adicionar(){
+public boolean adicionar(){
 	AtendimentoDao ad=new AtendimentoDaoImplementation();
 	boolean retorno=ad.adicionar(atendimentoNovo);
 	if(retorno==true){
@@ -66,6 +74,7 @@ public void adicionar(){
 	}else{
 		System.out.println("Erro ao Adicionar atendimento!");
 	}
+	return retorno;
 }
 public void buscar(){
 	AtendimentoDao ad=new AtendimentoDaoImplementation();
@@ -102,5 +111,47 @@ public void atualizar(){
 		System.out.println("Erro ao Atualizar atendimento!");
 	}
 }
-
+public Beneficiario getBeneficiarioNovo() {
+	return beneficiarioNovo;
+}
+public void setBeneficiarioNovo(Beneficiario beneficiarioNovo) {
+	this.beneficiarioNovo = beneficiarioNovo;
+}
+public List<Beneficiario> getBeneficiarios() {
+	return beneficiarios;
+}
+public void setBeneficiarios(List<Beneficiario> beneficiarios) {
+	this.beneficiarios = beneficiarios;
+}
+public List<Beneficiario> buscarBeneficiarios(){
+	beneficiarios=new ArrayList<Beneficiario>();
+	BeneficiarioDao bn=new BeneficiarioDaoImplementation();
+	beneficiarios=bn.buscar(beneficiarioNovo.getContrato());
+return beneficiarios;
+}
+public String atender(){
+	BeneficiarioDao bd=new BeneficiarioDaoImplementation();
+	boolean resultado=false,ret=adicionar();
+	if(ret){
+	resultado=bd.registrar(beneficiarioNovo);System.out.println("bene Registrar");}
+	beneficiarioNovo=new Beneficiario();
+	beneficiarios=new ArrayList<Beneficiario>();
+	String result="";
+	if(resultado==true){
+		mensagem="Atendimento registrado!";
+		tipo="Sucesso!";
+		addMessage(tipo,mensagem);
+		result= "/index.xhtml";
+	}else{
+		mensagem="Erro ao registrar Atendimento";
+		tipo="Erro!";
+		addMessage(tipo,mensagem);
+		result= "/informe.xhtml";
+	}
+	return result;
+}
+public void addMessage(String tipo, String mensagem) {
+    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,tipo, mensagem);
+    FacesContext.getCurrentInstance().addMessage(null, message);
+}
 }

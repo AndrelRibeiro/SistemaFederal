@@ -158,24 +158,7 @@ public List<Beneficiario> listarAtivos(){
 	addMessage(tipo,mensagem);
 	return beneficiarios;
 }
-public String atender(){
-	BeneficiarioDao bd=new BeneficiarioDaoImplementation();
-	boolean resultado=bd.registrar(beneficiarioNovo);System.out.println("bene Registrar");
-	beneficiarioNovo=new Beneficiario();
-	beneficiarios=new ArrayList<Beneficiario>();
-	if(resultado==true){
-		mensagem="Atendimento registrado!";
-		tipo="Sucesso!";
-		addMessage(tipo,mensagem);
-		return "/index.xhtml";
-	}else{
-		mensagem="Erro ao registrar Atendimento";
-		tipo="Erro!";
-		addMessage(tipo,mensagem);
-		return "/informe.xhtml";
-	}
-	
-}
+
 public void verificar(AjaxBehaviorEvent event){
 	BeneficiarioDao bd=new BeneficiarioDaoImplementation();
 	boolean existe=bd.pesquisa(beneficiarioNovo);

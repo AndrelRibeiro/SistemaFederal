@@ -24,7 +24,7 @@ public class CepDaoImplementation implements CepDao{
 			ps=con.prepareStatement(sql);
 			ps.setString(1, cep);
 			rs=ps.executeQuery();
-			while(rs.next()){
+			if(rs.next()){
 				endereco.setEstado(rs.getString("UF_DESCRICAO"));
 				endereco.setCidade(rs.getString("CIDADE_DESCRICAO"));
 				endereco.setBairro(rs.getString("BAIRRO_DESCRICAO"));

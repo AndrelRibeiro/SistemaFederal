@@ -79,11 +79,12 @@
 								<f:selectItem itemLabel="Outros" itemValue="Outros" />
 										</p:selectOneMenu></td>
 									<td><p:outputLabel for="sexo" value="Sexo" /></td>
-									<td><p:selectOneRadio id="sexo" required="false"
-											value="#{contrato.sexo}">
-											<f:selectItem itemLabel="Masculino" itemValue="1" />
-											<f:selectItem itemLabel="Feminino" itemValue="2" />
-										</p:selectOneRadio></td>
+									<td><p:selectOneMenu id="sexo" value="#{contrato.cliente.sexo}">
+									<f:selectItem itemLabel="-" itemValue="#{null}" />
+									<f:selectItem itemLabel="Masculino" itemValue="Masculino" />
+									<f:selectItem itemLabel="Feminino" itemValue="Feminino" />
+									</p:selectOneMenu></td>
+									
 								</tr>
 								<tr>
 									<td><p:outputLabel for="celular" value="Celular" /></td>
@@ -138,7 +139,8 @@
 									<td><p:outputLabel for="cep" value="CEP" /></td>
 									<td colspan="3"><p:inputMask id="cep" title="Digite o CEP"
 											maxlenght="9" size="14" mask="99999999" required="true" requiredMessage="Insira o CEP corretamente" label="CEP"
-											value="#{contrato.endereco.cep}" /><p:commandButton  action="#{contrato.endereco}" update="endereco cidade estado bairro" id="buscaEnd" value="Buscar"/></td>
+											value="#{contrato.endereco.cep}" />
+											<p:commandButton  action="#{contrato.endereco}" update="endereco cidade estado bairro" id="buscaEnd" value="Buscar"/></td>
 								</tr>
 								<tr>
 									<td><p:outputLabel for="endereco" value="Endereço"/></td>
@@ -243,11 +245,12 @@
 							</p:selectOneMenu></td>
 						<td><p:outputLabel for="sexobn" value="Sexo"
 								style="font-weight:bold" /></td>
-						<td><p:selectOneRadio id="sexobn" required="true" requiredMessage="Insira sexo"
-								value="#{contrato.sexoB}">
-								<f:selectItem itemLabel="Masculino" itemValue="1" />
-								<f:selectItem itemLabel="Feminino" itemValue="2" />
-							</p:selectOneRadio></td>
+								<td><p:selectOneMenu id="sexobn" value="#{contrato.beneficiario.sexo}">
+									<f:selectItem itemLabel="-" itemValue="#{null}" />
+									<f:selectItem itemLabel="Masculino" itemValue="Masculino" />
+									<f:selectItem itemLabel="Feminino" itemValue="Feminino" />
+									</p:selectOneMenu></td>
+						
 </tr>
 <tr>
 <td><p:outputLabel for="religiaobn" value="Religião" style="font-weight:bold" /></td>

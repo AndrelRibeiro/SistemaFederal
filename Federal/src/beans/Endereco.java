@@ -7,12 +7,6 @@ import dao.CepDaoImplementation;
 
 
 public class Endereco implements Serializable{
-	public static void main(String[]args){
-		CepDao cd=new CepDaoImplementation();
-		Endereco e=new Endereco();
-		e=cd.buscar("08060220");
-		System.out.println(e.toString());
-	}	
 /**
 	 * 
 	 */

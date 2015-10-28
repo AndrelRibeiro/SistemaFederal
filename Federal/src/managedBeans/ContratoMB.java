@@ -50,8 +50,6 @@ private String mensal;
 private Cliente cliente;
 private Beneficiario beneficiario;
 private List<Beneficiario>beneficiarios;
-private String sexo;
-private String sexoB;
 private String codigoBarras;
 private int contador=0;
 private String atualiza="";
@@ -64,7 +62,6 @@ public ContratoMB(){
 public void init() {
 	
 	mensal = "1"; 
-	sexo="1";sexoB="1";
 	cliente=new Cliente();
 	beneficiario=new Beneficiario();
 	beneficiarios=new ArrayList<Beneficiario>();
@@ -115,23 +112,6 @@ public List<Mensalidade> getMensalidades() {
 public void setMensalidades(List<Mensalidade> mensalidades) {
 	this.mensalidades = mensalidades;
 }
-
-public String getSexo() {
-	
-	return sexo;
-}
-public void setSexo(String sexo) {
-	cliente.setSexo(sexo);
-	
-	this.sexo = sexo;
-}
-
-public String getSexoB() {
-	return sexoB;
-}
-public void setSexoB(String sexoB) {
-	this.sexoB = sexoB;
-}
 public String getRadio() {
 	return radio;
 }
@@ -180,25 +160,18 @@ public void adicionar(){
 	c.add(Calendar.MONTH, 3);
 	contratoNovo.setCarencia(c.getTime());
 	contratoNovo.setIdFuncionario(cliente.getIdFuncionario());
-	beneficiario.setIdFuncionario(cliente.getIdFuncionario());
+	
+	cliente.setNumeroContrato(contratoNovo.getnContrato());
 	contratoNovo.setPlano(plano.configuraPlanos(contratoNovo.getPlano()));
 	boolean retorno=cd.adicionar(contratoNovo);
 	if(retorno){System.out.println("Contrato adicionado com sucesso!"+contratoNovo.toString());
-	if(cliente.getSexo().equalsIgnoreCase("1")){
-		cliente.setSexo("Masculino");
-	}else{
-		cliente.setSexo("Feminino");
-	}
+	
 	cliente.setLogradouro(cliente.getLogradouro()+", "+cliente.getNumero());
 		boolean retCli=cli.adicionar(cliente);
 		if(retCli){System.out.println("Cliente adicionado com sucesso!"+cliente.toString());
 			
 			for(Beneficiario b:beneficiarios){
-				if(beneficiario.getSexo().equalsIgnoreCase("1")){
-					beneficiario.setSexo("Masculino");
-				}else{
-					beneficiario.setSexo("Feminino");
-				}
+				b.setIdFuncionario(cliente.getIdFuncionario());			
 				retBen=false;
 				b.setContrato(contratoNovo.getnContrato());
 				b.setDataCadastro(contratoNovo.getDataContrato());

@@ -25,7 +25,7 @@ public class EstadoCidadeDaoImplementation implements Serializable, EstadoCidade
 		PreparedStatement ps;
 		Connection con=null;
 		ResultSet rs;
-		String sql="SELECT * FROM ESTADO;";
+		String sql="SELECT * FROM UF";
 		try{
 			new ConnectionFactory();
 			con=ConnectionFactory.getConnection();
@@ -33,10 +33,9 @@ public class EstadoCidadeDaoImplementation implements Serializable, EstadoCidade
 			rs=ps.executeQuery();
 			while(rs.next()){
 				estado=new Estado();
-				estado.setId(rs.getInt("ID"));
-				estado.setNome(rs.getString("NOME"));
-				estado.setUf(rs.getString("UF"));
-				estado.setPais(rs.getInt("PAIS"));
+				estado.setId(rs.getInt("UF_CODIGO"));
+				estado.setNome(rs.getString("UF_DESCRICAO"));
+				estado.setUf(rs.getString("UF_SIGLA"));
 				estados.add(estado);}
 			
 			    rs.close();
@@ -56,17 +55,16 @@ public class EstadoCidadeDaoImplementation implements Serializable, EstadoCidade
 		Connection con=null;
 		int i=Integer.parseInt(id.toString());
 		ResultSet rs;
-		String sql="SELECT * FROM ESTADO WHERE ID=?";
+		String sql="SELECT * FROM UF WHERE UF_CODIGO=?";
 		try{
 			new ConnectionFactory();
 			con=ConnectionFactory.getConnection();
 			ps=con.prepareStatement(sql);
 			ps.setInt(1, i);
 			rs=ps.executeQuery();
-				estado.setId(rs.getInt("ID"));
-				estado.setNome(rs.getString("NOME"));
-				estado.setUf(rs.getString("UF"));
-				estado.setPais(rs.getInt("PAIS"));			
+				estado.setId(rs.getInt("UF_CODIGO"));
+				estado.setNome(rs.getString("UF_DESCRICAO"));
+				estado.setUf(rs.getString("UF_SIGLA"));		
 			    rs.close();
 				ps.close();
 				con.close();
@@ -84,16 +82,16 @@ public class EstadoCidadeDaoImplementation implements Serializable, EstadoCidade
 		Connection con=null;
 		int i=Integer.parseInt(id.toString());
 		ResultSet rs;
-		String sql="SELECT * FROM CIDADE WHERE ID=?";
+		String sql="SELECT * FROM CIDADE WHERE CIDADE_CODIGO=?";
 		try{
 			new ConnectionFactory();
 			con=ConnectionFactory.getConnection();
 			ps=con.prepareStatement(sql);
 			ps.setInt(1, i);
 			rs=ps.executeQuery();
-				cidade.setId(rs.getInt("ID"));
-				cidade.setNome(rs.getString("NOME"));
-				cidade.setEstado(rs.getInt("ESTADO"));			
+				cidade.setId(rs.getInt("CIDADE_CODIGO"));
+				cidade.setNome(rs.getString("CIDADE_DESCRICAO"));
+				cidade.setEstado(rs.getInt("UF_CODIGO"));			
 			    rs.close();
 				ps.close();
 				con.close();
@@ -111,7 +109,7 @@ public class EstadoCidadeDaoImplementation implements Serializable, EstadoCidade
 		PreparedStatement ps;
 		Connection con=null;
 		ResultSet rs;
-		String sql="SELECT * FROM CIDADE  WHERE ESTADO=?";
+		String sql="SELECT * FROM CIDADE  WHERE UF_CODIGO=?";
 		try{
 			new ConnectionFactory();
 			con=ConnectionFactory.getConnection();
@@ -119,9 +117,9 @@ public class EstadoCidadeDaoImplementation implements Serializable, EstadoCidade
 			ps.setInt(1,id);
 			rs=ps.executeQuery();
 			while(rs.next()){
-				cidade.setId(rs.getInt("ID"));
-				cidade.setNome(rs.getString("NOME"));
-				cidade.setEstado(rs.getInt("ESTADO"));
+				cidade.setId(rs.getInt("CIDADE_CODIGO"));
+				cidade.setNome(rs.getString("CIDADE_DESCRICAO"));
+				cidade.setEstado(rs.getInt("UF_CODIGO"));
 				cidades.add(cidade);
 				cidade=new Cidade();
 							}

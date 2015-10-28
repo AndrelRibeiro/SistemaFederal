@@ -403,7 +403,7 @@ public class BeneficiarioDaoImplementation implements Serializable,BeneficiarioD
 		    ps.setDate(1, data2);
 		    ps.setString(2, ben.getSituacao());
 		    ps.setInt(3, ben.getIdBeneficiario());
-			ps.execute(sql);
+			ps.executeUpdate();
 			ps.close();
 			con.close();
 			retorno=true;

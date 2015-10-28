@@ -89,15 +89,15 @@ public void addMessage(String mensagem) {
     FacesContext.getCurrentInstance().addMessage(null, message);
 }
 
-	public void pesqEndereco(AjaxBehaviorEvent event) {
-		String vcep=endereco.getCep();
-		if (vcep.length()==8) {
-
-			System.out.println(endereco.toString());
+	public void pesqEndereco() {
+		
+		if (endereco.getCep().isEmpty()||endereco.getCep().length()!=8) {
+			FacesContext.getCurrentInstance().addMessage("Aviso", new FacesMessage(FacesMessage.SEVERITY_INFO,"Informe um cep válido",null));
+		}else{
 			// FacesContext.getCurrentInstance().addMessage("Aviso", new
 			// FacesMessage(FacesMessage.SEVERITY_INFO,"Aguarde!",null));
 			CepDao cep = new CepDaoImplementation();
-			endereco = cep.buscar(vcep);
+			endereco = cep.buscar(endereco.getCep());
 			vendedorNovo.setBairro(endereco.getBairro());
 			vendedorNovo.setCep(endereco.getCep());
 			vendedorNovo.setCidade(endereco.getCidade());
@@ -106,7 +106,7 @@ public void addMessage(String mensagem) {
 			if (endereco.getLogradouro() == null
 					|| endereco.getLogradouro().equalsIgnoreCase("")) {
 				FacesContext.getCurrentInstance().addMessage("Aviso",	new FacesMessage(FacesMessage.SEVERITY_INFO, "Informe um cep válido", null));
-			}vcep="";
-		}
+			}
+		}}
 	}
-}
+

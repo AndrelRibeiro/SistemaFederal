@@ -19,19 +19,19 @@
 					<tr>
 						<td width="200"><p:outputLabel for="numContrato" value="Contrato" /></td>
 						<td colspan="3"><p:inputText id="numContrato" onfocus="this.value=''"
-								actionListener="#{beneficiario.buscar()}"
+								actionListener="#{atendimento.buscarBeneficiarios()}"
 								title="Insira o número do contrato" required="true" maxlenght="30"
-								size="10" value="#{beneficiario.beneficiarioNovo.contrato}" style="margin-right:10px"/>
+								size="10" value="#{atendimento.beneficiarioNovo.contrato}" style="margin-right:10px"/>
 							<p:commandButton id="buscar" value="Buscar"
 								title="Pesquisar número do contrato"
-								action="#{beneficiario.buscar}" update="display" ajax="true" /></td>
+								action="#{atendimento.buscarBeneficiarios}" update="display" ajax="true" /></td>
 					</tr></table><p:panel>
 					<table align="center">
 					<tr>
 						<td width="200"><p:outputLabel for="display" value="Beneficiários" /></td>
 						<td colspan="3"><p:selectOneMenu id="display" style="width:400px"	value="#{atendimento.atendimentoNovo.idBeneficiario}" >
 
-								<f:selectItems value="#{beneficiario.beneficiarios}" var="ben"	itemValue="#{ben.idBeneficiario}" itemLabel="#{ben.nome}"/>
+								<f:selectItems value="#{atendimento.beneficiarios}" var="ben"	itemValue="#{ben.idBeneficiario}" itemLabel="#{ben.nome}"/>
 								
 							</p:selectOneMenu></td></tr>
 					<tr><td><p:outputLabel for="falecimento" value="Data do Falecimento" required="true"/></td>
@@ -73,7 +73,7 @@
 				<table align="center">
 					<tr><td></td>
 					
-					<td><p:commandButton id="gravar" value="Gravar" title="Registrar Atendimento" action="#{beneficiario.atender}" ajax="true"/>
+					<td><p:commandButton id="gravar" value="Gravar" title="Registrar Atendimento" action="#{atendimento.atender()}" ajax="true"/>
 					<p:commandButton value="Limpar" update="formulario" process="@this">
 					<p:resetInput target="busca"/>
 					</p:commandButton>
