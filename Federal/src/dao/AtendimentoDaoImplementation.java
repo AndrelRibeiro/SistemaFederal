@@ -18,28 +18,29 @@ public class AtendimentoDaoImplementation implements AtendimentoDao, Serializabl
 
 	@Override
 	public boolean adicionar(Atendimento at) {
-		PreparedStatement ps;
+		PreparedStatement ps;int i=0;
 		Connection con=null;
 		boolean retorno = false;
 		String sql="INSERT INTO ATENDIMENTO(ID_CONTRATO,ID_BENEFICIARIO,FALECIMENTO,AGENCIA,DATA_ATENDIMENTO,NUM_NOTA,RESSARCIMENTO,OBSERVACAO,ID_FUNCIONARIO)VALUES(?,?,?,?,?,?,?,?,?);";
 		try{
 			new ConnectionFactory();
 			con=ConnectionFactory.getConnection();
-			ps=con.prepareStatement(sql);
-			ps.setInt(1, at.getContrato());
-			ps.setInt(2, at.getIdBeneficiario());
-			ps.setString(3, at.getAgencia());
-			ps.setDate(4, new java.sql.Date(at.getFalecimento().getTime()));
-			ps.setDate(5, new java.sql.Date(at.getData_atendimento().getTime()));
-			ps.setInt(6, at.getNumNota());
-			ps.setDouble(7, at.getRessarcimento());
-			ps.setString(8, at.getObservacao());
-			ps.setInt(9, at.getIdFuncionario());
-			ps.execute();
+			ps=con.prepareStatement(sql);System.out.println("-"+i++);
+			ps.setInt(1, at.getContrato());System.out.println("-"+i++);
+			ps.setInt(2, at.getIdBeneficiario());System.out.println("-"+i++);
+			ps.setString(3, at.getAgencia());System.out.println("-"+i++);
+			ps.setDate(4, new java.sql.Date(at.getFalecimento().getTime()));System.out.println("-"+i++);
+			ps.setDate(5, new java.sql.Date(at.getData_atendimento().getTime()));System.out.println("-"+i++);
+			ps.setInt(6, at.getNumNota());System.out.println("-"+i++);
+			ps.setDouble(7, at.getRessarcimento());System.out.println("-"+i++);
+			ps.setString(8, at.getObservacao());System.out.println("-"+i++);
+			ps.setInt(9, at.getIdFuncionario());System.out.println("-"+i++);
+			ps.execute();System.out.println("-"+i++);
 			ps.close();
 			con.close();
 			retorno=true;
 		}catch(Exception e){
+			System.out.println(e.toString());
 			retorno=false;
 		}
 		return retorno;

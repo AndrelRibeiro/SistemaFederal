@@ -2,6 +2,7 @@ package managedBeans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class AtendimentoMB implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-private Atendimento atendimentoNovo=new Atendimento();
+private Atendimento atendimentoNovo;
 private Beneficiario beneficiarioNovo=new Beneficiario();
 private List<Beneficiario>beneficiarios;
 private List<Atendimento>atendimentos;
@@ -34,11 +35,12 @@ private String mensagem;
 private String radio;
 private Date data;
 public AtendimentoMB(){
-	//Calendar c=Calendar.getInstance();
-	//data=c.getTime();System.out.println(data);
+	
 }
 @PostConstruct 
 public void init() {
+	Calendar c=Calendar.getInstance();
+	data=c.getTime();System.out.println(data);
 	radio = "1"; 
 }
 
@@ -49,6 +51,9 @@ public void setData(Date data) {
 	this.data = data;
 }
 public Atendimento getAtendimentoNovo() {
+	if(atendimentoNovo==null){
+		atendimentoNovo=new Atendimento();
+	}
 	return atendimentoNovo;
 }
 public void setAtendimentoNovo(Atendimento atendimentoNovo) {
@@ -67,7 +72,12 @@ public void setRadio(String radio) {
 	this.radio = radio;
 }
 public boolean adicionar(){
-	AtendimentoDao ad=new AtendimentoDaoImplementation();
+	AtendimentoDao ad=new AtendimentoDaoImplementation();System.out.println("1 "+atendimentoNovo.toString());
+	if(radio.equalsIgnoreCase("1")){
+		atendimentoNovo.setRessarcimento(0.0);
+	}
+	atendimentoNovo.setContrato(beneficiarioNovo.getContrato());System.out.println(beneficiarioNovo.toString());
+	System.out.println("2 "+atendimentoNovo.toString());
 	boolean retorno=ad.adicionar(atendimentoNovo);
 	if(retorno==true){
 		System.out.println("Atendimento Adicionado com sucesso!");
@@ -130,10 +140,11 @@ public List<Beneficiario> buscarBeneficiarios(){
 return beneficiarios;
 }
 public String atender(){
-	BeneficiarioDao bd=new BeneficiarioDaoImplementation();
-	boolean resultado=false,ret=adicionar();
-	if(ret){
-	resultado=bd.registrar(beneficiarioNovo);System.out.println("bene Registrar");}
+	BeneficiarioDao bd=new BeneficiarioDaoImplementation();System.out.println("Chamada");
+	boolean resultado=false,ret=false;
+	ret=adicionar();
+	if(ret){}
+	resultado=bd.registrar(beneficiarioNovo);System.out.println("bene Registrar");
 	beneficiarioNovo=new Beneficiario();
 	beneficiarios=new ArrayList<Beneficiario>();
 	String result="";
