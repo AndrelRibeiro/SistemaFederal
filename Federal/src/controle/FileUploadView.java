@@ -2,6 +2,7 @@ package controle;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -31,6 +32,7 @@ public class FileUploadView implements Serializable{
     List<Registro>registros=new ArrayList<Registro>();
     List<Mensalidade> mensalidades=new ArrayList<Mensalidade>();
     ControleArquivoRetorno ca=new ControleArquivoRetorno();
+    ControleArquivoRemessa carem=new ControleArquivoRemessa();
     private String valorTotal;
     public FileUploadView(){
     	
@@ -100,6 +102,23 @@ public class FileUploadView implements Serializable{
     	}
     	
 	}
-    
+    public List<Registro> remessa(){
+    	registros=new ArrayList<Registro>();
+    	ControleArquivoRemessa car=new ControleArquivoRemessa();
+    	registros=car.geraArquivo();
+    	int regs=0;
+    	for(Registro r:registros){
+    		String d=r.getVencimento().substring(0, 2)+"/"+r.getVencimento().substring(2, 4)+"/"+r.getVencimento().substring(4, 6);
+    		r.setVencimento(d);
+    		int t=r.getValorTitulo().length();
+    		int t2=t-2;
+    		String valor="R$"+r.getValorTitulo().substring(0, t2)+","+r.getValorTitulo().substring(t2, t);
+    		r.setValorTitulo(valor);
+    		regs++;
+    		r.setNumeroSequencial(regs);	
+    	}
+    	
+    	return registros;
+    }
     
 }

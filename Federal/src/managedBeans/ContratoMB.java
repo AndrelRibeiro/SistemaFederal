@@ -13,6 +13,11 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import beans.Beneficiario;
+import beans.Cliente;
+import beans.Contrato;
+import beans.Endereco;
+import beans.Mensalidade;
 import controle.CalculoDatas;
 import controle.Plano;
 import controle.ValidaCPF;
@@ -26,13 +31,6 @@ import dao.ContratoDao;
 import dao.ContratoDaoImplementation;
 import dao.MensalidadeDao;
 import dao.MensalidadeDaoImplementation;
-import beans.Beneficiario;
-import beans.Cidade;
-import beans.Cliente;
-import beans.Contrato;
-import beans.Endereco;
-import beans.Estado;
-import beans.Mensalidade;
 @ManagedBean
 @RequestScoped
 public class ContratoMB implements Serializable{
@@ -238,8 +236,6 @@ public void buscar(){
 			CalculoDatas cd = new CalculoDatas();
 			Date ultimaParc;
 			double valorMensal=0;
-			@SuppressWarnings("unused")
-			Date atual;
 			mensalidades = new ArrayList<Mensalidade>();
 			int parcelas = 0;
 			if (contratoNovo.getnContrato() == 0) {
@@ -253,15 +249,16 @@ public void buscar(){
 					parcelas = 4;
 				}// cuidado com a data de pagamento!!!!!
 				mensalidadeNova = md.buscaUltimoPgm(contratoNovo.getnContrato());
+				if(mensalidadeNova==null){
+					valorMensal=contratoNovo.getMensalidade();					
+					Calendar c = Calendar.getInstance();
+						c.set(Calendar.DAY_OF_MONTH,contratoNovo.getDiaVencimento());
+						ultimaParc = c.getTime();
+				}else{
 				ultimaParc = mensalidadeNova.getDataVencimento();
 				valorMensal=mensalidadeNova.getValorParcela();
-				Calendar c = Calendar.getInstance();
-				atual = c.getTime();
-				if (ultimaParc == null) {
-					c.set(Calendar.DAY_OF_MONTH,contratoNovo.getDiaVencimento());
-					ultimaParc = c.getTime();
-
 				}
+				
 				for (int i = 1; i <= parcelas; i++) {
 					mensalidadeNova = new Mensalidade();
 					mensalidadeNova.setNumParcela(i);

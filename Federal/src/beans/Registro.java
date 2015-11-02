@@ -7,7 +7,9 @@ public class Registro implements Serializable{
 	 * Bean para objeto recuperado do arquivo de importação
 	 */
 	private static final long serialVersionUID = 1L;
+	private String contrato;
 	private String nome;
+	private String CPF;
 	private String endereco;
 	private String bairro;
 	private String cidade;
@@ -25,12 +27,28 @@ public class Registro implements Serializable{
 		
 	}
 	
+	public String getContrato() {
+		return contrato;
+	}
+
+	public void setContrato(String contrato) {
+		this.contrato = contrato;
+	}
+
 	public String getNome() {
 		return nome;
 	}
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public String getCPF() {
+		return CPF;
+	}
+
+	public void setCPF(String cPF) {
+		CPF = cPF;
 	}
 
 	public String getEndereco() {
@@ -123,14 +141,21 @@ public class Registro implements Serializable{
 	public void setNumeroSequencial(int numeroSequencial) {
 		this.numeroSequencial = numeroSequencial;
 	}
+
 	@Override
 	public String toString() {
-		return "Registro [tipoRegRegistro=" + tipoRegRegistro
-				+ ", nossoNumero=" + nossoNumero + ", codOcorrencia="
-				+ codOcorrencia + ", dataOcorrencia=" + dataOcorrencia
-				+ ", valorTitulo=" + valorTitulo + ", codLiquidacao="
-				+ codLiquidacao + ", numeroSequencial=" + numeroSequencial
-				+ "]";
+		return "Registro [contrato=" + contrato + ", nome=" + nome + ", CPF="
+				+ CPF + ", endereco=" + endereco + ", bairro=" + bairro
+				+ ", cidade=" + cidade + ", estado=" + estado + ", cep=" + cep
+				+ ", vencimento=" + vencimento + ", tipoRegRegistro="
+				+ tipoRegRegistro + ", nossoNumero=" + nossoNumero
+				+ ", codOcorrencia=" + codOcorrencia + ", dataOcorrencia="
+				+ dataOcorrencia + ", valorTitulo=" + valorTitulo
+				+ ", codLiquidacao=" + codLiquidacao + ", numeroSequencial="
+				+ numeroSequencial + "]";
 	}
+
+	
+	
 	
 }

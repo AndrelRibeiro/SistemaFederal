@@ -191,7 +191,6 @@ public class MensalidadeMB implements Serializable {
 	public void excluir() {
 		MensalidadeDao md = new MensalidadeDaoImplementation();
 		mensalidadeNova=md.buscar(mensalidadeNova.getNossoNumero());System.out.println("Exclusão MB:"+mensalidadeNova.toString());
-		int contrato=mensalidadeNova.getContrato();
 		boolean retorno = md.excluir(mensalidadeNova);
 		if (retorno) {
 			FacesMessage msg = new FacesMessage("Sucesso!","Exclusão efetuada com sucesso!");

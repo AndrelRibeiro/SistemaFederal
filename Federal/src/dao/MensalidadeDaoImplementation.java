@@ -5,12 +5,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import beans.Mensalidade;
-import beans.Remessa;
+import beans.Registro;
 import controle.CalculoDatas;
 
 public class MensalidadeDaoImplementation implements MensalidadeDao, Serializable{
@@ -524,7 +525,7 @@ CalculoDatas cp=new CalculoDatas();
 		
 		Connection con=null;
 		PreparedStatement ps;
-		Mensalidade m=new Mensalidade();
+		Mensalidade m=null;
 		ResultSet rs;
 		String sql="SELECT * FROM MENSALIDADE WHERE CONTRATO=? ORDER BY VENCIMENTO DESC";
 		try{
@@ -554,9 +555,9 @@ CalculoDatas cp=new CalculoDatas();
 		
 		return m;
 	}
-public List<Remessa> gerarRemessa(){
-	Remessa remessa=new Remessa();
-	List<Remessa>remessas=new ArrayList<Remessa>();
+public List<Registro> gerarRemessa(){
+	Registro registro=new Registro();
+	List<Registro>registros=new ArrayList<Registro>();
 	Connection con=null;
 	PreparedStatement ps;
 	ResultSet rs;
@@ -566,18 +567,19 @@ public List<Remessa> gerarRemessa(){
 		ps=con.prepareStatement(sql);
 		rs=ps.executeQuery();
 		while(rs.next()){
-			remessa=new Remessa();
-			remessa.setContrato(rs.getInt("CONTRATO"));
-			remessa.setNome(rs.getString("NOME"));
-			remessa.setCpf(rs.getString("CPF"));
-			remessa.setEndereco(rs.getString("ENDERECO"));
-			remessa.setBairro(rs.getString("BAIRRO"));
-			remessa.setCidade(rs.getString("CIDADE"));
-			remessa.setEstado(rs.getString("ESTADO"));
-			remessa.setCep(rs.getString("CEP"));
-			remessa.setVencimento(new java.util.Date(rs.getDate("VENCIMENTO").getTime()));
-			remessa.setValor(rs.getDouble("VALOR"));
-			remessas.add(remessa);
+			registro=new Registro();
+			registro.setContrato(String.valueOf(rs.getInt("CONTRATO")));
+			registro.setNome(rs.getString("NOME"));
+			registro.setCPF(rs.getString("CPF"));
+			registro.setEndereco(rs.getString("ENDERECO"));
+			registro.setBairro(rs.getString("BAIRRO"));
+			registro.setCidade(rs.getString("CIDADE"));
+			registro.setEstado(rs.getString("ESTADO"));
+			registro.setCep(rs.getString("CEP"));
+			String dat=new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate("VENCIMENTO"));
+			registro.setVencimento(dat);
+			registro.setValorTitulo(String.valueOf(rs.getDouble("VALOR")));
+			registros.add(registro);
 		}
 		rs.close();
 		ps.close();
@@ -587,6 +589,6 @@ public List<Remessa> gerarRemessa(){
 		e.printStackTrace();
 	}
 	
-	return remessas;
+	return registros;
 }
 }
