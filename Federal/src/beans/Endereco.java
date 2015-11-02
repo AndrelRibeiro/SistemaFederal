@@ -2,9 +2,6 @@ package beans;
 
 import java.io.Serializable;
 
-import dao.CepDao;
-import dao.CepDaoImplementation;
-
 
 public class Endereco implements Serializable{
 /**

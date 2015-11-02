@@ -59,7 +59,6 @@ public class PrecoDaoImplementation implements PrecoDao, Serializable {
 			System.out.println(e.getMessage());
 			retorno = false;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println(e.getCause());
 			retorno = false;
@@ -92,7 +91,6 @@ public class PrecoDaoImplementation implements PrecoDao, Serializable {
 
 	@Override
 	public boolean atualizar(Preco preco) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -144,7 +142,6 @@ public class PrecoDaoImplementation implements PrecoDao, Serializable {
 
 	@Override
 	public List<Preco> listar() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

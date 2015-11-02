@@ -1,10 +1,7 @@
 package controle;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -126,7 +123,6 @@ public class ControleArquivoRemessa {
 			try {
 				file.createNewFile();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -139,7 +135,6 @@ public class ControleArquivoRemessa {
 			bfw.flush();
 			bfw.close();
 		} catch (IOException e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
 	}

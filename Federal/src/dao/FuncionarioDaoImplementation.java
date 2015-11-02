@@ -52,7 +52,7 @@ public class FuncionarioDaoImplementation implements FuncionarioDao, Serializabl
 			con.close();
 			retorno=true;
 		} catch (Exception e) {
-		    // TODO Auto-generated catch block
+		  
 		    c.erro(null, e.getMessage());
 		    retorno=false;
 		}
@@ -197,7 +197,6 @@ public class FuncionarioDaoImplementation implements FuncionarioDao, Serializabl
 			e.printStackTrace();
 			System.out.println(e.getMessage());
 		}catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();System.out.println(e.getMessage());
 			
 		}

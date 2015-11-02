@@ -46,7 +46,6 @@ public class VendedorDaoImplementation implements VendedorDao,Serializable{
 			System.out.println(e.getMessage());
 			retorno=false;
 		}catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println(e.getMessage());
 			retorno=false;
@@ -106,7 +105,6 @@ public class VendedorDaoImplementation implements VendedorDao,Serializable{
 					System.out.println(e.getMessage());
 					retorno=false;
 				}catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					System.out.println(e.getMessage());
 					retorno=false;
@@ -144,7 +142,6 @@ public class VendedorDaoImplementation implements VendedorDao,Serializable{
 					e.getStackTrace();
 					System.out.println(e.getMessage());
 				}catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					System.out.println(e.getMessage());
 				}	
@@ -187,7 +184,6 @@ public class VendedorDaoImplementation implements VendedorDao,Serializable{
 			e.getStackTrace();
 			System.out.println(e.getMessage());
 		}catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println(e.getMessage());
 		}	

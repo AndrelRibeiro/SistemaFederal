@@ -7,6 +7,13 @@ public class Registro implements Serializable{
 	 * Bean para objeto recuperado do arquivo de importação
 	 */
 	private static final long serialVersionUID = 1L;
+	private String nome;
+	private String endereco;
+	private String bairro;
+	private String cidade;
+	private String estado;
+	private String cep;
+	private String vencimento;
 	private String tipoRegRegistro;//REGISTRO
 	private String nossoNumero;//REGISTRO
 	private String codOcorrencia;//REGISTRO
@@ -17,6 +24,63 @@ public class Registro implements Serializable{
 	public Registro(){
 		
 	}
+	
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
+	}
+
+	public String getBairro() {
+		return bairro;
+	}
+
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
+
+	public String getCidade() {
+		return cidade;
+	}
+
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public String getCep() {
+		return cep;
+	}
+
+	public void setCep(String cep) {
+		this.cep = cep;
+	}
+
+	public String getVencimento() {
+		return vencimento;
+	}
+
+	public void setVencimento(String vencimento) {
+		this.vencimento = vencimento;
+	}
+
 	public String getTipoRegRegistro() {
 		return tipoRegRegistro;
 	}

@@ -13,7 +13,6 @@ import beans.Beneficiario;
 import beans.Cliente;
 import beans.Contrato;
 import beans.Mensalidade;
-import controle.ValidaCPF;
 import dao.BeneficiarioDao;
 import dao.BeneficiarioDaoImplementation;
 import dao.ClienteDao;
@@ -147,17 +146,13 @@ public List<Cliente> contratos(){
 	MensalidadeDao men=new MensalidadeDaoImplementation();
 	List<Cliente>geral=new ArrayList<Cliente>();
 	clientes=new ArrayList<Cliente>();
-	geral=cli.listarAtivos();
+	geral=cli.listar_CPF_Ok();
 	Mensalidade m=new Mensalidade();
 	for(int f=0;f<geral.size();f++){
 		clienteNovo=geral.get(f);
-		boolean valida=ValidaCPF.valida(clienteNovo);
-		if(valida){
-		
 		m=men.buscaUltimoPgm(clienteNovo.getNumeroContrato());
 		clienteNovo.setValor(m.getValorParcela());
 		clientes.add(clienteNovo);
-		}
 	}
 	
 	return clientes;

@@ -507,20 +507,30 @@ public class MensalidadeMB implements Serializable {
 		MensalidadeDao md=new MensalidadeDaoImplementation();
 		ClienteDao cd=new ClienteDaoImplementation();
 		List<Mensalidade>emAberto=new ArrayList<Mensalidade>();
+		int codigo=0;
 		mensalidades=md.listar(mensalidadeNova.getContrato());
 		cliente=cd.buscar(mensalidadeNova.getContrato());
 		for(Mensalidade m:mensalidades){
 			if("ABERTO".equalsIgnoreCase(m.getSituacao())||"IMPRIMIR".equalsIgnoreCase(m.getSituacao())){
 				emAberto.add(m);
+			}else if("CADASTRAR".equalsIgnoreCase(m.getSituacao())){
+				codigo=1;				
+			}else{
+				codigo=2;				
 			}
 		}
 		if(!emAberto.isEmpty()){
 			SegundaVia g=new SegundaVia();
 			g.groupInPages(emAberto, cliente);	
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Sucesso!","Arquivo gerado com sucesso!"));
-		}else{
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Aviso!","Cliente está com todas mensalidades pagas!"));
+			codigo=3;			
 		}
+			if(codigo==1){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Aviso!","Ainda não foi cadastrado o código de barras"));
+			}else if(codigo==2){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Aviso!","Cliente não possui carnê em aberto"));
+			}else if(codigo==3){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Sucesso!","Arquivo gerado com sucesso!"));
+			}		
 	}
 	public void cadastrarBarras(){
 		File file=new File("C:/Federal/app/CadastraCNR.jar");
@@ -528,7 +538,6 @@ public class MensalidadeMB implements Serializable {
 		try {
 			desktop.open(file);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

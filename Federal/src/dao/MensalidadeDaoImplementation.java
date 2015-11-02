@@ -47,7 +47,7 @@ CalculoDatas cp=new CalculoDatas();
 			con.close();
 			retorno=true;
 		} catch (Exception e) {
-		    // TODO Auto-generated catch block
+		   
 		    e.printStackTrace();
 		    retorno=false;
 		}
@@ -85,7 +85,7 @@ CalculoDatas cp=new CalculoDatas();
 			con.close();
 			retorno=true;
 		} catch (Exception e) {
-		    // TODO Auto-generated catch block
+		  
 		    e.printStackTrace();
 		    retorno=false;
 		}
@@ -158,7 +158,7 @@ CalculoDatas cp=new CalculoDatas();
 			con.close();
 			retorno=true;
 		} catch (Exception e) {
-		    // TODO Auto-generated catch block
+		  
 		    e.printStackTrace();
 		    retorno=false;
 		}
@@ -477,7 +477,7 @@ CalculoDatas cp=new CalculoDatas();
 		con.close();
 		retorno=true;
 	} catch (Exception e) {
-	    // TODO Auto-generated catch block
+	  
 	    e.printStackTrace();
 	    System.out.println(e.getMessage());
 	    retorno=false;
@@ -583,7 +583,7 @@ public List<Remessa> gerarRemessa(){
 		ps.close();
 		con.close();
 	} catch (Exception e) {
-		// TODO Auto-generated catch block
+
 		e.printStackTrace();
 	}
 	

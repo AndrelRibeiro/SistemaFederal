@@ -25,7 +25,7 @@ public class GeraBoletos {
 					"C:/Federal impressos/Carne/carne" + new Date().getTime()
 							+ ".pdf");
 		} catch (JRException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 			System.out.println(e.getMessage());
 		}

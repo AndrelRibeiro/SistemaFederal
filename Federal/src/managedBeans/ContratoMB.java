@@ -168,8 +168,10 @@ public void adicionar(){
 	
 	cliente.setLogradouro(cliente.getLogradouro()+", "+cliente.getNumero());
 		boolean retCli=cli.adicionar(cliente);
-		if(retCli){System.out.println("Cliente adicionado com sucesso!"+cliente.toString());
-			
+		if(retCli){
+			System.out.println("Cliente adicionado com sucesso!"+cliente.toString());
+			geraM();
+			gravarMen();
 			for(Beneficiario b:beneficiarios){
 				b.setIdFuncionario(cliente.getIdFuncionario());			
 				retBen=false;
@@ -225,46 +227,70 @@ public void buscar(){
 	contratoNovo=cd.buscar(contratoNovo.getnContrato());}
     	
 }//Gera novas mensalidades
-public void geraM(){
-	MensalidadeDao md=new MensalidadeDaoImplementation();
-	mensalidadeNova=new Mensalidade();
-	CalculoDatas cd=new CalculoDatas();
-	Date ultimaParc;
-	@SuppressWarnings("unused")
-	Date atual;
-	mensalidades=new ArrayList<Mensalidade>();
-	int parcelas=0;
-	if(contratoNovo.getnContrato()==0){
-		addMensagem("Erro", "Número de contrato inválido!");
-	}else{
-	if(contratoNovo.getPeriodicidade().equalsIgnoreCase("MENSAL")){
-		parcelas=12;
-	}else if(contratoNovo.getPeriodicidade().equalsIgnoreCase("BIMESTRAL")){
-		parcelas=6;
-	}else if(contratoNovo.getPeriodicidade().equalsIgnoreCase("TRIMESTRAL")){
-		parcelas=4;
-}//cuidado com a data de pagamento!!!!!
-	mensalidadeNova=md.buscaUltimoPgm(contratoNovo.getnContrato());
-	ultimaParc=mensalidadeNova.getDataVencimento();
-	Calendar c=Calendar.getInstance();
-	atual=c.getTime();
-	if(ultimaParc==null){
-		c.set(Calendar.DAY_OF_MONTH, contratoNovo.getDiaVencimento());
-		ultimaParc=c.getTime();
-		
+
+	public void geraM() {
+		MensalidadeDao md = new MensalidadeDaoImplementation();
+
+		boolean boleto = false;
+		boleto=buscarCarne();
+		if (!boleto) {
+			mensalidadeNova = new Mensalidade();
+			CalculoDatas cd = new CalculoDatas();
+			Date ultimaParc;
+			double valorMensal=0;
+			@SuppressWarnings("unused")
+			Date atual;
+			mensalidades = new ArrayList<Mensalidade>();
+			int parcelas = 0;
+			if (contratoNovo.getnContrato() == 0) {
+				addMensagem("Erro", "Número de contrato inválido!");
+			} else {
+				if (contratoNovo.getPeriodicidade().equalsIgnoreCase("MENSAL")) {
+					parcelas = 12;
+				} else if (contratoNovo.getPeriodicidade().equalsIgnoreCase("BIMESTRAL")) {
+					parcelas = 6;
+				} else if (contratoNovo.getPeriodicidade().equalsIgnoreCase("TRIMESTRAL")) {
+					parcelas = 4;
+				}// cuidado com a data de pagamento!!!!!
+				mensalidadeNova = md.buscaUltimoPgm(contratoNovo.getnContrato());
+				ultimaParc = mensalidadeNova.getDataVencimento();
+				valorMensal=mensalidadeNova.getValorParcela();
+				Calendar c = Calendar.getInstance();
+				atual = c.getTime();
+				if (ultimaParc == null) {
+					c.set(Calendar.DAY_OF_MONTH,contratoNovo.getDiaVencimento());
+					ultimaParc = c.getTime();
+
+				}
+				for (int i = 1; i <= parcelas; i++) {
+					mensalidadeNova = new Mensalidade();
+					mensalidadeNova.setNumParcela(i);
+					mensalidadeNova.setContrato(contratoNovo.getnContrato());
+					mensalidadeNova.setDataVencimento(cd.calculaVencimento(ultimaParc, parcelas));
+					mensalidadeNova.setPeriodicidade(contratoNovo.getPeriodicidade());
+					mensalidadeNova.setValorParcela(valorMensal);
+					mensalidadeNova.setSituacao("CADASTRAR");
+					mensalidades.add(mensalidadeNova);
+					ultimaParc = mensalidadeNova.getDataVencimento();
+				}
+			}
+		} else {System.out.println("Mensalidades já geradas anteriormente ");
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage("Aviso!","O cliente já possui mensalidades!"));
+		}
 	}
-	for(int i=1;i<=parcelas;i++){
-		mensalidadeNova=new Mensalidade();
-		mensalidadeNova.setNumParcela(i);
-		mensalidadeNova.setContrato(contratoNovo.getnContrato());
-		mensalidadeNova.setDataVencimento(cd.calculaVencimento(ultimaParc, parcelas));
-		mensalidadeNova.setPeriodicidade(contratoNovo.getPeriodicidade());
-		mensalidadeNova.setValorParcela(contratoNovo.getMensalidade());
-		mensalidadeNova.setSituacao("CADASTRAR");
-		mensalidades.add(mensalidadeNova);
-		ultimaParc=mensalidadeNova.getDataVencimento();
-	}}
-}
+private boolean buscarCarne() {
+	MensalidadeDao md=new MensalidadeDaoImplementation();
+	boolean boleto=false;
+	List<Mensalidade> valida = new ArrayList<Mensalidade>();
+	valida = md.listar(contratoNovo.getnContrato());System.out.println("Contrato: "+contratoNovo.getnContrato());
+	for (Mensalidade m : valida) {
+		if (m.getSituacao().equalsIgnoreCase("CADASTRAR")||m.getSituacao().equalsIgnoreCase("IMPRIMIR")) {
+			boleto = true;
+			System.out.println("Mensalidade gerada: "+m.getSituacao());
+		}
+	}
+	return boleto;
+	}
 public List<Contrato> listar(){
 	contratos=new ArrayList<Contrato>();
 	ContratoDao cd=new ContratoDaoImplementation();
@@ -320,26 +346,33 @@ public void addMensagem(String tipo,String mensagem){
      FacesContext.getCurrentInstance().addMessage(null, msg);
    
 }
-public void gravarMen(){
-	boolean retorno=false;
-	MensalidadeDao md=new MensalidadeDaoImplementation();
-	int cont=0;
-	for(Mensalidade m:mensalidades){
-		m.setSituacao("CADASTRAR");
-	retorno=md.adicionar(m);
-	if(retorno){
-		cont++;
+
+	public void gravarMen() {
+		boolean retorno = false;
+		MensalidadeDao md = new MensalidadeDaoImplementation();
+		int cont = 0;
+		boolean boleto = buscarCarne();
+		if (boleto) {
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage("Aviso!","Esta operação não pode ser efetuada, o cliente possui mensalidades em aberto!"));
+			
+		} else {
+			for (Mensalidade m : mensalidades) {
+				m.setSituacao("CADASTRAR");
+				retorno = md.adicionar(m);
+				if (retorno) {
+					cont++;
+				}
+			}
+			if (cont == mensalidades.size()) {
+				FacesMessage msg = new FacesMessage("Sucesso","Mensalidades Geradas com sucesso!");
+				FacesContext.getCurrentInstance().addMessage(null, msg);
+			} else {
+				FacesMessage msg = new FacesMessage("Erro",	"Erro ao criar novas mensalidades!");
+				FacesContext.getCurrentInstance().addMessage(null, msg);
+
+			}
+		}
 	}
-	}
-	if(cont==mensalidades.size()){
-		 FacesMessage msg = new FacesMessage("Sucesso","Mensalidades Adicionadas com sucesso!");
-	     FacesContext.getCurrentInstance().addMessage(null, msg);
-	}else{
-		 FacesMessage msg = new FacesMessage("Erro","Erro ao criar novas mensalidades!");
-	     FacesContext.getCurrentInstance().addMessage(null, msg);
-	
-	}
-}
 public void barras(AjaxBehaviorEvent event){
 	System.out.println(contador+"-"+codigoBarras);
 	if(codigoBarras.length()==44 && mensalidades.size()>contador){

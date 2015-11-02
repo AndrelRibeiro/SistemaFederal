@@ -24,10 +24,11 @@ import org.jrimum.domkee.financeiro.banco.febraban.Cedente;
 import org.jrimum.domkee.financeiro.banco.febraban.ContaBancaria;
 import org.jrimum.domkee.financeiro.banco.febraban.NumeroDaConta;
 import org.jrimum.domkee.financeiro.banco.febraban.Sacado;
-import org.jrimum.domkee.financeiro.banco.febraban.SacadorAvalista;
 import org.jrimum.domkee.financeiro.banco.febraban.TipoDeTitulo;
 import org.jrimum.domkee.financeiro.banco.febraban.Titulo;
-import org.jrimum.utilix.ClassLoaders;
+
+import beans.Cliente;
+import beans.Mensalidade;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -35,9 +36,6 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
-
-import beans.Cliente;
-import beans.Mensalidade;
 
 public class SegundaVia {
 	/*
@@ -149,7 +147,7 @@ ms.setNossoNumero("05756824");
 			response.flushBuffer();
 			FacesContext.getCurrentInstance().responseComplete();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();System.out.println("Messagem: "+e.getMessage()+"Causa: "+e.getCause());
 		}
 	}

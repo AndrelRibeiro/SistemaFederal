@@ -33,6 +33,7 @@ private String estadoCivil;
 private String naturalidade;
 private String sexo;
 private double valor;
+private int cpfok;
 public Cliente() {
 	
 }
@@ -193,6 +194,13 @@ public double getValor() {
 }
 public void setValor(double valor) {
 	this.valor = valor;
+}
+
+public int getCpfok() {
+	return cpfok;
+}
+public void setCpfok(int cpfok) {
+	this.cpfok = cpfok;
 }
 @Override
 public int hashCode() {
@@ -370,7 +378,8 @@ public String toString() {
 			+ ", pontoRef=" + pontoRef + ", email=" + email + ", situacao="
 			+ situacao + ", idFuncionario=" + idFuncionario + ", observacao="
 			+ observacao + ", estadoCivil=" + estadoCivil + ", naturalidade="
-			+ naturalidade + ", sexo=" + sexo + "]";
+			+ naturalidade + ", sexo=" + sexo + ", valor=" + valor + ", cpfok="
+			+ cpfok + "]";
 }
 
 

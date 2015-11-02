@@ -13,7 +13,11 @@ import beans.Mensalidade;
 
 public class MensalDataModel extends LazyDataModel<Mensalidade> {
 
-    private List<Mensalidade> datasource;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private List<Mensalidade> datasource;
 
     public MensalDataModel(List<Mensalidade> datasource) {
         this.datasource = datasource;

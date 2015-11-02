@@ -55,7 +55,10 @@
 				<td><p:outputLabel for="celular" value="Celular:"/></td>
 				<td><p:outputLabel id="celular" value="#{contrato.cliente.celular}" readonly="true" size="20"/></td></tr>
 				<tr><td><p:outputLabel for="carencia" value="Carencia até:"/></td>
-				<td colspan="3"><p:outputLabel id="carencia" value="#{contrato.contratoNovo.carencia}" readonly="true" size="20"/></td></tr>
+				<td colspan="3"><p:outputLabel id="carencia" value="#{contrato.contratoNovo.carencia}" readonly="true" size="20">
+				<f:convertDateTime locale="pt_BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+				</p:outputLabel>
+				</td></tr>
 				<tr><td><p:outputLabel for="plano" value="Plano:"/></td>
 				<td colspan="3"><p:outputLabel id="plano" value="#{contrato.contratoNovo.plano}" readonly="true" size="100"/></td></tr>
 				<tr><td><p:outputLabel for="situacao" value="Situação:"/></td>

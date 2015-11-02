@@ -14,4 +14,5 @@ public List<Cliente> buscarPorNome(Cliente cliente);
 public List<Cliente> listarInativos();
 public List<Cliente> listarAtivos();
 public Cliente buscarPorCpf (Cliente cliente);
+public List<Cliente> listar_CPF_Ok();
 }

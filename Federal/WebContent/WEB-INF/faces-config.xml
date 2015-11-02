@@ -71,7 +71,7 @@
  </managed-bean>
  <managed-bean>
   <managed-bean-name>cArquivo</managed-bean-name>
-  <managed-bean-class>controle.ControleArquivo</managed-bean-class>
+  <managed-bean-class>controle.ControleArquivoRetorno</managed-bean-class>
   <managed-bean-scope>request</managed-bean-scope>
  </managed-bean>
  <managed-bean>

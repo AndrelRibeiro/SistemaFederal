@@ -66,7 +66,7 @@ CalculoDatas cd=new CalculoDatas();
 			System.out.println(e.getMessage());
 			retorno= false;
 		} catch (Exception e) {
-		    // TODO Auto-generated catch block
+		   
 		    e.printStackTrace();
 		    System.out.println(e.getCause());
 		    retorno=false;
@@ -119,8 +119,7 @@ CalculoDatas cd=new CalculoDatas();
 			System.out.println(e.getMessage());
 			retorno= false;
 		} catch (Exception e) {
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
+		     e.printStackTrace();
 		    System.out.println(e.getCause());
 		    retorno=false;
 		}
@@ -156,7 +155,7 @@ CalculoDatas cd=new CalculoDatas();
 		boolean retorno;
 		Connection con = null;
 		//NUM_CONTRATO=?, NOME=?, CPF=?, RG=?, NASCIMENTO=?, CELULAR=?, TELEFONE=?, ENDERECO=?, BAIRRO=?, CEP=?, COMPLEMENTO=?, CIDADE=?, ESTADO=?, RELIGIAO=?, PROFISSAO=?, PONTO_REFE=?, EMAIL=?, SITUACAO=?, ID_FUNCIONARIO=?, OBSERVACAO=?, ESTADO_CIVIL=?, NATURALIDADE=?, SEXO=? WHERE ID_CLIENTE=?"
-		String sql="UPDATE CLIENTE SET CONTRATO=?, NOME=?, CPF=?, RG=?, NASCIMENTO=?, CELULAR=?, TELEFONE=?, ENDERECO=?, BAIRRO=?, CEP=?, COMPLEMENTO=?, CIDADE=?, ESTADO=?, RELIGIAO=?, PROFISSAO=?, PONTO_REFE=?, EMAIL=?, SITUACAO=?, ID_FUNCIONARIO=?, OBSERVACAO=?, ESTADO_CIVIL=?, NATURALIDADE=?, SEXO=? WHERE ID_CLIENTE=?";
+		String sql="UPDATE CLIENTE SET CONTRATO=?, NOME=?, CPF=?, RG=?, NASCIMENTO=?, CELULAR=?, TELEFONE=?, ENDERECO=?, BAIRRO=?, CEP=?, COMPLEMENTO=?, CIDADE=?, ESTADO=?, RELIGIAO=?, PROFISSAO=?, PONTO_REFE=?, EMAIL=?, SITUACAO=?, ID_FUNCIONARIO=?, OBSERVACAO=?, ESTADO_CIVIL=?, NATURALIDADE=?, SEXO=?, CPFOK=? WHERE ID_CLIENTE=?";
 					
 		try{
 			new ConnectionFactory();
@@ -185,7 +184,8 @@ CalculoDatas cd=new CalculoDatas();
 		    ps.setString(21, cliente.getEstadoCivil());
 		    ps.setString(22, cliente.getNaturalidade());
 		    ps.setString(23, cliente.getSexo());
-		    ps.setInt(24, cliente.getIdCliente());System.out.println("Cliente dao: "+cliente.toString());
+		    ps.setInt(24, cliente.getCpfok());
+		    ps.setInt(25, cliente.getIdCliente());System.out.println("Cliente dao: "+cliente.toString());
 			ps.execute();
 			ps.close();
 			con.close();
@@ -456,5 +456,60 @@ CalculoDatas cd=new CalculoDatas();
 			er.RetornoErro(erro);}
 	    
 		return cliente;
+	}
+	@Override
+	public List<Cliente> listar_CPF_Ok() {
+			List<Cliente> clientes=new ArrayList<Cliente>();
+			String sql="SELECT * FROM CLIENTE WHERE CPFOK=1";
+			Cliente cliente;
+			PreparedStatement ps;
+			Connection con=null;
+			ResultSet rs;
+			try{
+				new ConnectionFactory();
+				con=ConnectionFactory.getConnection();
+				ps=con.prepareStatement(sql);
+				rs=ps.executeQuery();
+				while(rs.next()){
+					cliente=new Cliente();
+					cliente.setIdCliente(rs.getInt("ID_CLIENTE"));
+					cliente.setNome(rs.getString("NOME"));
+					cliente.setNascimento(rs.getDate("NASCIMENTO"));
+					cliente.setCpf(rs.getString("CPF"));
+					cliente.setRg(rs.getString("RG"));
+					cliente.setLogradouro(rs.getString("ENDERECO"));
+					cliente.setCep(rs.getString("CEP"));
+					cliente.setBairro(rs.getString("BAIRRO"));
+					cliente.setComplemento(rs.getString("COMPLEMENTO"));
+					cliente.setCidade(rs.getString("CIDADE"));
+					cliente.setEstado(rs.getString("ESTADO"));
+					cliente.setTelefone(rs.getString("TELEFONE"));
+					cliente.setCelular(rs.getString("CELULAR"));
+					cliente.setReligiao(rs.getString("RELIGIAO"));
+					cliente.setProfissao(rs.getString("PROFISSAO"));
+					cliente.setPontoRef(rs.getString("PONTO_REFE"));
+					cliente.setEmail(rs.getString("EMAIL"));
+					cliente.setSituacao(rs.getString("SITUACAO"));
+					cliente.setIdFuncionario(rs.getInt("ID_FUNCIONARIO"));
+					cliente.setObservacao(rs.getString("OBSERVACAO"));
+					cliente.setEstadoCivil(rs.getString("ESTADO_CIVIL"));
+					cliente.setSexo(rs.getString("SEXO"));
+					cliente.setNumeroContrato(rs.getInt("CONTRATO"));
+					cliente.setNaturalidade(rs.getString("NATURALIDADE"));
+				clientes.add(cliente);
+			}
+			ps.close();
+			rs.close();
+			con.close();
+			
+			}catch(SQLException e){
+				String erro=e.getStackTrace().toString();		
+			er.RetornoErro(erro);
+			e.printStackTrace();
+		    }catch(Exception e){
+				String erro=e.getStackTrace().toString();
+				er.RetornoErro(erro);
+			}
+			return clientes;
 	}	
 }

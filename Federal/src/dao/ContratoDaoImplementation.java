@@ -59,7 +59,7 @@ public class ContratoDaoImplementation implements ContratoDao, Serializable{
 			System.out.println(e.getMessage());
 			retorno=false;
 	}catch (Exception e) {
-		    // TODO Auto-generated catch block
+		   
 		   System.out.println(e.getMessage());
 		    retorno=false;
 		}
@@ -107,7 +107,7 @@ public class ContratoDaoImplementation implements ContratoDao, Serializable{
 			System.out.println(e.getMessage());
 			retorno=false;
 	}catch (Exception e) {
-		    // TODO Auto-generated catch block
+		  
 		   System.out.println(e.getMessage());
 		    retorno=false;
 		}
@@ -133,7 +133,7 @@ public class ContratoDaoImplementation implements ContratoDao, Serializable{
 			System.out.println(e.getMessage());
 			retorno=false;
 	}catch (Exception e) {
-		    // TODO Auto-generated catch block
+		  
 		   System.out.println(e.getMessage());
 		    retorno=false;
 		}
@@ -187,7 +187,7 @@ public class ContratoDaoImplementation implements ContratoDao, Serializable{
 			System.out.println(e.getMessage());
 			
 	}catch (Exception e) {
-		    // TODO Auto-generated catch block
+		  
 		   System.out.println(e.getMessage());
 		    
 		}
@@ -237,7 +237,7 @@ public class ContratoDaoImplementation implements ContratoDao, Serializable{
 			System.out.println(e.getMessage());
 			retorno=false;
 	}catch (Exception e) {
-		    // TODO Auto-generated catch block
+		 
 		   System.out.println(e.getMessage());
 		    retorno=false;
 		}
@@ -298,7 +298,7 @@ public class ContratoDaoImplementation implements ContratoDao, Serializable{
 			System.out.println(e.getMessage());
 			
 	}catch (Exception e) {
-		    // TODO Auto-generated catch block
+		   
 		   System.out.println(e.getMessage());
 		   
 		}
@@ -308,7 +308,6 @@ public class ContratoDaoImplementation implements ContratoDao, Serializable{
 
 	@Override
 	public List<Contrato> listar(Contrato c) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

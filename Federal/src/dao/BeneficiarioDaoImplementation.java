@@ -113,7 +113,7 @@ public class BeneficiarioDaoImplementation implements Serializable,BeneficiarioD
 			System.out.println(e.getMessage());
 			retorno=false;
 	}catch (Exception e) {
-		    // TODO Auto-generated catch block
+		    
 		   System.out.println(e.getMessage());
 		    retorno=false;
 		}
@@ -159,7 +159,7 @@ public class BeneficiarioDaoImplementation implements Serializable,BeneficiarioD
 			System.out.println(e.getMessage());
 			retorno=false;
 	}catch (Exception e) {
-		    // TODO Auto-generated catch block
+		   
 		   System.out.println(e.getMessage());
 		    retorno=false;
 		}
@@ -203,7 +203,7 @@ public class BeneficiarioDaoImplementation implements Serializable,BeneficiarioD
 				System.out.println(e.getMessage());
 				
 		}catch (Exception e) {
-			    // TODO Auto-generated catch block
+			   
 			   System.out.println(e.getMessage());
 			   
 			}
@@ -248,7 +248,7 @@ public class BeneficiarioDaoImplementation implements Serializable,BeneficiarioD
 			System.out.println(e.getMessage());
 			
 	}catch (Exception e) {
-		    // TODO Auto-generated catch block
+		    
 		   System.out.println(e.getMessage());
 		   
 		}
@@ -294,7 +294,7 @@ public class BeneficiarioDaoImplementation implements Serializable,BeneficiarioD
 			System.out.println(e.getMessage());
 			
 	}catch (Exception e) {
-		    // TODO Auto-generated catch block
+		   
 		   System.out.println(e.getMessage());
 		   
 		}
@@ -339,7 +339,7 @@ public class BeneficiarioDaoImplementation implements Serializable,BeneficiarioD
 		}catch(SQLException e){ 
 			System.out.println(e.getMessage());
 	}catch (Exception e) {
-		    // TODO Auto-generated catch block
+		   
 		   System.out.println(e.getMessage());
 		}
 		return bens;
@@ -381,7 +381,6 @@ public class BeneficiarioDaoImplementation implements Serializable,BeneficiarioD
 		}catch(SQLException e){ 
 			System.out.println(e.getMessage());
 	}catch (Exception e) {
-		    // TODO Auto-generated catch block
 		   System.out.println(e.getMessage());
 		}
 	    
@@ -411,7 +410,7 @@ public class BeneficiarioDaoImplementation implements Serializable,BeneficiarioD
 			System.out.println(e.getMessage());
 			retorno=false;
 	}catch (Exception e) {
-		    // TODO Auto-generated catch block
+		   
 		   System.out.println(e.getMessage());
 		    retorno=false;
 		}

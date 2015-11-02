@@ -18,8 +18,8 @@ public static boolean valida(Cliente c){
 	String cpfv="";
 	int valor=0,f=0;
 	//System.out.println(c.getCpf());
-	if(c.getCpf()==null||c.getCpf().isEmpty()||c.getCpf().length()<11){
-		
+	if(c.getCpf().equalsIgnoreCase("")||c.getCpf()==null||c.getCpf().isEmpty()||c.getCpf().length()<11){
+		valida=false;
 	}else{
 		String cpf[]=c.getCpf().split("\\.|\\-|\\_|\\*|\\/|\\ |\\,|\\+");
 		String cpfVal[]=new String[11];
@@ -27,7 +27,7 @@ public static boolean valida(Cliente c){
 		for(int z=0;z<cpf.length;z++){
 			cpfv+=cpf[z];
 		}
-		if(cpfv.length()==11){
+		if(cpfv.length()==11&&!cpfv.equalsIgnoreCase("00000000000")&&!cpfv.equalsIgnoreCase("11111111111")&&!cpfv.equalsIgnoreCase("22222222222")&&!cpfv.equalsIgnoreCase("33333333333")&&!cpfv.equalsIgnoreCase("44444444444")&&!cpfv.equalsIgnoreCase("55555555555")&&!cpfv.equalsIgnoreCase("66666666666")&&!cpfv.equalsIgnoreCase("77777777777")&&!cpfv.equalsIgnoreCase("88888888888")&&!cpfv.equalsIgnoreCase("99999999999")){
 		for(int a=0;a<cpfv.length();a++){
 			cpfVal[a]=cpfv.charAt(a)+"";
 		}
@@ -73,13 +73,31 @@ public static void main(String[]args){
 	ClienteDao cd=new ClienteDaoImplementation();
 	List<Cliente>clientes=new ArrayList<Cliente>();
 	boolean valido=false;
+	boolean retorno=false;
 	clientes=cd.listarAtivos();
+	Cliente cliente;
 	List<Cliente> clientesvalidos=new ArrayList<Cliente>();
 			
 	for(int i=0;clientes.size()>i;i++){
 		valido=valida(clientes.get(i));
 		if(valido){
+			cliente=new Cliente();
+			cliente=clientes.get(i);
+			cliente.setCpfok(1);
+			retorno=cd.atualizar(cliente);
 			clientesvalidos.add(clientes.get(i));
+			System.out.println("CPF válido: "+cliente.getCpf());
+		}else{
+			cliente=new Cliente();
+			cliente=clientes.get(i);
+			cliente.setCpfok(0);
+			retorno=cd.atualizar(cliente);
+			System.out.println("CPF inválido: "+cliente.getCpf());
+		}
+		if(retorno){
+			System.out.println("Cliente atualizado: "+cliente.toString());
+		}else{
+			System.out.println("Cliente não atualizado: "+cliente.toString());
 		}
 	}
 	/*int clientesvalidos[]=new int[clientes.size()];System.out.println("Lista de clientes: "+clientes.size());
