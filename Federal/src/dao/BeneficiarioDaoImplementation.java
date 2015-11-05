@@ -33,7 +33,7 @@ public class BeneficiarioDaoImplementation implements Serializable,BeneficiarioD
 		    ps=con.prepareStatement(sql);
 		    ps.setInt(1, ben.getContrato());System.out.println("1");
 		    ps.setString(2, ben.getNome().toUpperCase());		 System.out.println("2");   
-		    ps.setDate(3, new java.sql.Date( ben.getDataNascimento().getTime()));System.out.println("3");
+		    ps.setDate(3, new java.sql.Date( ben.getDataNascimento().getTime()+86400000));System.out.println("3");
 		    ps.setString(4, ben.getReligiao());System.out.println("4");
 		    ps.setString(5, ben.getProfissao());System.out.println("5");
 		    ps.setString(6, ben.getEmail());System.out.println("6");
@@ -69,7 +69,7 @@ public class BeneficiarioDaoImplementation implements Serializable,BeneficiarioD
 		    ps=con.prepareStatement(sql);
 		    ps.setInt(1, ben.getContrato());System.out.println("1");
 		    ps.setString(2, ben.getNome().toUpperCase());		 System.out.println("2");   
-		    ps.setDate(3, new java.sql.Date( ben.getDataNascimento().getTime()));System.out.println("3");
+		    ps.setDate(3, new java.sql.Date( ben.getDataNascimento().getTime()+86400000));System.out.println("3");
 		    ps.setString(4, ben.getReligiao());System.out.println("4");
 		    ps.setString(5, ben.getProfissao());System.out.println("5");
 		    ps.setString(6, ben.getEmail());System.out.println("6");
@@ -134,7 +134,7 @@ public class BeneficiarioDaoImplementation implements Serializable,BeneficiarioD
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, ben.getContrato());
 		    ps.setString(2, ben.getNome());
-		    ps.setDate(3, (Date)ben.getDataNascimento());
+		    ps.setDate(3, new java.sql.Date(ben.getDataNascimento().getTime()+86400000));
 		    ps.setString(4, ben.getReligiao());
 		    ps.setString(5, ben.getProfissao());
 		    ps.setString(6, ben.getEmail());
@@ -357,7 +357,7 @@ public class BeneficiarioDaoImplementation implements Serializable,BeneficiarioD
 			ps=con.prepareStatement(sql);
 			ps.setInt(1, idBeneficiario);
 			rs=ps.executeQuery();
-			rs.first();			
+			if(rs.next()){			
 			    ben.setContrato(rs.getInt("CONTRATO"));
 				 ben.setIdBeneficiario(rs.getInt("ID_BENEFICIARIO"));
 				    ben.setNome(rs.getString("NOME"));
@@ -372,8 +372,8 @@ public class BeneficiarioDaoImplementation implements Serializable,BeneficiarioD
 				    ben.setDataNascimento(rs.getDate("FALECIMENTO"));		
 		            ben.setIdFuncionario(rs.getInt("ID_FUNCIONARIO"));
 				    ben.setSexo(rs.getString("SEXO"));
-				    ben.setClassificacao(rs.getString("CLASSIFICA"));
-			
+				    ben.setClassificacao(rs.getString("CLASSIFICA"));System.out.println("Beneficiario por id dao:"+ben.toString());
+			}
 			
 			ps.close();
 			rs.close();

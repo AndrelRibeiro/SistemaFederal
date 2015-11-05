@@ -297,7 +297,8 @@ public class MensalidadeMB implements Serializable {
 		CalculoDatas cd = new CalculoDatas();
 		MensalidadeDao md = new MensalidadeDaoImplementation();
 		mensalidades=new ArrayList<Mensalidade>();
-		for (Registro reg : registros) {System.out.println("Registro Men MB"+reg.toString());
+		for (Registro reg : registros) {
+			System.out.println("Registro Men MB"+reg.toString());
 			mensalidadeNova = md.buscar(reg.getNossoNumero());System.out.println("Men MB"+mensalidadeNova.toString());
 			if (mensalidadeNova.getNossoNumero()!=null) {
 				System.out.println("Mensalidade encontrada! "+ mensalidadeNova.toString());
