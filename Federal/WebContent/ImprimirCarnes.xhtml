@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>Carnês a serem impressos</title>
+</h:head>
+<ui:composition template="/cabecalho.xhtml">
+	<ui:define name="conteudo">
+		<h:body>
+		
+			<h:form id="form1">
+			<p:growl id="growl" sticky="true" showDetail="true" life="8000"  autoUpdate="true" showSummary="false"/>
+			<p:commandButton value="Imprimir" type="button" icon="ui-icon-print" style="display:block;margin-bottom: 20px">
+    <p:printer target="listar" />
+</p:commandButton>
+			<p:dataTable id="listar" value="#{mensalidade.imprimeCarnes()}" var="men" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,20,25,30,50,75,100,200,500" rows="15">
+					<f:facet name="header">
+					Foram encontrados  #{fn:length(cliente.clientes)} Contratos
+					
+					</f:facet>
+					<p:column sortBy="#{men.numeroContrato}" width="20">
+						<f:facet name="header">
+							<h:outputText value="Contrato" />
+						</f:facet>
+						<h:outputText value="#{men.contrato}" />
+					</p:column>
+					<p:column  width="100">
+						<f:facet name="header">
+							<h:outputText value="Valor" />
+						</f:facet>
+						<h:outputText value="#{men.valorParcela}" />
+					</p:column>
+					<p:column width="40">
+						<f:facet name="header">
+							<h:outputText value="Vencimento" />
+						</f:facet>
+						<h:outputText value="#{men.dataVencimento}" />
+					</p:column>
+					<p:column width="40">
+						<f:facet name="header">
+							<h:outputText value="Nosso Número" />
+						</f:facet>
+						<h:outputText value="#{men.nossoNumero}" />
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</h:body>
+	</ui:define>
+</ui:composition>
+</html>
