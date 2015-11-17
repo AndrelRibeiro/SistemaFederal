@@ -22,4 +22,6 @@ public List<Mensalidade> listarSemCNR();
 Mensalidade buscaUltimoPgm(int contrato);
 boolean adicionarPagas(Mensalidade m);
 public List<Registro> gerarRemessa();
+boolean excluirMensalGerada(Mensalidade m);
+List<Mensalidade> ImprimirCarnes();
 }

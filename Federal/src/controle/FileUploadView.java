@@ -105,7 +105,7 @@ public class FileUploadView implements Serializable{
     public List<Registro> remessa(){
     	registros=new ArrayList<Registro>();
     	ControleArquivoRemessa car=new ControleArquivoRemessa();
-    	registros=car.geraArquivo();
+    	//registros=car.geraArquivo();
     	int regs=0;
     	for(Registro r:registros){
     		String d=r.getVencimento().substring(0, 2)+"/"+r.getVencimento().substring(2, 4)+"/"+r.getVencimento().substring(4, 6);

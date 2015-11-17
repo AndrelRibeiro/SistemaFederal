@@ -11,6 +11,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import dao.ClienteDao;
 import dao.ClienteDaoImplementation;
 import dao.MensalidadeDao;
@@ -52,7 +54,7 @@ public class ControleArquivoRemessa {
 	private String usoEmpresa = String.format("%-25s", "");// X25
 	private String nossoNumero = "00000000";// 9(8)
 	private String qtdMoeda = "0000000000000";// 9(8)V9(5)
-	private String numCarteira = "174";// 9(3)
+	private String numCarteira = "109";// 9(3) anterior 174
 	private String usoBanco = String.format("%-21s", "");// X21
 	private String carteira = "I";// X1
 	private String codOcorrencia = "01";// 9(2)
@@ -91,9 +93,7 @@ public class ControleArquivoRemessa {
 	private String brancos6;
 
 	public static void main(String[] args) {
-		ControleArquivoRemessa gr = new ControleArquivoRemessa();
-
-		gr.geraArquivo();
+		
 
 	}
 
@@ -117,18 +117,17 @@ public class ControleArquivoRemessa {
 		this.registro = registro;
 	}
 
-	public List<Registro> geraArquivo() {
+	public List<Registro> geraArquivo(List<Mensalidade>mensalidades) {
 		// List<Cliente>clientes=new ArrayList<Cliente>();
 		Cliente cliente;
+		JOptionPane.showMessageDialog(null, "Teste", "Teste de mensagem", JOptionPane.INFORMATION_MESSAGE);
 		ClienteDao cd = new ClienteDaoImplementation();
 		MensalidadeDao md = new MensalidadeDaoImplementation();
-		List<Mensalidade> mensalidades = new ArrayList<Mensalidade>();
-		mensalidades = md.listar("CADASTRAR");
 		for (Mensalidade m : mensalidades) {
 			cliente = new Cliente();
 			cliente = cd.buscar(m.getContrato());
-			m.setSituacao("ENVIADO");
-			m.setNossoNumero(nossoNumero);
+			m.setSituacao("ABERTO");
+			m.setNossoNumero(m.getNossoNumero());
 			boolean ret=md.alterar(m);
 			if(ret){
 				System.out.println("Mensalidade atualizada com sucesso: "+m.toString());

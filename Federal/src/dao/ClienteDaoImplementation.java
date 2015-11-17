@@ -26,7 +26,7 @@ CalculoDatas cd=new CalculoDatas();
 		boolean retorno=false;
 		PreparedStatement ps;
 		//ID_CLIENTE,		NUM_CONTRATO,		NOME,		CPF,		RG,		NASCIMENTO,		CELULAR,		TELEFONE,		ENDERECO,		BAIRRO,		CEP,		COMPLEMENTO,		CIDADE,		ESTADO,		RELIGIAO,		PROFISSAO,		PONTO_REFE,		EMAIL,		SITUACAO,		ID_FUNCIONARIO,		OBSERVACAO,		ESTADO_CIVIL,		NATURALIDADE,		SEXO
-		String sql="INSERT INTO CLIENTE(CONTRATO, NOME,	CPF, RG, NASCIMENTO, CELULAR, TELEFONE,	ENDERECO, BAIRRO, CEP, COMPLEMENTO, CIDADE,	ESTADO,	RELIGIAO, PROFISSAO, PONTO_REFE, EMAIL,	SITUACAO, ID_FUNCIONARIO, OBSERVACAO, ESTADO_CIVIL,	NATURALIDADE, SEXO)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql="INSERT INTO CLIENTE(CONTRATO, NOME,	CPF, RG, NASCIMENTO, CELULAR, TELEFONE,	ENDERECO, BAIRRO, CEP, COMPLEMENTO, CIDADE,	ESTADO,	RELIGIAO, PROFISSAO, PONTO_REFE, EMAIL,	SITUACAO, ID_FUNCIONARIO, OBSERVACAO, ESTADO_CIVIL,	NATURALIDADE, SEXO, CPFOK)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		try {
 		    new ConnectionFactory();
 		    con=ConnectionFactory.getConnection();
@@ -57,7 +57,7 @@ CalculoDatas cd=new CalculoDatas();
 		    ps.setString(21, cliente.getEstadoCivil());
 		    ps.setString(22, cliente.getNaturalidade().toUpperCase());
 		    ps.setString(23,cliente.getSexo().toUpperCase());
-		    
+		    ps.setInt(24, 1);
 		    ps.execute();
 		    ps.close();
 			con.close();

@@ -20,6 +20,7 @@ import beans.Endereco;
 import beans.Mensalidade;
 import controle.CalculoDatas;
 import controle.Plano;
+import controle.SegundaVia;
 import controle.ValidaCPF;
 import dao.BeneficiarioDao;
 import dao.BeneficiarioDaoImplementation;
@@ -31,6 +32,8 @@ import dao.ContratoDao;
 import dao.ContratoDaoImplementation;
 import dao.MensalidadeDao;
 import dao.MensalidadeDaoImplementation;
+import dao.NossoNumeroDao;
+import dao.NossoNumeroDaoImplementation;
 @ManagedBean
 @RequestScoped
 public class ContratoMB implements Serializable{
@@ -161,6 +164,7 @@ public void adicionar(){
 	
 	cliente.setNumeroContrato(contratoNovo.getnContrato());
 	contratoNovo.setPlano(plano.configuraPlanos(contratoNovo.getPlano()));
+	System.out.println("Plano: "+contratoNovo.getPlano());
 	boolean retorno=cd.adicionar(contratoNovo);
 	if(retorno){System.out.println("Contrato adicionado com sucesso!"+contratoNovo.toString());
 	
@@ -228,13 +232,13 @@ public void buscar(){
 
 	public void geraM() {
 		MensalidadeDao md = new MensalidadeDaoImplementation();
-
-		boolean boleto = false;
-		boleto=buscarCarne();
-		if (!boleto) {
+		int nossoNumero=0;
+			NossoNumeroDao nd=new NossoNumeroDaoImplementation();
+			SegundaVia sv=new SegundaVia();
 			mensalidadeNova = new Mensalidade();
 			CalculoDatas cd = new CalculoDatas();
-			Date ultimaParc;
+			Date ultimaParc=null;
+			Date dataAtual=null;
 			double valorMensal=0;
 			mensalidades = new ArrayList<Mensalidade>();
 			int parcelas = 0;
@@ -248,46 +252,62 @@ public void buscar(){
 				} else if (contratoNovo.getPeriodicidade().equalsIgnoreCase("TRIMESTRAL")) {
 					parcelas = 4;
 				}// cuidado com a data de pagamento!!!!!
-				mensalidadeNova = md.buscaUltimoPgm(contratoNovo.getnContrato());
-				if(mensalidadeNova==null){
+			
+				//BUSCA O NOSSO NÚMERO NO BANCO DE DADOS 
+				nossoNumero=nd.buscar();
+				//CASO NÃO HAJA NENHUMA PARCELA PAGA ANTERIORMENTE, GERA A MENSALIDADE PARA O PRÓXIMO VENCIMENTO
+				
 					valorMensal=contratoNovo.getMensalidade();					
 					Calendar c = Calendar.getInstance();
+					dataAtual=c.getTime();
 						c.set(Calendar.DAY_OF_MONTH,contratoNovo.getDiaVencimento());
 						ultimaParc = c.getTime();
-				}else{
-				ultimaParc = mensalidadeNova.getDataVencimento();
-				valorMensal=mensalidadeNova.getValorParcela();
-				}
-				
+						if(ultimaParc.before(dataAtual)){
+							c.add(Calendar.MONTH, 1);
+							ultimaParc=c.getTime();
+								
 				for (int i = 1; i <= parcelas; i++) {
 					mensalidadeNova = new Mensalidade();
 					mensalidadeNova.setNumParcela(i);
 					mensalidadeNova.setContrato(contratoNovo.getnContrato());
-					mensalidadeNova.setDataVencimento(cd.calculaVencimento(ultimaParc, parcelas));
+					mensalidadeNova.setIdFuncionario(contratoNovo.getIdFuncionario());
+					if(i==1){
+						mensalidadeNova.setDataVencimento(ultimaParc);
+						}else{
+						mensalidadeNova.setDataVencimento(cd.calculaVencimento(ultimaParc, parcelas));
+						}				
 					mensalidadeNova.setPeriodicidade(contratoNovo.getPeriodicidade());
 					mensalidadeNova.setValorParcela(valorMensal);
-					mensalidadeNova.setSituacao("CADASTRAR");
+					String nn=String.valueOf(nossoNumero);	
+					nossoNumero++;
+					mensalidadeNova.setNossoNumero(nn);
+					int nossoN[]=new int[8];
+					for(int s=0;s<nn.length();s++){
+					nossoN[s]=Integer.parseInt(String.valueOf(nn.charAt(s)));
+					}
+					mensalidadeNova.setDacNossoNumero(String.valueOf(sv.DACNossoNumero(nossoN)));
+					
+					mensalidadeNova.setSituacao("IMPRIMIR");
 					mensalidades.add(mensalidadeNova);
 					ultimaParc = mensalidadeNova.getDataVencimento();
 				}
+				boolean ret = md.geraCarne(mensalidadeNova);
+				
+				if (!ret) {
+					System.out.println("Erro ao enviar para geração de novo carnê: "+ mensalidadeNova.toString());
+				}
 			}
-		} else {System.out.println("Mensalidades já geradas anteriormente ");
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage("Aviso!","O cliente já possui mensalidades!"));
+			boolean ok=nd.alterar(nossoNumero);
+			if(ok){
+				System.out.println("Nosso numero gravado com sucesso!");
+			}else{
+				System.out.println("Erro ao gravar Nosso numero!");
+			}
+			
+	}
 		}
-	}
-private boolean buscarCarne() {
-	MensalidadeDao md=new MensalidadeDaoImplementation();
-	boolean boleto=false;
-	List<Mensalidade> valida = new ArrayList<Mensalidade>();
-	valida = md.listar(contratoNovo.getnContrato());System.out.println("Contrato: "+contratoNovo.getnContrato());
-	for (Mensalidade m : valida) {
-		if (m.getSituacao().equalsIgnoreCase("CADASTRAR")||m.getSituacao().equalsIgnoreCase("IMPRIMIR")) {
-			boleto = true;
-			System.out.println("Mensalidade gerada: "+m.getSituacao());
-		}
-	}
-	return boleto;
-	}
+		
+
 public List<Contrato> listar(){
 	contratos=new ArrayList<Contrato>();
 	ContratoDao cd=new ContratoDaoImplementation();
@@ -348,13 +368,13 @@ public void addMensagem(String tipo,String mensagem){
 		boolean retorno = false;
 		MensalidadeDao md = new MensalidadeDaoImplementation();
 		int cont = 0;
-		boolean boleto = buscarCarne();
+		MensalidadeMB mmb=new MensalidadeMB();
+		boolean boleto = mmb.buscarCarne(contratoNovo.getnContrato());
 		if (boleto) {
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage("Aviso!","Esta operação não pode ser efetuada, o cliente possui mensalidades em aberto!"));
 			
 		} else {
 			for (Mensalidade m : mensalidades) {
-				m.setSituacao("CADASTRAR");
 				retorno = md.adicionar(m);
 				if (retorno) {
 					cont++;
