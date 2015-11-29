@@ -16,7 +16,7 @@
 			<center>
 			<p:panel id="panel" header="2ª Via de Carnê">
 				<h:form>
-					<p:growl id="growl" showDetail="true" life="8000" autoUpdate="true"/>
+					<p:growl id="growl" showDetail="true" life="20000" autoUpdate="true"/>
 					<p:messages id="msg"/>
 					<p:panel>
 					<table>
@@ -54,7 +54,7 @@
 						<table>
 						<tr><td></td>
 								<td> 
-										<p:commandButton id="gerar" value="Gerar Carne" action="#{mensalidade.via2Carne}" icon="ui-icon-disk"/>
+										<p:commandButton id="gerar" value="Gerar Arquivo" action="#{mensalidade.via2Carne}" icon="ui-icon-disk"/>
 										<p:commandButton id="cancelar" value="Cancelar" icon="ui-icon-trash" title="Cancelar" action="/index.xhtml" /></td>
 							</tr>
 						</table>

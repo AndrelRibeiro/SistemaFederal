@@ -24,4 +24,6 @@ boolean adicionarPagas(Mensalidade m);
 public List<Registro> gerarRemessa();
 boolean excluirMensalGerada(Mensalidade m);
 List<Mensalidade> ImprimirCarnes();
+int alteraGeraCarne(Mensalidade m);
+List<Mensalidade> imprimirEtiquetas();
 }

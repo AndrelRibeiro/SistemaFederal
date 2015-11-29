@@ -52,7 +52,7 @@ public class ControleArquivoRemessa {
 	private String brancos1 = String.format("%-4s", "");// X4
 	private String alegacao = "0000";// 9(4)
 	private String usoEmpresa = String.format("%-25s", "");// X25
-	private String nossoNumero = "00000000";// 9(8)
+	private String nossoNumero ;// 9(8)
 	private String qtdMoeda = "0000000000000";// 9(8)V9(5)
 	private String numCarteira = "109";// 9(3) anterior 174
 	private String usoBanco = String.format("%-21s", "");// X21
@@ -120,14 +120,13 @@ public class ControleArquivoRemessa {
 	public List<Registro> geraArquivo(List<Mensalidade>mensalidades) {
 		// List<Cliente>clientes=new ArrayList<Cliente>();
 		Cliente cliente;
-		JOptionPane.showMessageDialog(null, "Teste", "Teste de mensagem", JOptionPane.INFORMATION_MESSAGE);
+		
 		ClienteDao cd = new ClienteDaoImplementation();
 		MensalidadeDao md = new MensalidadeDaoImplementation();
 		for (Mensalidade m : mensalidades) {
 			cliente = new Cliente();
 			cliente = cd.buscar(m.getContrato());
 			m.setSituacao("ABERTO");
-			m.setNossoNumero(m.getNossoNumero());
 			boolean ret=md.alterar(m);
 			if(ret){
 				System.out.println("Mensalidade atualizada com sucesso: "+m.toString());
@@ -142,12 +141,12 @@ public class ControleArquivoRemessa {
 			registro.setEstado(cliente.getEstado());
 			registro.setCep(cliente.getCep());
 			registro.setValorTitulo(String.valueOf(m.getValorParcela()));
+			registro.setNossoNumero(m.getNossoNumero());System.out.println("Nosso numero antes do registro: "+m.getNossoNumero());
 			String valor = registro.getValorTitulo().replace(".", "");
 			valor=valor+"0";
 			System.out.println("Replace: " + valor);
 			registro.setValorTitulo(valor);
-			String dataV = new SimpleDateFormat("ddMMyy").format(m
-					.getDataVencimento());
+			String dataV = new SimpleDateFormat("ddMMyy").format(m.getDataVencimento());
 			registro.setVencimento(dataV);
 			System.out.println("Vencimento: " + dataV);
 			registros.add(registro);
@@ -180,6 +179,7 @@ public class ControleArquivoRemessa {
 				cpfv += cpf[z];
 			}
 			numeroInscricao = cpfv + "   ";
+			nossoNumero=r.getNossoNumero();
 			int t = 30 - r.getNome().length();
 			nome = r.getNome() + String.format("%-" + t + "s", "");
 			nome = nome.substring(0, 30);
@@ -229,15 +229,17 @@ public class ControleArquivoRemessa {
 		String trailer = tipoRegTrailer + brancos6 + sequencia+ numeroSequencial;
 		linhas.add(trailer);
 		File file = new File("C:/Federal/ArquivoRemessa/AR"+data+".rem");
-		boolean e = file.exists();
-		if (!e) {
-			// file.mkdir();
+		int v=1;
+		while(file.exists()){
+			file = new File("C:/Federal/ArquivoRemessa/AR"+data+v+".rem");
+			v++;
+		}
 			try {
 				file.createNewFile();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-		}
+		
 		try {
 			FileWriter fw = new FileWriter(file);
 			BufferedWriter bfw = new BufferedWriter(fw);

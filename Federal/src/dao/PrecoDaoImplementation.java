@@ -137,6 +137,54 @@ public class PrecoDaoImplementation implements PrecoDao, Serializable {
 
 		return preco;
 	}
+	@Override
+	public Preco buscarUltimo() {
+		String sql = "SELECT * FROM PRECO ORDER BY ID_PRECO DESC";
+		Preco preco=null;
+		PreparedStatement ps;
+		Connection con = null;
+		ResultSet rs;
+		try {
+			new ConnectionFactory();
+			con = ConnectionFactory.getConnection();
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			if(rs.next()){
+			preco=new Preco();
+			//PORCENTAGEM, ESPECIAL, EXECUTIVO, CREMATORIO, URNA, SEPULTAMENTO, ADESAO, DEP66, DEP76, DEP86, DEP91, AVU65, AVU66, AVU76, AVU86, AVU91, MINIMO, AJUSTE
+			preco.setIdPreco(rs.getInt("ID_PRECO"));
+			preco.setPorcentagem(rs.getInt("PORCENTAGEM"));
+			preco.setEspecial(rs.getDouble("ESPECIAL"));
+			preco.setExecutivo(rs.getDouble("EXECUTIVO"));
+			preco.setCrematorio(rs.getDouble("CREMATORIO"));
+			preco.setUrna(rs.getDouble("URNA"));
+			preco.setSepultamento(rs.getDouble("SEPULTAMENTO"));
+			preco.setAdesao(rs.getDouble("ADESAO"));
+			preco.setDep66(rs.getDouble("DEP66"));
+			preco.setDep76(rs.getDouble("DEP76"));
+			preco.setDep86(rs.getDouble("DEP86"));
+			preco.setDep91(rs.getDouble("DEP91"));
+			preco.setAvu65(rs.getDouble("AVU65"));
+			preco.setAvu66(rs.getDouble("AVU66"));
+			preco.setAvu76(rs.getDouble("AVU76"));
+			preco.setAvu86(rs.getDouble("AVU86"));
+			preco.setAvu91(rs.getDouble("AVU91"));
+			preco.setMinimo(rs.getDouble("MINIMO"));
+			preco.setReajuste(rs.getDate("AJUSTE"));
+			}
+			ps.close();
+			rs.close();
+			con.close();
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		return preco;
+	}
 
 	@Override
 	public List<Preco> listar() {

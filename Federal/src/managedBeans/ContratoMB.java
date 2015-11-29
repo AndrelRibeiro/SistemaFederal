@@ -18,6 +18,7 @@ import beans.Cliente;
 import beans.Contrato;
 import beans.Endereco;
 import beans.Mensalidade;
+import beans.Preco;
 import controle.CalculoDatas;
 import controle.Plano;
 import controle.SegundaVia;
@@ -34,6 +35,8 @@ import dao.MensalidadeDao;
 import dao.MensalidadeDaoImplementation;
 import dao.NossoNumeroDao;
 import dao.NossoNumeroDaoImplementation;
+import dao.PrecoDao;
+import dao.PrecoDaoImplementation;
 @ManagedBean
 @RequestScoped
 public class ContratoMB implements Serializable{
@@ -163,6 +166,9 @@ public void adicionar(){
 	contratoNovo.setIdFuncionario(cliente.getIdFuncionario());
 	
 	cliente.setNumeroContrato(contratoNovo.getnContrato());
+	boolean valida=ValidaCPF.valida(cliente);
+	if(valida){
+		cliente.setCpfok(1);	
 	contratoNovo.setPlano(plano.configuraPlanos(contratoNovo.getPlano()));
 	System.out.println("Plano: "+contratoNovo.getPlano());
 	boolean retorno=cd.adicionar(contratoNovo);
@@ -199,6 +205,9 @@ public void adicionar(){
 	}
 	if(cont==0){
 		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage("Sucesso!","Contrato adicionado com sucesso!"));
+	}
+	}else{
+		FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Número de CPF de cliente inválido! Informe novamente!",  null));
 	}
 }
 public void excluir(){
@@ -239,7 +248,7 @@ public void buscar(){
 			CalculoDatas cd = new CalculoDatas();
 			Date ultimaParc=null;
 			Date dataAtual=null;
-			double valorMensal=0;
+			double valor;
 			mensalidades = new ArrayList<Mensalidade>();
 			int parcelas = 0;
 			if (contratoNovo.getnContrato() == 0) {
@@ -255,9 +264,7 @@ public void buscar(){
 			
 				//BUSCA O NOSSO NÚMERO NO BANCO DE DADOS 
 				nossoNumero=nd.buscar();
-				//CASO NÃO HAJA NENHUMA PARCELA PAGA ANTERIORMENTE, GERA A MENSALIDADE PARA O PRÓXIMO VENCIMENTO
-				
-					valorMensal=contratoNovo.getMensalidade();					
+				//CASO NÃO HAJA NENHUMA PARCELA PAGA ANTERIORMENTE, GERA A MENSALIDADE PARA O PRÓXIMO VENCIMENTO				
 					Calendar c = Calendar.getInstance();
 					dataAtual=c.getTime();
 						c.set(Calendar.DAY_OF_MONTH,contratoNovo.getDiaVencimento());
@@ -265,7 +272,17 @@ public void buscar(){
 						if(ultimaParc.before(dataAtual)){
 							c.add(Calendar.MONTH, 1);
 							ultimaParc=c.getTime();
-								
+							if(mensalidadeNova.getValorParcela()==0){
+								valor=contratoNovo.getMensalidade();
+							}else{
+								Preco p=new Preco();
+								PrecoDao pd=new PrecoDaoImplementation();
+								p=pd.buscarUltimo();
+								valor=mensalidadeNova.getValorParcela();
+								System.out.println("Valor antes da correção: "+valor);
+								valor+=(valor*p.getPorcentagem())/100;
+								System.out.println("Valor corrigido: "+valor);
+							}
 				for (int i = 1; i <= parcelas; i++) {
 					mensalidadeNova = new Mensalidade();
 					mensalidadeNova.setNumParcela(i);
@@ -277,7 +294,7 @@ public void buscar(){
 						mensalidadeNova.setDataVencimento(cd.calculaVencimento(ultimaParc, parcelas));
 						}				
 					mensalidadeNova.setPeriodicidade(contratoNovo.getPeriodicidade());
-					mensalidadeNova.setValorParcela(valorMensal);
+					mensalidadeNova.setValorParcela(valor);
 					String nn=String.valueOf(nossoNumero);	
 					nossoNumero++;
 					mensalidadeNova.setNossoNumero(nn);
@@ -381,7 +398,7 @@ public void addMensagem(String tipo,String mensagem){
 				}
 			}
 			if (cont == mensalidades.size()) {
-				FacesMessage msg = new FacesMessage("Sucesso","Mensalidades Geradas com sucesso!");
+				FacesMessage msg = new FacesMessage("Sucesso","Mensalidades Gravadas com sucesso!");
 				FacesContext.getCurrentInstance().addMessage(null, msg);
 			} else {
 				FacesMessage msg = new FacesMessage("Erro",	"Erro ao criar novas mensalidades!");

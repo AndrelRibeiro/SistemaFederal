@@ -1,14 +1,18 @@
 package managedBeans;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import dao.ClienteDao;
+import dao.ClienteDaoImplementation;
 import dao.MensalidadeDao;
 import dao.MensalidadeDaoImplementation;
+import beans.Cliente;
 import beans.Notificacao;
 import beans.Mensalidade;
 @ManagedBean
@@ -45,24 +49,37 @@ public List<Notificacao> listar(){
 	lista=new ArrayList<Notificacao>();
 	MensalidadeDao md=new MensalidadeDaoImplementation();
 	List<Mensalidade>mens=new ArrayList<Mensalidade>();
-	mens=md.listar("A");
+	Cliente c=null;
+	ClienteDao cd=new ClienteDaoImplementation();
+	mens=md.listar("ATRASADO");
 	for(Mensalidade m:mens){
 		informacaoNova=new Notificacao();
 		informacaoNova.setTipo("Importante");
 		informacaoNova.setTitulo("Mensalidades");
-		informacaoNova.setDescricao("Mensalidade em atraso! Contrato: "+m.getContrato());
+		String vencimento=new SimpleDateFormat("dd/MM/yyyy").format(m.getDataVencimento());
+		informacaoNova.setDescricao("Mensalidade em atraso! Contrato: "+m.getContrato()+" - Vencimento: "+vencimento);
 		lista.add(informacaoNova);
 	}
 	List<Mensalidade>carnes=new ArrayList<Mensalidade>();
 	carnes=md.listarCarnes();
-	for(Mensalidade mg:carnes){
+	for(Mensalidade mg:carnes){ 
 		informacaoNova=new Notificacao();
-		informacaoNova.setTipo("Importante");
-		informacaoNova.setTitulo("Carnês");
+		c=new Cliente();
+		c=cd.buscar(mg.getContrato());
+		if(c==null){
+			informacaoNova.setDescricao("Contrato não possui cliente, Para gerar mensalidades o cliente deve ser cadastrado, Contrato: "+mg.getContrato());
+		}else{
+		if(c.getCpfok()==0){
+			informacaoNova.setDescricao("CPF inválido! Atualize o CPF para gerar o carnê! Contrato: "+c.getNumeroContrato());
+		}else{
 		informacaoNova.setDescricao("O carnê do contrato: "+mg.getContrato()+" "+mg.getSituacao());
+		}	}	
+		informacaoNova.setTipo("Importante");
+		informacaoNova.setTitulo("Carnê");
 		lista.add(informacaoNova);
+		
 	}
-	List<Mensalidade>cnrs=new ArrayList<Mensalidade>();
+	/*List<Mensalidade>cnrs=new ArrayList<Mensalidade>();
 	cnrs=md.listarSemCNR();
 	for(Mensalidade cnr:cnrs){
 		informacaoNova=new Notificacao();
@@ -70,7 +87,7 @@ public List<Notificacao> listar(){
 		informacaoNova.setTitulo("CNRs");
 		informacaoNova.setDescricao("A mensalidade do contrato: "+cnr.getContrato()+" não possui número de CNR");
 		lista.add(informacaoNova);
-	}
+	}*/
 	return lista;
 }
 public void adicionar(){

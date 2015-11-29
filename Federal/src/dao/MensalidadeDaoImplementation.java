@@ -59,7 +59,7 @@ CalculoDatas cp=new CalculoDatas();
 		Connection con=null;
 		boolean retorno;
 		PreparedStatement ps;
-		String sql="INSERT INTO MENSALIDADE_PAGA (CONTRATO, PARCELA, VENCIMENTO, VALOR, SITUACAO, NOSSO_NUMERO, DAC_NOSSO_NUMERO, COD_BARRAS, PAGAMENTO, PARCELA_CARNE_ANO, CARENCIA, PERIODICIDADE, ID_FUNCIONARIO)VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql="INSERT INTO MENSALIDADE_PAGA (CONTRATO, PARCELA, VENCIMENTO, VALOR, SITUACAO, NOSSO_NUMERO, DAC_NOSSO_NUMERO, COD_BARRAS, PAGAMENTO, PARCELA_CARNE_ANO, CARENCIA, PERIODICIDADE, ID_FUNCIONARIO)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		try {
 		    new ConnectionFactory();
 		    con=ConnectionFactory.getConnection();
@@ -71,8 +71,12 @@ CalculoDatas cp=new CalculoDatas();
 		    ps.setString(5, m.getSituacao());
 		    ps.setString(6, m.getNossoNumero());
 		    ps.setString(7, m.getDacNossoNumero());
-		    ps.setDate(8, new java.sql.Date(m.getDataPagamento().getTime()));
-		    ps.setString(9, m.getCodBarras());
+		    ps.setString(8, m.getCodBarras());
+		    if(m.getDataPagamento()==null){
+		    	ps.setDate(9, new java.sql.Date(m.getDataVencimento().getTime()));
+		    }else{
+		    ps.setDate(9, new java.sql.Date(m.getDataPagamento().getTime()));
+		    }
 		    ps.setLong(10, m.getParcela_carne_ano());
 		    if(m.getDataCarencia()!=null){
 		    	ps.setDate(11, new java.sql.Date(m.getDataCarencia().getTime()));
@@ -162,6 +166,29 @@ CalculoDatas cp=new CalculoDatas();
 		  
 		    e.printStackTrace();
 		    retorno=false;
+		}
+		return retorno;
+		
+	}
+	@Override
+	public int alteraGeraCarne(Mensalidade m) {
+		Connection con=null;
+		int retorno=0;
+		PreparedStatement ps;
+		String sql="UPDATE GERACARNE SET SITUACAO=?, IMPRESSO=?, CARNE_CRIADO=? WHERE CONTRATO=?";
+		try {
+		    new ConnectionFactory();
+		    con=ConnectionFactory.getConnection();System.out.println(m.toString());
+		    ps=con.prepareStatement(sql);
+		    ps.setString(1, m.getSituacao());
+		    ps.setBoolean(2, true);
+		    ps.setBoolean(3, true);
+		    ps.setInt(4, m.getContrato());
+		    retorno=ps.executeUpdate();
+		    ps.close();
+			con.close();
+		} catch (Exception e) {		  
+		    e.printStackTrace();		    
 		}
 		return retorno;
 		
@@ -503,11 +530,43 @@ CalculoDatas cp=new CalculoDatas();
 				m.setContrato(rs.getInt("CONTRATO"));
 				boolean carne=rs.getBoolean("CARNE_CRIADO");
 				boolean imp=rs.getBoolean("IMPRESSO");
+				m.setPeriodicidade(rs.getString("TIPO_PARCELA"));
+				m.setValorParcela(rs.getDouble("VALOR"));
 				if(imp){
 					m.setSituacao("Excluir carnê da fila de impressão");
 				}else if(!carne){
 					m.setSituacao("não foi gerado");
+				}else if(!imp){
+					m.setSituacao("pronto para impressão");
 				}
+				mensalidades.add(m);
+			}
+			ps.close();
+			rs.close();
+			con.close();
+			
+		}catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+		return mensalidades;
+	}
+	@Override
+	public List<Mensalidade> imprimirEtiquetas() {
+		Connection con=null;
+		PreparedStatement ps;
+		ResultSet rs;
+		List<Mensalidade>mensalidades=new ArrayList<Mensalidade>();
+		Mensalidade m=null;
+		String sql="SELECT * FROM GERACARNE WHERE SITUACAO='ETIQUETA'";
+		try{
+			new ConnectionFactory();
+			con=ConnectionFactory.getConnection();
+			ps=con.prepareStatement(sql);
+			rs=ps.executeQuery();
+			while(rs.next()){
+				m=new Mensalidade();
+				m.setContrato(rs.getInt("CONTRATO"));
+				m.setSituacao(rs.getString("SITUACAO"));
 				mensalidades.add(m);
 			}
 			ps.close();
@@ -536,6 +595,7 @@ CalculoDatas cp=new CalculoDatas();
 				m.setContrato(rs.getInt("CONTRATO"));
 				m.setPeriodicidade(rs.getString("TIPO_PARCELA"));
 				m.setValorParcela(rs.getDouble("VALOR"));
+				m.setSituacao(rs.getString("SITUACAO"));
 				mensalidades.add(m);
 			}
 			ps.close();
@@ -573,7 +633,7 @@ CalculoDatas cp=new CalculoDatas();
 		
 		Connection con=null;
 		PreparedStatement ps;
-		Mensalidade m=new Mensalidade();
+		Mensalidade m=null;
 		ResultSet rs;
 		String sql="SELECT * FROM MENSALIDADE WHERE CONTRATO=? ORDER BY VENCIMENTO DESC";
 		try{
@@ -591,7 +651,23 @@ CalculoDatas cp=new CalculoDatas();
 				m.setSituacao(rs.getString("SITUACAO"));
 				m.setParcela_carne_ano(rs.getLong("PARCELA_CARNE_ANO"));
 				
+			}else{
+				String sql2="SELECT * FROM MENSALIDADE_PAGA WHERE CONTRATO=? ORDER BY VENCIMENTO DESC";
+				new ConnectionFactory();
+				con=ConnectionFactory.getConnection();
+				ps=con.prepareStatement(sql2);
+				ps.setInt(1, contrato);
+				rs=ps.executeQuery();
+				if(rs.next()){
+					m=new Mensalidade();
+					m.setContrato(rs.getInt("CONTRATO"));
+					m.setNumParcela(rs.getInt("PARCELA"));
+					m.setDataVencimento(rs.getDate("VENCIMENTO"));
+					m.setValorParcela(rs.getDouble("VALOR"));
+					m.setSituacao(rs.getString("SITUACAO"));
+					m.setParcela_carne_ano(rs.getLong("PARCELA_CARNE_ANO"));
 			}
+				}
 			ps.close();
 			rs.close();
 			con.close();

@@ -275,6 +275,11 @@ public class SegundaVia {
 			for(Cliente c:clientes){
 				mensalidades=md.listar(c.getNumeroContrato());		
 			for (Mensalidade m : mensalidades) {
+				int nosso=Integer.parseInt(m.getNossoNumero());
+				if(nosso==0){
+					m=geraNossoNumero(m);
+					
+				}
 				boleto = geraBoleto(m, c);
 				boletos.add(boleto);
 				boleto = new Boleto();
@@ -421,5 +426,23 @@ return geral;
 
 		}
 		return soma;
+	}
+	private Mensalidade geraNossoNumero(Mensalidade m){
+		NossoNumeroDao nd=new NossoNumeroDaoImplementation();
+		int nossoNumero=nd.buscar();
+		String nn=String.valueOf(nossoNumero);	
+		nossoNumero++;
+		m.setNossoNumero(nn);
+		int nossoN[]=new int[8];
+		for(int s=0;s<nn.length();s++){
+		nossoN[s]=Integer.parseInt(String.valueOf(nn.charAt(s)));
+		}
+		boolean ok=nd.alterar(nossoNumero);
+		if(ok){
+			System.out.println("Nosso numero gravado com sucesso!");
+		}else{
+			System.out.println("Erro ao gravar Nosso numero!");
+		}
+		return m;
 	}
 }

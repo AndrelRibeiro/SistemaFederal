@@ -361,7 +361,7 @@ CalculoDatas cd=new CalculoDatas();
 	}
 	public Cliente buscar (int contrato){
 		String sql="SELECT * FROM CLIENTE WHERE CONTRATO =?";
-		Cliente cliente=new Cliente();
+		Cliente cliente=null;
 		PreparedStatement ps;
 		Connection con=null;
 		ResultSet rs;
@@ -372,6 +372,7 @@ CalculoDatas cd=new CalculoDatas();
 			ps.setInt(1, contrato);
 			rs=ps.executeQuery();
 			if(rs.next()){
+				cliente=new Cliente();
 			cliente.setIdCliente(rs.getInt("ID_CLIENTE"));
 			cliente.setNome(rs.getString("NOME"));
 			cliente.setNascimento(rs.getDate("NASCIMENTO"));

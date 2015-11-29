@@ -3,6 +3,7 @@ package managedBeans;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,6 +20,7 @@ import org.primefaces.event.SelectEvent;
 import beans.Cliente;
 import beans.Contrato;
 import beans.Mensalidade;
+import beans.Preco;
 import beans.Registro;
 import controle.CalculoDatas;
 import controle.ControleArquivoRemessa;
@@ -31,6 +33,8 @@ import dao.MensalidadeDao;
 import dao.MensalidadeDaoImplementation;
 import dao.NossoNumeroDao;
 import dao.NossoNumeroDaoImplementation;
+import dao.PrecoDao;
+import dao.PrecoDaoImplementation;
 
 @ManagedBean
 @SessionScoped
@@ -49,10 +53,10 @@ public class MensalidadeMB implements Serializable {
 	Calendar c=Calendar.getInstance();
 	private int opc;
 	private String cnr;
-	private Date atrasadasInicio = null;
-	private Date pagasInicio = null;
-	private Date atrasadasFim = null;
-	private Date pagasFim = null;
+	private Date atrasadasInicio;
+	private Date pagasInicio;
+	private Date atrasadasFim;
+	private Date pagasFim;
 	private boolean tAtrasada = false;
 	private boolean tPaga = false;
 	public MensalidadeMB() {
@@ -137,7 +141,6 @@ public class MensalidadeMB implements Serializable {
 	}
 
 	public void setMensalidadeNova(Mensalidade mensalidadeNova) {
-		System.out.println("setMB"+mensalidadeNova.toString());
 		this.mensalidadeNova = mensalidadeNova;
 	}
 
@@ -241,7 +244,7 @@ public class MensalidadeMB implements Serializable {
 	// Lista as mensalidades conforme solicitação, 1 = por contrato, 2 =
 	// atrasadas por período, 3 = pagas por período, 4 = todas atrasadas e 5 =
 	// todas pagas.
-	public void buscar() {
+	public List<Mensalidade> buscar() {
 		System.out.println("Chamada do metodo");
 		MensalidadeDao md = new MensalidadeDaoImplementation();
 		mensalidades = new ArrayList<Mensalidade>();
@@ -264,7 +267,10 @@ public class MensalidadeMB implements Serializable {
 			mensalidades = md.listar("PAGO");
 			System.out.println("Listar pagos");
 		}
-	}// Lista todas as mensalidades
+		return mensalidades;
+	}
+	
+	// Lista todas as mensalidades
 
 	public List<Mensalidade> listar() {
 		mensalidades = new ArrayList<Mensalidade>();
@@ -318,8 +324,9 @@ public class MensalidadeMB implements Serializable {
 				}else{
 					System.out.println(mensalidadeNova.toString());
 					mensalidades.add(mensalidadeNova);
-				//Cadastra em banco de dados a informação dos carnês quitados;
+				//Cadastra em banco de dados a informação do carnê quitado;
 					geraCarne(mensalidadeNova);
+					
 				}
 			}} else {
 				System.out.println("Mensalidade não encontrada");
@@ -360,7 +367,8 @@ public class MensalidadeMB implements Serializable {
 						FacesMessage msg = new FacesMessage("Aviso!","Atraso superior a 90 dias! Contrato deve ser cancelado!");
 						FacesContext.getCurrentInstance().addMessage(null, msg);
 					}else{
-					FacesMessage msg = new FacesMessage("Aviso!","Pagamento efetuado com atraso! Carência até: "+mensalidadeNova.getDataCarencia());
+						String dt=new SimpleDateFormat("dd/MM/yyyy").format(mensalidadeNova.getDataCarencia());
+					FacesMessage msg = new FacesMessage("Aviso!","Pagamento efetuado com atraso! \r\nCarência até: "+dt);
 					FacesContext.getCurrentInstance().addMessage(null, msg);}
 				}
 				if (retorno) {
@@ -385,7 +393,7 @@ public class MensalidadeMB implements Serializable {
 
 	public void geraCarne(Mensalidade mensalidadeNova) {
 
-		if (mensalidadeNova.getNumParcela() == 12|| mensalidadeNova.getNumParcela() == 6|| (mensalidadeNova.getNumParcela() == 4 && mensalidadeNova
+		if (mensalidadeNova.getNumParcela() == 12|| (mensalidadeNova.getNumParcela() == 6&& mensalidadeNova.getPeriodicidade().equalsIgnoreCase("BIMESTRAL"))|| (mensalidadeNova.getNumParcela() == 4 && mensalidadeNova
 						.getPeriodicidade().equalsIgnoreCase("TRIMESTRAL"))) {
 			MensalidadeDao md = new MensalidadeDaoImplementation();
 			List<Mensalidade> mensContrato = new ArrayList<Mensalidade>();
@@ -410,7 +418,7 @@ public class MensalidadeMB implements Serializable {
 						*gerar novas mensalidades
 						*/
 						List<Mensalidade>novasMensalidades=new ArrayList<Mensalidade>();
-						novasMensalidades=gerarM(mensalidadeNova);
+						novasMensalidades= gerarM(mensalidadeNova);
 						for(Mensalidade m:mensContrato){
 							boolean gravar=md.adicionarPagas(m);
 							if(gravar){
@@ -454,6 +462,7 @@ public class MensalidadeMB implements Serializable {
 		mensalidadeNova=new Mensalidade();
 		CalculoDatas cd=new CalculoDatas();
 		Date ultimaParc=null;
+		double valor=0;
 		Date atual;
 		mensalidades=new ArrayList<Mensalidade>();
 		int parcelas=0;
@@ -472,15 +481,28 @@ public class MensalidadeMB implements Serializable {
 		System.out.println(mensalidadeNova.toString());
 		}else{
 			ultimaParc=mensalidadeNova.getDataVencimento();	
-		}		
+			
+		}
+		if(mensalidadeNova.getValorParcela()==0){
+			valor=contrato.getMensalidade();
+		}else{
+			Preco p=new Preco();
+			PrecoDao pd=new PrecoDaoImplementation();
+			p=pd.buscarUltimo();
+			valor=mensalidadeNova.getValorParcela();
+			System.out.println("Valor antes da correção: "+valor);
+			valor+=(valor*p.getPorcentagem())/100;
+			System.out.println("Valor corrigido: "+valor);
+		}
 		nossoNumero=nd.buscar();
 		Calendar c=Calendar.getInstance();
 		atual=c.getTime();
 		if(ultimaParc==null){
 			c.set(Calendar.DAY_OF_MONTH, contratoNovo.getDiaVencimento());
+			System.out.println("Data de pagamento: 1 parcela: "+c.getTime());
 			ultimaParc=c.getTime();
 			if(ultimaParc.before(atual)){
-				c.add(Calendar.MONTH, 1);
+				c.add(Calendar.MONTH, 1);System.out.println("Data de pagamento: 1 parcela adicionando 1 mes:  "+c.getTime());
 				ultimaParc=c.getTime();
 			}
 		}
@@ -494,7 +516,7 @@ public class MensalidadeMB implements Serializable {
 				mensalidadeNova.setDataVencimento(cd.calculaVencimento(ultimaParc, parcelas));
 				}	
 			mensalidadeNova.setPeriodicidade(contratoNovo.getPeriodicidade());
-			mensalidadeNova.setValorParcela(contratoNovo.getMensalidade());
+			mensalidadeNova.setValorParcela(valor);
 			String nn=String.valueOf(nossoNumero);	
 			nossoNumero++;
 			mensalidadeNova.setNossoNumero(nn);
@@ -525,6 +547,17 @@ public class MensalidadeMB implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Erro!","Você deve informar o nosso Número!"));
 		}else{
 		mensalidadeNova=md.buscar(mensalidadeNova.getNossoNumero());
+		if(mensalidadeNova==null){
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Erro!","Não foi encontrada mensalidade com este número!"));
+		}else{
+			if(mensalidadeNova.getNossoNumero().equalsIgnoreCase("")||mensalidadeNova.getNossoNumero().equalsIgnoreCase("0")){
+				NossoNumeroDao nd=new NossoNumeroDaoImplementation();
+				int nosso=nd.buscar();
+				mensalidadeNova.setNossoNumero(String.valueOf(nosso));
+				nosso++;
+				nd.alterar(nosso);				
+			}
+		}
 		cliente=cd.buscar(mensalidadeNova.getContrato());
 		SegundaVia gr=new SegundaVia();
 		gr.exibeBoleto(mensalidadeNova, cliente);
@@ -542,7 +575,7 @@ public class MensalidadeMB implements Serializable {
 		mensalidades=md.listar(mensalidadeNova.getContrato());
 		cliente=cd.buscar(mensalidadeNova.getContrato());
 		for(Mensalidade m:mensalidades){
-			if("ABERTO".equalsIgnoreCase(m.getSituacao())||"IMPRIMIR".equalsIgnoreCase(m.getSituacao())){
+			if("ABERTO".equalsIgnoreCase(m.getSituacao())||"IMPRIMIR".equalsIgnoreCase(m.getSituacao())||"ETIQUETA".equalsIgnoreCase(m.getSituacao())){
 				emAberto.add(m);
 			}else if("CADASTRAR".equalsIgnoreCase(m.getSituacao())){
 				codigo=1;				
@@ -554,17 +587,47 @@ public class MensalidadeMB implements Serializable {
 			SegundaVia g=new SegundaVia();
 			g.groupInPages(emAberto, cliente);	
 			codigo=3;			
+		}else{
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Aviso!","Cliente não possui carnê,\r\n vá até 'Carnê Manual'\r\n para criar um novo carnê para o cliente,\r\n depois retorne a esta página."));
 		}
+		
 			if(codigo==1){
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Aviso!","Ainda não foi cadastrado o código de barras"));
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Aviso!","Ainda não foi cadastrado o nosso número"));
 			}else if(codigo==2){
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Aviso!","Cliente não possui carnê em aberto"));
 			}else if(codigo==3){
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Sucesso!","Arquivo gerado com sucesso!"));
 			}		
 	}
-
-	public List<Mensalidade> imprimeCarnes() {
+public List<Cliente> exibeClientesImprimir(){
+	ClienteDao cd=new ClienteDaoImplementation();
+	List<Cliente>clientes=new ArrayList<Cliente>();
+	Cliente cliente =new Cliente();
+	List<Mensalidade>mensais=new ArrayList<Mensalidade>();
+	MensalidadeDao md=new MensalidadeDaoImplementation();
+	mensais=md.listarCarnes();
+	for(Mensalidade m:mensais){
+		cliente=cd.buscar(m.getContrato());
+		if(cliente!=null){
+		if(cliente.getCpfok()==1){
+			cliente.setSituacao("CPF OK");
+			System.out.println("CPF OK: "+cliente.toString());
+		}else{
+			cliente.setSituacao("CPF INVÁLIDO");
+			System.out.println("CPF INVÁLIDO: "+cliente.toString());
+		}
+		}else{
+			cliente=new Cliente();
+			cliente.setNumeroContrato(m.getContrato());
+			cliente.setNome("Cliente não cadastrado");
+			cliente.setCpf("-----------");
+			cliente.setSituacao("Necessário cadastrar os dados do cliente");
+		}
+		clientes.add(cliente);
+	}
+	return clientes;
+}
+	public List<Cliente> imprimeCarnes() {
 		MensalidadeDao md = new MensalidadeDaoImplementation();
 		ClienteDao cd = new ClienteDaoImplementation();
 		List<Cliente> clientes = new ArrayList<Cliente>();
@@ -601,17 +664,21 @@ public class MensalidadeMB implements Serializable {
 			List<Mensalidade>geral = g.geraArquivoParaImpressao(clientes);
 			
 				for (Mensalidade m : mensalidades) {
-					boolean ret = md.excluirMensalGerada(m);
-					if (ret) {
-						System.out.println("Gera carnê, registro excluído");
+					m.setSituacao("ETIQUETA");
+					int ret = md.alteraGeraCarne(m);
+					if (ret==1) {
+						System.out.println("Gera carnê, registro atualizado");
 					} else {
-						System.out.println("Gera carnê, erro ao excluir");
+						System.out.println("Gera carnê, erro ao atualizar");
 					}				
 			}FacesContext.getCurrentInstance().addMessage(null,new FacesMessage("Aviso!","Gerando arquivo de Remessa!"));
 				ControleArquivoRemessa car=new ControleArquivoRemessa();
-				car.equals(geral);
+				for(Mensalidade m:geral){
+					System.out.println(m.toString());
+				}
+				car.geraArquivo(geral);
 		}
-		return mensalidades;
+		return clientes;
 	}
 	public void cadastrarBarras(){
 		File file=new File("C:/Federal/app/CadastraCNR.jar");
@@ -631,6 +698,35 @@ public class MensalidadeMB implements Serializable {
 			boleto=false;
 		}else{
 			boleto=true;}
+		valida=null;
 		return boleto;
 		}
+	public static void atualizaMensalidades(){
+		MensalidadeDao md=new MensalidadeDaoImplementation();
+		List<Mensalidade>mensalidadesPagas=new ArrayList<Mensalidade>();
+		mensalidadesPagas=md.listar("QUITADO");
+		for(Mensalidade m:mensalidadesPagas){
+		boolean retorno=md.adicionarPagas(m);
+		if(retorno){
+			System.out.println("Sucesso: "+m.getContrato());
+			boolean ret=md.excluir(m);
+			if(ret){
+				System.out.println("Mensalidade excluida: "+m.getContrato());
+			}else{
+				System.out.println("Erro mensalidade não excluida: "+m.getContrato());
+			}
+		}else{
+			System.out.println("Erro: "+m.getContrato()+" Vencimento: "+m.getDataVencimento());
+		}
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}
+	}
+	public static void main(String[] args){
+		atualizaMensalidades();
+	}
 }

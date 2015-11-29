@@ -15,14 +15,53 @@
 		<h:body>
 		
 			<h:form id="form1">
-			<p:growl id="growl" sticky="true" showDetail="true" life="8000"  autoUpdate="true" showSummary="false"/>
+			<p:commandButton id="gerarMensalidades" icon="ui-icon-disk"	value="Gerar Arquivo para impressão" title="Gerar Arquivo de Mensalidades"
+									actionListener="#{mensalidade.imprimeCarnes()}" update="message"	process="@this" />
+			<p:dataTable id="listarClientes" value="#{mensalidade.exibeClientesImprimir()}" var="cli" rows="500">
+					<f:facet name="header">
+					Clientes com mensalidades a serem impressas
+					
+					</f:facet>
+					<p:column width="20">
+						<f:facet name="header">
+							<h:outputText value="Contrato" />
+						</f:facet>
+						<h:outputText value="#{cli.numeroContrato}" />
+					</p:column>
+					<p:column  width="90">
+						<f:facet name="header">
+							<h:outputText value="Cliente" />
+						</f:facet>
+						<h:outputText value="#{cli.nome}" />
+					</p:column>
+					<p:column width="30">
+						<f:facet name="header">
+							<h:outputText value="Telefone" />
+						</f:facet>
+						<h:outputText value="#{cli.telefone}" />
+					</p:column>
+					<p:column width="30">
+						<f:facet name="header">
+							<h:outputText value="CPF" />
+						</f:facet>
+						<h:outputText value="#{cli.cpf}" />
+					</p:column>
+					<p:column width="80">
+						<f:facet name="header">
+							<h:outputText value="Situação" />
+						</f:facet>
+						<h:outputText value="#{cli.situacao}" />
+					</p:column>
+				</p:dataTable>
+				
+			<p:growl id="message" sticky="true" showDetail="true" life="8000"  autoUpdate="true" showSummary="false"/>
 			<p:commandButton value="Imprimir" type="button" icon="ui-icon-print" style="display:block;margin-bottom: 20px">
     <p:printer target="listar" />
 </p:commandButton>
-			<p:dataTable id="listar" value="#{mensalidade.imprimeCarnes()}" var="men" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			<p:dataTable id="listar" value="#{mensalidade.mensalidades}" var="men" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,20,25,30,50,75,100,200,500" rows="15">
 					<f:facet name="header">
-					Foram encontrados  #{fn:length(cliente.clientes)} Contratos
+					Foram encontrados  #{fn:length(mensalidade.mensalidades)} Contratos
 					
 					</f:facet>
 					<p:column sortBy="#{men.numeroContrato}" width="20">

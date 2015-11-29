@@ -8,6 +8,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.print.PrintException;
+
+import controle.Impressao;
 import beans.Beneficiario;
 import beans.Cliente;
 import beans.Contrato;
@@ -90,7 +93,32 @@ public List<Cliente> listar(){
 	
 	return clientes;
 }
-
+public List<Cliente> listarParaImprimirEtiquetas(){
+	clientes=new ArrayList<Cliente>();
+	ClienteDao cli=new ClienteDaoImplementation();
+	MensalidadeDao md=new MensalidadeDaoImplementation();
+	List<Mensalidade>mensalidades=new ArrayList<Mensalidade>();
+	mensalidades=md.imprimirEtiquetas();
+	for(Mensalidade m:mensalidades){
+		clienteNovo=cli.buscar(m.getContrato());
+		clientes.add(clienteNovo);
+		clienteNovo=new Cliente();
+	}
+	
+	return clientes;
+}
+public void imprimir(){
+	Impressao imp=new Impressao();
+	try {
+		imp.sendTextToPrinter("Etiquetas", clientes);
+	} catch (PrintException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
 public void atualizar(){
 	ClienteDao cli=new ClienteDaoImplementation();System.out.println("Chamada de atualização: "+clienteNovo.toString());
 	boolean retorno=cli.atualizar(clienteNovo);

@@ -10,4 +10,5 @@ public boolean excluir(Preco preco);
 public boolean atualizar(Preco preco);
 public Preco buscar(Preco preco);
 public List<Preco> listar();
+Preco buscarUltimo();
 }
