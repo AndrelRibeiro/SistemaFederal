@@ -457,7 +457,7 @@ public class MensalidadeMB implements Serializable {
 		MensalidadeDao md=new MensalidadeDaoImplementation();
 		ContratoDao contd=new ContratoDaoImplementation();
 		SegundaVia sv=new SegundaVia();
-		Contrato contratoNovo=new Contrato();
+		Contrato contratoNovo=new Contrato();System.out.println(m.toString());
 		contratoNovo=contd.buscar(m.getContrato());
 		mensalidadeNova=new Mensalidade();
 		CalculoDatas cd=new CalculoDatas();
@@ -560,7 +560,7 @@ public class MensalidadeMB implements Serializable {
 		}
 		cliente=cd.buscar(mensalidadeNova.getContrato());
 		SegundaVia gr=new SegundaVia();
-		gr.exibeBoleto(mensalidadeNova, cliente);
+		gr.exibeBoleto2(mensalidadeNova, cliente);
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Sucesso!","Boleto gerado com sucesso!"));
 		//gr.exibeNavegador(mensalidadeNova, cliente);
 		}

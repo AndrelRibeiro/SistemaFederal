@@ -633,7 +633,7 @@ CalculoDatas cp=new CalculoDatas();
 		
 		Connection con=null;
 		PreparedStatement ps;
-		Mensalidade m=null;
+		Mensalidade m=new Mensalidade();
 		ResultSet rs;
 		String sql="SELECT * FROM MENSALIDADE WHERE CONTRATO=? ORDER BY VENCIMENTO DESC";
 		try{

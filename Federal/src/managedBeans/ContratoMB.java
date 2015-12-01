@@ -238,90 +238,81 @@ public void buscar(){
 	contratoNovo=cd.buscar(contratoNovo.getnContrato());}
     	
 }//Gera novas mensalidades
-
 	public void geraM() {
-		MensalidadeDao md = new MensalidadeDaoImplementation();
 		int nossoNumero=0;
-			NossoNumeroDao nd=new NossoNumeroDaoImplementation();
-			SegundaVia sv=new SegundaVia();
-			mensalidadeNova = new Mensalidade();
-			CalculoDatas cd = new CalculoDatas();
-			Date ultimaParc=null;
-			Date dataAtual=null;
-			double valor;
-			mensalidades = new ArrayList<Mensalidade>();
-			int parcelas = 0;
-			if (contratoNovo.getnContrato() == 0) {
-				addMensagem("Erro", "Número de contrato inválido!");
-			} else {
-				if (contratoNovo.getPeriodicidade().equalsIgnoreCase("MENSAL")) {
-					parcelas = 12;
-				} else if (contratoNovo.getPeriodicidade().equalsIgnoreCase("BIMESTRAL")) {
-					parcelas = 6;
-				} else if (contratoNovo.getPeriodicidade().equalsIgnoreCase("TRIMESTRAL")) {
-					parcelas = 4;
-				}// cuidado com a data de pagamento!!!!!
+		NossoNumeroDao nd=new NossoNumeroDaoImplementation();
+		MensalidadeDao md=new MensalidadeDaoImplementation();
+		ContratoDao contd=new ContratoDaoImplementation();
+		SegundaVia sv=new SegundaVia();
+		mensalidadeNova=new Mensalidade();
+		CalculoDatas cd=new CalculoDatas();
+		Date ultimaParc=null;
+		double valor=0;
+		Date atual;
+		mensalidades=new ArrayList<Mensalidade>();
+		int parcelas=0;
+		if(contratoNovo.getPeriodicidade().equalsIgnoreCase("MENSAL")){
+			parcelas=12;
+		}else if(contratoNovo.getPeriodicidade().equalsIgnoreCase("BIMESTRAL")){
+			parcelas=6;
+		}else if(contratoNovo.getPeriodicidade().equalsIgnoreCase("TRIMESTRAL")){
+			parcelas=4;
+	}//cuidado com a data de pagamento!!!!!
+		mensalidadeNova=md.buscaUltimoPgm(contratoNovo.getnContrato());
+		if(mensalidadeNova.getDataVencimento()==null){
+		System.out.println(mensalidadeNova.toString());
+		}else{
+			ultimaParc=mensalidadeNova.getDataVencimento();	
 			
-				//BUSCA O NOSSO NÚMERO NO BANCO DE DADOS 
-				nossoNumero=nd.buscar();
-				//CASO NÃO HAJA NENHUMA PARCELA PAGA ANTERIORMENTE, GERA A MENSALIDADE PARA O PRÓXIMO VENCIMENTO				
-					Calendar c = Calendar.getInstance();
-					dataAtual=c.getTime();
-						c.set(Calendar.DAY_OF_MONTH,contratoNovo.getDiaVencimento());
-						ultimaParc = c.getTime();
-						if(ultimaParc.before(dataAtual)){
-							c.add(Calendar.MONTH, 1);
-							ultimaParc=c.getTime();
-							if(mensalidadeNova.getValorParcela()==0){
-								valor=contratoNovo.getMensalidade();
-							}else{
-								Preco p=new Preco();
-								PrecoDao pd=new PrecoDaoImplementation();
-								p=pd.buscarUltimo();
-								valor=mensalidadeNova.getValorParcela();
-								System.out.println("Valor antes da correção: "+valor);
-								valor+=(valor*p.getPorcentagem())/100;
-								System.out.println("Valor corrigido: "+valor);
-							}
-				for (int i = 1; i <= parcelas; i++) {
-					mensalidadeNova = new Mensalidade();
-					mensalidadeNova.setNumParcela(i);
-					mensalidadeNova.setContrato(contratoNovo.getnContrato());
-					mensalidadeNova.setIdFuncionario(contratoNovo.getIdFuncionario());
-					if(i==1){
-						mensalidadeNova.setDataVencimento(ultimaParc);
-						}else{
-						mensalidadeNova.setDataVencimento(cd.calculaVencimento(ultimaParc, parcelas));
-						}				
-					mensalidadeNova.setPeriodicidade(contratoNovo.getPeriodicidade());
-					mensalidadeNova.setValorParcela(valor);
-					String nn=String.valueOf(nossoNumero);	
-					nossoNumero++;
-					mensalidadeNova.setNossoNumero(nn);
-					int nossoN[]=new int[8];
-					for(int s=0;s<nn.length();s++){
-					nossoN[s]=Integer.parseInt(String.valueOf(nn.charAt(s)));
-					}
-					mensalidadeNova.setDacNossoNumero(String.valueOf(sv.DACNossoNumero(nossoN)));
-					
-					mensalidadeNova.setSituacao("IMPRIMIR");
-					mensalidades.add(mensalidadeNova);
-					ultimaParc = mensalidadeNova.getDataVencimento();
-				}
-				boolean ret = md.geraCarne(mensalidadeNova);
-				
-				if (!ret) {
-					System.out.println("Erro ao enviar para geração de novo carnê: "+ mensalidadeNova.toString());
-				}
+		}
+		if(mensalidadeNova.getValorParcela()==0){
+			valor=contratoNovo.getMensalidade();
+		}else{
+			valor=mensalidadeNova.getValorParcela();
+		}
+		nossoNumero=nd.buscar();
+		Calendar c=Calendar.getInstance();
+		atual=c.getTime();
+		if(ultimaParc==null){
+			c.set(Calendar.DAY_OF_MONTH, contratoNovo.getDiaVencimento());
+			System.out.println("Data de pagamento: 1 parcela: "+c.getTime());
+			ultimaParc=c.getTime();
+			if(ultimaParc.before(atual)){
+				c.add(Calendar.MONTH, 1);System.out.println("Data de pagamento: 1 parcela adicionando 1 mes:  "+c.getTime());
+				ultimaParc=c.getTime();
 			}
-			boolean ok=nd.alterar(nossoNumero);
-			if(ok){
-				System.out.println("Nosso numero gravado com sucesso!");
-			}else{
-				System.out.println("Erro ao gravar Nosso numero!");
+		}
+		for(int i=1;i<=parcelas;i++){
+			mensalidadeNova=new Mensalidade();
+			mensalidadeNova.setNumParcela(i);
+			mensalidadeNova.setContrato(contratoNovo.getnContrato());
+			if(i==1){
+				mensalidadeNova.setDataVencimento(ultimaParc);
+				}else{
+				mensalidadeNova.setDataVencimento(cd.calculaVencimento(ultimaParc, parcelas));
+				}	
+			mensalidadeNova.setPeriodicidade(contratoNovo.getPeriodicidade());
+			mensalidadeNova.setValorParcela(valor);
+			String nn=String.valueOf(nossoNumero);	
+			nossoNumero++;
+			mensalidadeNova.setNossoNumero(nn);
+			int nossoN[]=new int[8];
+			for(int s=0;s<nn.length();s++){
+			nossoN[s]=Integer.parseInt(String.valueOf(nn.charAt(s)));
 			}
-			
-	}
+			mensalidadeNova.setDacNossoNumero(String.valueOf(sv.DACNossoNumero(nossoN)));
+			mensalidadeNova.setSituacao("IMPRIMIR");
+			mensalidades.add(mensalidadeNova);
+			ultimaParc=mensalidadeNova.getDataVencimento();
+		}
+		boolean ok=nd.alterar(nossoNumero);
+		if(ok){
+			System.out.println("Nosso numero gravado com sucesso!");
+		}else{
+			System.out.println("Erro ao gravar Nosso numero!");
+		}
+		
+		
 		}
 		
 
@@ -391,6 +382,10 @@ public void addMensagem(String tipo,String mensagem){
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage("Aviso!","Esta operação não pode ser efetuada, o cliente possui mensalidades em aberto!"));
 			
 		} else {
+			if(mensalidades.isEmpty()){
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage("Aviso!","Esta operação não pode ser efetuada, as mensalidades não foram geradas!"));
+				
+			}else{
 			for (Mensalidade m : mensalidades) {
 				retorno = md.adicionar(m);
 				if (retorno) {
@@ -404,7 +399,7 @@ public void addMensagem(String tipo,String mensagem){
 				FacesMessage msg = new FacesMessage("Erro",	"Erro ao criar novas mensalidades!");
 				FacesContext.getCurrentInstance().addMessage(null, msg);
 
-			}
+			}}
 		}
 	}
 public void barras(AjaxBehaviorEvent event){

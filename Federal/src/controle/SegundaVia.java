@@ -27,6 +27,7 @@ import org.jrimum.domkee.financeiro.banco.febraban.Cedente;
 import org.jrimum.domkee.financeiro.banco.febraban.ContaBancaria;
 import org.jrimum.domkee.financeiro.banco.febraban.NumeroDaConta;
 import org.jrimum.domkee.financeiro.banco.febraban.Sacado;
+import org.jrimum.domkee.financeiro.banco.febraban.SacadorAvalista;
 import org.jrimum.domkee.financeiro.banco.febraban.TipoDeTitulo;
 import org.jrimum.domkee.financeiro.banco.febraban.Titulo;
 
@@ -78,13 +79,15 @@ public class SegundaVia {
 		Cedente cedente;
 		Sacado sacado;
 		Endereco enderecoSac;
+		Endereco enderecoSacAval;
 		ContaBancaria contaBancaria;
+		SacadorAvalista sacadorAvalista;
 		Titulo titulo;
-		// SacadorAvalista sacadorAvalista;
 		Boleto boleto;
 		cedente = new Cedente("FEDERAL ORGANIZAÇÃO N C F LTDA","00.447.519/0001-12");
 		System.out.println(cliente.getCpf());
 		sacado = new Sacado(cliente.getNome(), cliente.getCpf());
+		
 
 		enderecoSac = new Endereco();
 		enderecoSac.setLocalidade(cliente.getCidade());
@@ -98,50 +101,105 @@ public class SegundaVia {
 		contaBancaria.setCarteira(new Carteira(109));
 		contaBancaria.setAgencia(new Agencia(714, "5"));
 
+		enderecoSacAval=new Endereco();
+		enderecoSacAval.setLogradouro("");
+		enderecoSacAval.setBairro("");
+		enderecoSacAval.setNumero("");
+		enderecoSacAval.setCep("");
+
+		sacadorAvalista=new SacadorAvalista("FEDERAL ORGANIZAÇÃO N C F LTDA", "00.447.519/0001-12");
+		sacadorAvalista.addEndereco(enderecoSacAval);
+		
 		titulo = new Titulo(contaBancaria, sacado, cedente);
-		titulo.setNumeroDoDocumento("");
+		titulo.setNumeroDoDocumento(mensalidade.getNossoNumero());
 		titulo.setNossoNumero(mensalidade.getNossoNumero());
 		titulo.setDigitoDoNossoNumero(mensalidade.getDacNossoNumero());
 		titulo.setValor(BigDecimal.valueOf(mensalidade.getValorParcela()));
 		titulo.setDataDoDocumento(new Date());
 		titulo.setDataDoVencimento(mensalidade.getDataVencimento());
 		titulo.setTipoDeDocumento(TipoDeTitulo.DM_DUPLICATA_MERCANTIL);
-		// titulo.setAceite(Aceite.A);
 		titulo.setDesconto(BigDecimal.ZERO);
 		titulo.setDeducao(BigDecimal.ZERO);
 		titulo.setMora(BigDecimal.ZERO);
 		titulo.setAcrecimo(BigDecimal.ZERO);
 		titulo.setValorCobrado(BigDecimal.ZERO);
+		titulo.setSacadorAvalista(sacadorAvalista);
 		boleto = new Boleto(titulo);
 		
-		String carteiraNossoNumero=String.format("%d-%s-%s", titulo.getContaBancaria().getCarteira().getCodigo(),
+		String carteiraNossoNumero=String.format("%s-%s", 
 		titulo.getNossoNumero(),titulo.getDigitoDoNossoNumero());  
-		boleto.addTextosExtras("txtFcNossoNumero", carteiraNossoNumero); 
+		boleto.addTextosExtras("txtFcNossoNumero", titulo.getContaBancaria().getCarteira().getCodigo()+"/"+carteiraNossoNumero); 
 		boleto.addTextosExtras("txtRsNossoNumero", carteiraNossoNumero); 
 		
-		String agenciaCodigoDoCedenteParaExibicao = String.format("%04d-%05d-%s",
+		/*String agenciaCodigoDoCedenteParaExibicao = String.format("%04d/%05d-%s",
 		titulo.getContaBancaria().getAgencia().getCodigo(),
 		titulo.getContaBancaria().getNumeroDaConta().getCodigoDaConta(),
-		titulo.getContaBancaria().getNumeroDaConta().getDigitoDaConta());
-		String personalizado="7145-03679-9";
+		titulo.getContaBancaria().getNumeroDaConta().getDigitoDaConta());*/
+		String personalizado="7145/03679-9";
 		boleto.addTextosExtras("txtFcAgenciaCodigoCedente", personalizado);
 		boleto.addTextosExtras("txtRsAgenciaCodigoCedente", personalizado);
 		//boleto.addTextosExtras("txtFcAgenciaCodigoCedente", agenciaCodigoDoCedenteParaExibicao); 
 		//boleto.addTextosExtras("txtRsAgenciaCodigoCedente", agenciaCodigoDoCedenteParaExibicao); 
 			
-		boleto.setLocalPagamento("ATÉ O VENCIMENTO, PAGÁVEL EM QUALQUER AGÊNCIA BANCÁRIA");
+		boleto.setLocalPagamento("");
 		boleto.setInstrucaoAoSacado("");
-		boleto.setInstrucao1("ATÉ O VENCIMENTO PAGÁVEL EM QUALQUER AGÊNCIA BANCÁRIA");
-		boleto.setInstrucao2("APÓS O VENCIMENTO PAGUE NO ITAÚ");
-		boleto.setInstrucao3("ATRASO GERA CARÊNCIA CONFORME ESTIPULADO EM CONTRATO");
-		boleto.setInstrucao4("E O NÃO ATENDIMENTO EM CASO DE ÓBITO");
-		boleto.setInstrucao5("SR. CAIXA NÃO RECEBER APÓS 30 DIAS DE VENCIMENTO.");
-
+		//boleto.setInstrucao1("ATÉ O VENCIMENTO PAGÁVEL EM QUALQUER AGÊNCIA BANCÁRIA");
+		//boleto.setInstrucao2("APÓS O VENCIMENTO PAGUE NO ITAÚ");
+		boleto.setInstrucao1("ATRASO GERA CARÊNCIA CONFORME ESTIPULADO EM CONTRATO");
+		boleto.setInstrucao2("E O NÃO ATENDIMENTO EM CASO DE ÓBITO");
+		boleto.setInstrucao3("SR. CAIXA NÃO RECEBER APÓS 30 DIAS DE VENCIMENTO.");
+		boleto.addTextosExtras("txtRsNumeroParcela", String.valueOf(mensalidade.getNumParcela()));
+		boleto.addTextosExtras("txtFcCnpj", "00.447.519/0001-12");
+		boleto.addTextosExtras("txtFcCnpj1", "00.447.519/0001-12");
+		boleto.addTextosExtras("txtFcAvalista", "FEDERAL ORGANIZAÇÃO N C F LTDA");
 		return boleto;
 		// exibeBoleto(arquivoPdf);
 		// exibeNavegador(boleto);
 	}
 
+	public void exibeBoleto2(Mensalidade mensalidade, Cliente cliente){
+			// Informando o template personalizado:
+			
+			File templatePersonalizado= new File("C:/Federal/Templates/BoletoCarne.pdf");
+			File arq = null;
+			Boleto boleto = new Boleto();
+			List<Boleto> boletos = new ArrayList<Boleto>();
+				
+			
+				int nosso=Integer.parseInt(mensalidade.getNossoNumero());
+				if(nosso==0){
+					mensalidade=geraNossoNumero(mensalidade);
+					
+				}
+				boleto = geraBoleto(mensalidade, cliente);
+				boletos.add(boleto);
+				boleto = new Boleto();
+			
+			
+			BoletoViewer boletoViewer = new BoletoViewer(boletos.get(0));
+			boletoViewer.setTemplate(templatePersonalizado);
+			List<byte[]> boletosEmBytes = new ArrayList<byte[]>(boletos.size());
+			// Adicionando os PDF, em forma de array de bytes, na lista.
+			for (Boleto b : boletos) {
+				boletosEmBytes.add(boletoViewer.setBoleto(b).getPdfAsByteArray());
+			}
+			try {
+				// Criando o arquivo com os boletos da lista.
+				Calendar c=Calendar.getInstance();
+				String data=new SimpleDateFormat("dd-MM-yyyy").format(c.getTime());
+				arq = Files.bytesToFile("C:/Federal/2Via/Boleto/Cliente - "+cliente.getNome()+".pdf", mergeFilesInPages(boletosEmBytes));
+				java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+				desktop.open(arq);
+			} catch (FileNotFoundException e) {
+				System.out.println(e.getMessage());
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+			} catch (DocumentException e) {
+				System.out.println(e.getMessage());
+			}
+	}
+	
 	// Exibe o boleto no Desktop utilizando o programa padrão
 	public void exibeBoleto(Mensalidade mensalidade, Cliente cliente) {
 		Boleto boleto = new Boleto();
