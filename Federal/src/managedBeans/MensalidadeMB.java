@@ -549,7 +549,7 @@ public class MensalidadeMB implements Serializable {
 		mensalidadeNova=md.buscar(mensalidadeNova.getNossoNumero());
 		if(mensalidadeNova==null){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Erro!","Não foi encontrada mensalidade com este número!"));
-		}else{
+		}else{ 
 			if(mensalidadeNova.getNossoNumero().equalsIgnoreCase("")||mensalidadeNova.getNossoNumero().equalsIgnoreCase("0")){
 				NossoNumeroDao nd=new NossoNumeroDaoImplementation();
 				int nosso=nd.buscar();
