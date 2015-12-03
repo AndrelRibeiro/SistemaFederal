@@ -1,5 +1,6 @@
 package controle;
 
+import java.awt.Image;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,13 +12,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.ImageIcon;
 
 import org.jrimum.bopepo.BancosSuportados;
 import org.jrimum.bopepo.Boleto;
+import org.jrimum.bopepo.LinhaDigitavel;
+import org.jrimum.bopepo.pdf.CodigoDeBarras;
 import org.jrimum.bopepo.pdf.Files;
 import org.jrimum.bopepo.view.BoletoViewer;
 import org.jrimum.domkee.comum.pessoa.endereco.Endereco;
@@ -54,7 +59,10 @@ public class SegundaVia {
 	private int DACBarras;
 	private String nossoNumero;
 	private int DACNossoNumero;
-
+	private String valor;
+	private long fator;
+	private String representacaoNumerica;
+	
 	public static void main(String[] args) {
 		SegundaVia g = new SegundaVia();
 		NossoNumeroDao nnd=new NossoNumeroDaoImplementation();
@@ -107,8 +115,11 @@ public class SegundaVia {
 		enderecoSacAval.setNumero("");
 		enderecoSacAval.setCep("");
 
-		sacadorAvalista=new SacadorAvalista("FEDERAL ORGANIZAÇÃO N C F LTDA", "00.447.519/0001-12");
-		sacadorAvalista.addEndereco(enderecoSacAval);
+		//sacadorAvalista=new SacadorAvalista("FEDERAL ORGANIZAÇÃO N C F LTDA Rua João Belo, 11 CEP 08011-040 São Paulo - SP", "00.447.519/0001-12");
+		//sacadorAvalista.addEndereco(enderecoSacAval);
+		
+		String codigoDeBarras=codigoBarras(mensalidade);
+		Image img=CodigoDeBarras.valueOf(codigoDeBarras).toImage();
 		
 		titulo = new Titulo(contaBancaria, sacado, cedente);
 		titulo.setNumeroDoDocumento(mensalidade.getNossoNumero());
@@ -123,7 +134,7 @@ public class SegundaVia {
 		titulo.setMora(BigDecimal.ZERO);
 		titulo.setAcrecimo(BigDecimal.ZERO);
 		titulo.setValorCobrado(BigDecimal.ZERO);
-		titulo.setSacadorAvalista(sacadorAvalista);
+		//titulo.setSacadorAvalista(sacadorAvalista);
 		boleto = new Boleto(titulo);
 		
 		String carteiraNossoNumero=String.format("%s-%s", 
@@ -151,7 +162,11 @@ public class SegundaVia {
 		boleto.addTextosExtras("txtRsNumeroParcela", String.valueOf(mensalidade.getNumParcela()));
 		boleto.addTextosExtras("txtFcCnpj", "00.447.519/0001-12");
 		boleto.addTextosExtras("txtFcCnpj1", "00.447.519/0001-12");
-		boleto.addTextosExtras("txtFcAvalista", "FEDERAL ORGANIZAÇÃO N C F LTDA");
+		boleto.addTextosExtras("txtFcAvalista", "FEDERAL ORGANIZAÇÃO LTDA Rua João Belo, 11 CEP 08011-040 São Paulo - SP");
+		boleto.addTextosExtras("txtRsAvalista1", "FEDERAL ORGANIZAÇÃO LTDA");
+		boleto.addTextosExtras("txtRsAvalista2", "Rua João Belo, 11 CEP 08011-040 São Paulo - SP");
+		boleto.addImagensExtras("txtFcCodigoBarra", new ImageIcon(img).getImage());
+		boleto.addTextosExtras("txtRsLinhaDigitavel", representacaoNumerica);
 		return boleto;
 		// exibeBoleto(arquivoPdf);
 		// exibeNavegador(boleto);
@@ -239,46 +254,85 @@ public class SegundaVia {
 	}
 
 	// Gera o código de barras, DAC nosso número e representação numérica
-	private String CodigoBarras(Mensalidade m) {
+	private String codigoBarras(Mensalidade m) {
 		System.out.println(m.getNossoNumero());
 		String barras = "";
-		// valor da parte 1=204
-		// int parte1[] = { 3, 4, 1, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		// 1, 7, 4 };
-		int parte2[] = new int[8];
-		// valor da parte 3=301
-		// int parte3[] = { 7, 1, 4, 5, 0, 3, 6, 7, 9, 0, 0, 0 };
-		nossoNumero = m.getNossoNumero();
-		int total = 0, mod = 8;
-		for (int i = 0; i < 8; i++) {
-			parte2[i] = Integer.parseInt(String.valueOf(nossoNumero.charAt(i)));
-			System.out.println("Valor: " + parte2[i] + " Indice: " + i);
+		String data=new SimpleDateFormat("dd/MM/yyyy").format(m.getDataVencimento());
+		String dataVenc[]=data.split("/");
+		Calendar c=Calendar.getInstance();
+		c.set(2000, 07, 3);
+		Calendar d=Calendar.getInstance();
+		int dia=Integer.parseInt(dataVenc[0])+1;
+		d.set(Integer.parseInt(dataVenc[2]),Integer.parseInt(dataVenc[1]),dia);
+		
+		//GregorianCalendar base=new GregorianCalendar(2000,Calendar.JULY,3);//=1000
+		//GregorianCalendar vencimento=new GregorianCalendar(Integer.parseInt(dataVenc[2]),Integer.parseInt(dataVenc[1]),Integer.parseInt(dataVenc[0]));
+		long diferenca=d.getTimeInMillis()-c.getTimeInMillis();
+		fator=diferenca/(24*60*60*1000);
+		fator=fator+1000;
+		String fatorString=String.valueOf(fator);
+		int fatorV[]=new int[4];
+		for(int i=0;i<4;i++){
+		fatorV[i]=Integer.parseInt(String.valueOf(fatorString.charAt(i)));
 		}
-		DACNossoNumero = DACNossoNumero(parte2);
-		total = DACNossoNumero * 7;
-		for (int i = 7; i >= 0; i--) {
-			total += parte2[i] * mod;
-			System.out.println("Total: " + total + " - Valor: " + parte2[i]
-					+ "Mod: " + mod + " Soma: " + (parte2[i] * mod));
-			if (mod == 9) {
-				mod = 2;
+		// antiga carteira: 174 nova carteira: 109
+		// valor da parte 1=204
+		int parte1[] = { 3, 4, 1, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		for(int f=0;f<4;f++){
+			parte1[f+4]=fatorV[f];
+		}
+		String v=String.valueOf(m.getValorParcela());
+		System.out.println("Valor parcela: "+v);
+		String valorArr[]=v.split("\\.");System.out.println(Arrays.toString(valorArr));
+		if(valorArr[1].length()==2){
+			valor=valorArr[0]+valorArr[1];	
+		}else{
+		valor=valorArr[0]+valorArr[1]+"0";
+		}
+		int t=valor.length();
+		t=10-t;
+		for(int f=0;f<t;f++){
+			valor="0"+valor;
+		}
+		for(int i=0;i<9;i++){
+			parte1[i+8]=Integer.parseInt(String.valueOf(valor.charAt(i)));
+		}
+				
+		int parte2NossoNumero[] = new int[8];
+		// valor da parte 3=301
+		// int parte3[] = { 7, 1, 4, 5, 0, 3, 6, 7, 9, 9, 0, 0, 0 };
+		
+		nossoNumero = m.getNossoNumero();
+		int total = 0, mod = 4;
+		for (int i = 0; i < 8; i++) {
+			parte2NossoNumero[i] = Integer.parseInt(String.valueOf(nossoNumero.charAt(i)));
+			parte1[i+21]=parte2NossoNumero[i];
+			System.out.println("Valor: " + parte2NossoNumero[i] + " Indice: " + i);
+		}
+		DACNossoNumero = DACNossoNumero(parte2NossoNumero);
+		parte1[29]=DACNossoNumero;
+		for(int f=0;f<30;f++){
+			total+=mod*parte1[f];
+			System.out.println("Total: " + total + " - Valor: " + parte1[f] 
+					+ " Mod: " + mod + " multiplicação: " + (parte1[f] * mod));
+			if (mod == 2) {
+				mod = 9;
 			} else {
-				mod++;
+				mod--;
 			}
 		}
-		total = 204 + 301 + total;
+		total = 301 + total;
 		System.out.println("Total das somas de parte1 e parte2:" + total);
 		total = total % 11;
 		System.out.println("Total mod11: " + total);
 		DACBarras = 11 - total;
 		System.out.println("DAC: " + DACBarras);
-		barras = "3419" + DACBarras + "00000000000000174" + nossoNumero
-				+ DACNossoNumero + "7145036799000";
+		barras = "3419" + DACBarras + fator+valor+"109" + nossoNumero+ DACNossoNumero + "7145036799000";
 		m.setCodBarras(barras);
 		m.setDacNossoNumero(Integer.toString(DACNossoNumero));
-		String representacao = representacaoNumerica(parte2);
+		representacaoNumerica = representacaoNumerica(parte2NossoNumero);
 		System.out.println("Código de barras: " + barras
-				+ "\n Representação numérica: " + representacao
+				+ "\n Representação numérica: " + representacaoNumerica
 				+ "\nNosso número + DAC: " + m.getNossoNumero() + "-"
 				+ m.getDacNossoNumero());
 		return barras;
@@ -430,28 +484,36 @@ return geral;
 
 	// Gera a representação numérica
 	private String representacaoNumerica(int[] NN) {
-		int parte1[] = { 3, 4, 1, 9, 1, 7, 4, NN[0], NN[1] };
-		int parte2[] = { NN[2], NN[3], NN[4], NN[5], NN[6], NN[7],
-				DACNossoNumero, 7, 1, 4 };
+		int parte1[] = { 3, 4, 1, 9, 1, 0, 9, NN[0], NN[1] };
+		int parte2[] = { NN[2], NN[3], NN[4], NN[5], NN[6], NN[7],DACNossoNumero, 7, 1, 4 };
 		int parte3[] = { 5, 0, 3, 6, 7, 9, 9, 0, 0, 0 };
 		// int parte5[]={0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 		int dac1, dac2, dac3, soma;
 		soma = mod10(parte1);
 		dac1 = soma % 10;
 		dac1 = 10 - dac1;
+		if(dac1==10){
+			dac1=0;
+		}
 
 		soma = mod10(parte2);
 		dac2 = soma % 10;
 		dac2 = 10 - dac2;
-
+		if(dac2==10){
+			dac2=0;
+		}
+		
 		soma = mod10(parte3);
 		dac3 = soma % 10;
 		dac3 = 10 - dac3;
-
-		String representacao = "34191.74" + NN[0] + NN[1] + dac1 + " " + NN[2]
+		if(dac3==10){
+			dac3=0;
+		}
+System.out.println("DAC 1: "+dac1+" DAC 2: "+dac2+" DAC 3: "+dac3);
+		String representacao = "34191.09" + NN[0] + NN[1] + dac1 + " " + NN[2]
 				+ NN[3] + NN[4] + NN[5] + NN[6] + "." + NN[7] + DACNossoNumero
 				+ "714" + dac2 + " " + "50367.99000" + dac3 + " " + DACBarras
-				+ " " + "000";
+				+ " " + fator+valor;
 		return representacao;
 	}
 
@@ -467,8 +529,7 @@ return geral;
 		int mod = 2, soma = 0;
 		for (int i = calculo.length - 1; i >= 0; i--) {
 			calcula[i] = calculo[i] * mod;
-			System.out.println("Total: " + calcula[i] + " Valor: " + calculo[i]
-					+ " Mod" + mod);
+			System.out.println("Total: " + calcula[i] + " Valor: " + calculo[i]+ " Mod" + mod);
 			if (mod == 2) {
 				mod = 1;
 			} else {
@@ -503,4 +564,5 @@ return geral;
 		}
 		return m;
 	}
+	
 }

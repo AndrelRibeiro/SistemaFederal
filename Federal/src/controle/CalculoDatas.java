@@ -36,7 +36,7 @@ public class CalculoDatas {
 		
 		return mensalidade;
 	}
-	public boolean pagamentos(ArrayList<Mensalidade>mensalidades){
+	public boolean pagamentoss(ArrayList<Mensalidade>mensalidades){
 		boolean retorno=false;
 		for(Mensalidade m : mensalidades){
 			if(!m.getSituacao().equalsIgnoreCase("P")){
