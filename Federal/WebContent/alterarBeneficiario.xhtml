@@ -33,7 +33,7 @@
 <td colspan="3"><p:selectOneMenu id="display"   style="width:300px"	value="#{beneficiario.beneficiarioNovo.idBeneficiario}">
 <f:selectItems value="#{beneficiario.beneficiarios}" var="ben" itemValue="#{ben.idBeneficiario}" itemLabel="#{ben.nome}" />
 	</p:selectOneMenu></td>
-	<td><p:commandButton id="busca"  action="#{beneficiario.buscarPorId}" ajax="false" update="dadosB:dados" value="Buscar"/></td>
+	<td><p:commandButton id="busca"  action="#{beneficiario.buscarPorId}" ajax="true" update="dadosB" value="Buscar"/></td>
 					</tr>
 					</table>
 					</h:form></p:panel>
@@ -43,13 +43,13 @@
 					<tr>
 						<td width="160"><p:outputLabel for="titular" value="Titular" /></td>
 						<td colspan="3" width="480"><p:inputText id="titular" required="" maxlength="100" size="60"
-						value="${beneficiario.cliente.nome}" colspan="2" /></td>
+						value="#{beneficiario.cliente.nome}" colspan="2" /></td>
 					</tr>
 					<tr>
 						<td width="160"><p:outputLabel for="nome" value="Nome" /></td>
 						
 						<td colspan="3" width="480"><p:inputText id="nome" title="Digite o Nome"
-							    required="" maxlength="100" size="60" value="${beneficiario.beneficiarioNovo.nome}" colspan="2"
+							    required="" maxlength="100" size="60" value="#{beneficiario.beneficiarioNovo.nome}" colspan="2"
 								style="text-transform:uppercase" rendered="true" /></td>
 					</tr>
 					<tr>

@@ -11,10 +11,9 @@
 </h:head>
 <ui:composition template="/cabecalho.xhtml">
 	<ui:define name="conteudo">
-		<h:body>
-		
+		<h:body><br></br>
 			<center> <h:form>
-			<h3>Cadastro de Clientes apenas para Contrato já existente e que não possua Cliente</h3>
+			
 <p:wizard style="width:100%" id="cad" backLabel="Voltar" nextLabel="Avançar">
 <p:tab id="Pessoal" title="Pessoal">
 <p:panel header="Dados Pessoais" id="panel0"><p:focus context="panel0"/>
@@ -22,7 +21,6 @@
 <p:messages >
 <p:effect type="pulsate" event="load" delay="1000" />
 </p:messages>
-
 							<table>
 							<tr>
 <td width="200"><p:outputLabel for="numContrato" value="Contrato" style="font-weight:bold" /></td>
@@ -32,7 +30,6 @@
 	<p:ajax event="blur" listener="#{contrato.pesquisaCadastrado}" update="growl"/>
 	</p:inputText></td>
 							</tr>
-							
 								<tr>
 									<td><p:outputLabel for="nome" value="Titular"
 											style="font-weight:bold" /></td>
@@ -40,6 +37,7 @@
 						<td colspan="3"><p:inputText id="nome"
 								title="Digite o Nome" required="true" onblur="upperCase(this)" requiredMessage="O nome do Cliente deve ser preenchido" maxlength="100"
 											size="55" value="#{contrato.cliente.nome}" colspan="2">
+
 											<f:validateLength minimum="5" maximum="100" />
 										</p:inputText></td>
 								</tr>
@@ -116,17 +114,7 @@
 											maxlength="100" size="20"
 											value="#{contrato.cliente.profissao}" /></td>
 								</tr>
-								<tr>
-									<td><p:outputLabel for="profissional"
-											value="Cadastrado por" /></td>
-									<td colspan="2"><p:selectOneMenu id="profissional" required="true" requiredMessage="Informe o cadastrador" label="Cadastrador"
-											value="#{contrato.cliente.idFuncionario}">
-											<f:selectItem itemLabel="-" itemValue="#{null}" />
-											<f:selectItems value="#{funcionario.listar()}" var="fun"
-												itemValue="#{fun.idFuncionario}" itemLabel="#{fun.login}" />
-										</p:selectOneMenu></td>
-									<td></td>
-								</tr>
+								
 								<tr>
 									<td><p:outputLabel for="observacao" value="Observação" /></td>
 									<td colspan="3"><p:inputTextarea id="observacao"
@@ -137,7 +125,7 @@
 								</tr>
 							</table>
 						</p:panel>
-</p:tab>
+					</p:tab>
 <p:tab id="dadosendereco" title="Endereço">
 <p:panel header="Dados de Endereço" id="end"><p:focus context="end"/>
 <p:growl id="growl2" sticky="true" showDetail="true" life="8000" autoUpdate="true" showSummary="false"/>
@@ -150,7 +138,7 @@
 									<td colspan="3"><p:inputMask id="cep" title="Digite o CEP"
 											maxlenght="9" size="14" mask="99999999" required="true" requiredMessage="Insira o CEP corretamente" label="CEP"
 											value="#{contrato.endereco.cep}" />
-											<p:commandButton  action="#{cliente.endereco}" update="endereco cidade estado bairro" id="buscaEnd" value="Buscar"/></td>
+											<p:commandButton  action="#{contrato.endereco}" update="endereco cidade estado bairro" id="buscaEnd" value="Buscar"/></td>
 								</tr>
 								<tr>
 									<td><p:outputLabel for="endereco" value="Endereço"/></td>
@@ -191,7 +179,7 @@
 							</table>
 						</p:panel>
 						<p:messages />
-</p:tab>			
+					</p:tab>		
 <p:tab id="confirmacao" title="Confirmação">
 						<p:panel header="Dados para Confirmação">
 							<p:growl id="growl5" sticky="true" showDetail="true" life="8000" autoUpdate="true" showSummary="false"/>

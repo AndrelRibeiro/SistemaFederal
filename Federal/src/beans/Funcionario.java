@@ -10,7 +10,7 @@ public class Funcionario implements Serializable{
 	private static final long serialVersionUID = 1L;
 private int idFuncionario;
 private String nome;
-private String login; 
+private String login;  
 private String senha;
 private String repsenha;
 private String dicaSenha;

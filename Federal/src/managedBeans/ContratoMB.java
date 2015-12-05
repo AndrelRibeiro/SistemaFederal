@@ -458,7 +458,7 @@ public void validaAniversarioBen(AjaxBehaviorEvent event){
 		    FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Data de nascimento inválida!",  null));
 	}
 }
-public void validaAniversarioCli(AjaxBehaviorEvent event){System.out.println(cliente.toString());
+public void validaAniversarioCli(AjaxBehaviorEvent event){
 	Calendar c= Calendar.getInstance();
 	if(cliente.getNascimento().after(c.getTime())){
 		    FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Data de nascimento inválida!",  null));
@@ -507,8 +507,8 @@ public void atendimento(){
 	MensalidadeDao md=new MensalidadeDaoImplementation();
 	Calendar c=Calendar.getInstance();
 	int contrato=contratoNovo.getnContrato();
-	cliente=cd.buscar(contrato);System.out.println(cliente.toString());
-	if(cliente.getNumeroContrato()==0){
+	cliente=cd.buscar(contrato);
+	if(cliente==null){
 		FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_INFO, "Não há cliente cadastrado com este número!",  null));
 	}
 	mensalidades=new ArrayList<Mensalidade>();
@@ -544,9 +544,9 @@ public void atendimento(){
 }
 public void adicionarCliente(){
 	ClienteDao cli=new ClienteDaoImplementation();
-	boolean retorno=cli.adicionar(cliente);
+	boolean retorno=cli.adicionar(cliente);System.out.println("Adicionar Contratomb: "+cliente.toString());
 	if(retorno==true){
-		FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente adicionado com sucesso!",  null));
+		FacesContext.getCurrentInstance().addMessage("Sucesso", new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente adicionado com sucesso!",  null));
 	}else{
 		FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao adicionar cliente!",  null));
 	}

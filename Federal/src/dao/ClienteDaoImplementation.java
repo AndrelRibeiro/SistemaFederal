@@ -61,7 +61,7 @@ CalculoDatas cd=new CalculoDatas();
 		    ps.execute();
 		    ps.close();
 			con.close();
-			retorno=true;
+			retorno=true;System.out.println("Adicionar dao: "+cliente.toString());
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 			retorno= false;
@@ -70,7 +70,7 @@ CalculoDatas cd=new CalculoDatas();
 		    e.printStackTrace();
 		    System.out.println(e.getCause());
 		    retorno=false;
-		}
+		}System.out.println(cliente.toString()+" situacao: "+retorno);
 		return retorno;
 	}
 	public boolean adicionarCancelado (Cliente cliente){
