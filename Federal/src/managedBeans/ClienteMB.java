@@ -2,21 +2,27 @@ package managedBeans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.print.PrintException;
 
-import controle.Impressao;
 import beans.Beneficiario;
 import beans.Cliente;
 import beans.Contrato;
+import beans.Endereco;
 import beans.Mensalidade;
+import controle.Impressao;
+import controle.ValidaCPF;
 import dao.BeneficiarioDao;
 import dao.BeneficiarioDaoImplementation;
+import dao.CepDao;
+import dao.CepDaoImplementation;
 import dao.ClienteDao;
 import dao.ClienteDaoImplementation;
 import dao.ContratoDao;
@@ -34,9 +40,18 @@ private List<Cliente>clientes;
 Cliente clienteNovo=new Cliente();
 private String tipo;
 private String mensagem;
+private Endereco endereco=new Endereco();
 public ClienteMB(){
 
 }
+public Endereco getEndereco() {
+	return endereco;
+}
+
+public void setEndereco(Endereco endereco) {
+	this.endereco = endereco;
+}
+
 public List<Cliente> getClientes() {
 	return clientes;
 }
@@ -46,8 +61,6 @@ public void setClientes(List<Cliente> clientes) {
 }
 
 public Cliente getClienteNovo() {
-	if(clienteNovo==null){
-	}
 	return clienteNovo;
 }
 
@@ -70,7 +83,18 @@ public void adicionar(){
 
 public Cliente buscar(){
 	ClienteDao cli=new ClienteDaoImplementation();
-	clienteNovo=cli.buscar(clienteNovo.getNumeroContrato());System.out.println(clienteNovo.toString());
+	int numeroContrato=clienteNovo.getNumeroContrato();
+	clienteNovo=cli.buscar(clienteNovo.getNumeroContrato());
+	if(clienteNovo==null){
+		Contrato contrato=new Contrato();
+		ContratoDao contd=new ContratoDaoImplementation();
+		contrato=contd.buscar(numeroContrato);
+		if(contrato==null){
+			FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Não há cliente ou contrato com este número!",null));
+		}else{
+		FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Contrato sem cliente cadastrado! Vá até Cadastro > Cliente sem cadastro",null));
+		}
+	}
 	return clienteNovo;
 }
 
@@ -184,5 +208,54 @@ public List<Cliente> contratos(){
 	
 	return clientes;
 }
-
+public void pesquisa(AjaxBehaviorEvent event){System.out.println("Pesquisa contrato: "+clienteNovo.toString());
+	int contrato=clienteNovo.getNumeroContrato();
+	ContratoDao cd=new ContratoDaoImplementation();
+	ClienteDao cli=new ClienteDaoImplementation();
+	Contrato contratoNovo=null;
+	Cliente verifica=null;
+	verifica=cli.buscar(contrato);
+	contratoNovo=cd.buscar(contrato);
+	if(contratoNovo!=null){		
+			if(verifica==null){
+			FacesContext.getCurrentInstance().addMessage("Erro",new FacesMessage(FacesMessage.SEVERITY_INFO,"Contrato sem Cliente encontrado! Prossiga!",null));
+		}else{
+		FacesContext.getCurrentInstance().addMessage("Erro",new FacesMessage(FacesMessage.SEVERITY_ERROR,"O número de contrato possui cliente, vá até a opção Editar > Cliente!",null));
+		}
+	}else if(contratoNovo==null){
+		FacesContext.getCurrentInstance().addMessage("Erro",new FacesMessage(FacesMessage.SEVERITY_ERROR,"O contrato não está cadastrado, vá até a opção: Cadastro > Contrato sem cliente",null));
+	}	System.out.println("Pesquisa contrato saida: "+clienteNovo.toString());
+	}
+public void validaCPF(AjaxBehaviorEvent event){
+	System.out.println("valida cpf: "+clienteNovo.toString());
+	boolean valida=ValidaCPF.valida(clienteNovo);
+	if(!valida){
+		FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Número de CPF inválido! Informe novamente!",  null));
+	}System.out.println("valida cpf saida: "+clienteNovo.toString());
+	}
+public void validaAniversarioCli(AjaxBehaviorEvent event){
+	Calendar c= Calendar.getInstance();System.out.println("Valida aniversario: "+clienteNovo.toString());
+	if(clienteNovo.getNascimento().after(c.getTime())){
+		    FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Data de nascimento inválida!",  null));
+	}System.out.println("Valida aniversario saida: "+clienteNovo.toString());
+}
+public void endereco(){
+	System.out.println("endereço: "+clienteNovo.toString());
+	if(endereco.getCep().isEmpty()||endereco.getCep().length()!=8){
+		FacesContext.getCurrentInstance().addMessage("Aviso", new FacesMessage(FacesMessage.SEVERITY_INFO,"Informe um cep válido",null));
+	}else{
+	System.out.println(endereco.toString());
+	//FacesContext.getCurrentInstance().addMessage("Aviso", new FacesMessage(FacesMessage.SEVERITY_INFO,"Aguarde!",null));
+	CepDao cep=new CepDaoImplementation();
+	endereco=cep.buscar(endereco.getCep());
+	clienteNovo.setBairro(endereco.getBairro());
+	clienteNovo.setCep(endereco.getCep());
+	clienteNovo.setCidade(endereco.getCidade());
+	clienteNovo.setEstado(endereco.getEstado());
+	clienteNovo.setLogradouro(endereco.getLogradouro());
+	if(endereco.getLogradouro()==null||endereco.getLogradouro().equalsIgnoreCase("")){
+		FacesContext.getCurrentInstance().addMessage("Aviso", new FacesMessage(FacesMessage.SEVERITY_INFO,"Informe um cep válido",null));
+	}
+	}System.out.println("endereço saida: "+clienteNovo.toString());
+}
 }

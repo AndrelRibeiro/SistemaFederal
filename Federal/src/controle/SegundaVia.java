@@ -119,6 +119,7 @@ public class SegundaVia {
 		//sacadorAvalista.addEndereco(enderecoSacAval);
 		
 		String codigoDeBarras=codigoBarras(mensalidade);
+		System.out.println(codigoDeBarras);
 		Image img=CodigoDeBarras.valueOf(codigoDeBarras).toImage();
 		
 		titulo = new Titulo(contaBancaria, sacado, cedente);
@@ -326,6 +327,9 @@ public class SegundaVia {
 		total = total % 11;
 		System.out.println("Total mod11: " + total);
 		DACBarras = 11 - total;
+		if(DACBarras==10||DACBarras==11||DACBarras==0){
+			DACBarras=1;
+		}
 		System.out.println("DAC: " + DACBarras);
 		barras = "3419" + DACBarras + fator+valor+"109" + nossoNumero+ DACNossoNumero + "7145036799000";
 		m.setCodBarras(barras);
