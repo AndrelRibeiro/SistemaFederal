@@ -2,7 +2,6 @@ package managedBeans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -68,15 +67,18 @@ public boolean isRender() {
 public void setRender(boolean render) {
 	this.render = render;
 }
-public void adicionar(){System.out.println("Chamada do metodo adicionar beneficiario");
+public void adicionar(){
 	BeneficiarioDao bn=new BeneficiarioDaoImplementation();
 	boolean resultado=bn.adicionar(beneficiarioNovo);
-	if(resultado==true){System.out.println("adicionar beneficiario com sucesso");
-		FacesContext.getCurrentInstance().addMessage("Sucesso", new FacesMessage(FacesMessage.SEVERITY_INFO, "Beneficiário adicionado com sucesso!",  null));		
-	}else{System.out.println("adicionar beneficiario sem sucesso");
-		FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao adicionar beneficiário!",  null));
-		
+	if(resultado==true){
+		mensagem="Beneficiário Adicionado com sucesso!";
+		tipo="Sucesso!";
+	}else{
+		mensagem="Erro ao Adicionar Beneficiário";
+		tipo="Erro!";
 	}
+	
+	addMessage(tipo,mensagem);
 }
 
 public void remover(){
@@ -202,12 +204,6 @@ public void pesquisa(AjaxBehaviorEvent event){
 	cliente=cd.buscar(contrato);System.out.println(cliente.toString());
 	if(cliente.getNumeroContrato()!=beneficiarioNovo.getContrato()){
 		FacesContext.getCurrentInstance().addMessage("Erro",new FacesMessage(FacesMessage.SEVERITY_ERROR,"O número de contrato digitado não existe!",null));
-	}
-}
-public void validaAniversarioBen(AjaxBehaviorEvent event){
-	Calendar c= Calendar.getInstance();
-	if(beneficiarioNovo.getDataNascimento().after(c.getTime())){
-		    FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Data de nascimento inválida!",  null));
 	}
 }
 }

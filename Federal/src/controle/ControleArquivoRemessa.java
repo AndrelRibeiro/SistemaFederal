@@ -64,7 +64,7 @@ public class ControleArquivoRemessa {
 	//private String codigoBanco="341";// 9(3)
 	private String agenciaCobra = "00000";// 9(5)
 	private String especie = "01";// X2
-	private String aceite = "A";// X1
+	private String aceite = "N";// X1
 	private String dataEmissao;// 9(6)
 	private String instrucao1 = "24";// X2
 	private String instrucao2 = "  ";// X2
@@ -180,12 +180,21 @@ public class ControleArquivoRemessa {
 			}
 			numeroInscricao = cpfv + "   ";
 			nossoNumero=r.getNossoNumero();
+			numDocumento="00"+nossoNumero;
 			int t = 30 - r.getNome().length();
+			if(t>0){
 			nome = r.getNome() + String.format("%-" + t + "s", "");
+			}else{
+				nome=r.getNome();
+			}
 			nome = nome.substring(0, 30);
 			System.out.println("Tamanho do nome: "+nome.length());
 			int t2 = 40 - r.getEndereco().length();
-			logradouro = r.getEndereco() + String.format("%-" + t2 + "s", "");
+			if(t2>0){
+				logradouro = r.getEndereco() + String.format("%-" + t2 + "s", "");
+			}else{
+				logradouro=r.getEndereco();
+			}
 			logradouro = logradouro.substring(0, 40);
 			System.out.println(logradouro);
 			int tam = r.getBairro().length();
@@ -204,7 +213,7 @@ public class ControleArquivoRemessa {
 			System.out.println(cidade);
 			estado = "SP";
 			cep = r.getCep().replace("-", "");
-			sacador = nome;
+			sacador = nomeEmpresa;
 			numeroSequencial++;
 			String nn = numeroSequencial + "";
 			String n = numeroSequencial(6, nn);
@@ -228,10 +237,10 @@ public class ControleArquivoRemessa {
 		brancos6 = String.format("%-393s", "");
 		String trailer = tipoRegTrailer + brancos6 + sequencia+ numeroSequencial;
 		linhas.add(trailer);
-		File file = new File("C:/Federal/ArquivoRemessa/AR"+data+".rem");
+		File file = new File("C:/Federal/ArquivoRemessa/C"+data);
 		int v=1;
 		while(file.exists()){
-			file = new File("C:/Federal/ArquivoRemessa/AR"+data+v+".rem");
+			file = new File("C:/Federal/ArquivoRemessa/C"+data+v);
 			v++;
 		}
 			try {

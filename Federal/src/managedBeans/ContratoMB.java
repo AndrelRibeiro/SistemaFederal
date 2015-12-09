@@ -361,6 +361,7 @@ public void adicionarBeneficiario() {
         }
 }
 
+
 public void addMensagem(String tipo,String mensagem){
 	 FacesMessage msg = new FacesMessage(tipo,mensagem);
      FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -425,23 +426,6 @@ public void pesquisa(AjaxBehaviorEvent event){
 		FacesContext.getCurrentInstance().addMessage("Erro",new FacesMessage(FacesMessage.SEVERITY_ERROR,"O número de contrato não pode ser igual a zero!",null));
 	}		
 	}
-public void pesquisaCadastrado(AjaxBehaviorEvent event){
-int contrato=cliente.getNumeroContrato();
-ContratoDao cd=new ContratoDaoImplementation();
-ClienteDao cli=new ClienteDaoImplementation();
-Contrato verifica=null;
-cliente=cli.buscar(contrato);
-verifica=cd.buscar(contrato);
-if(verifica!=null){		
-		if(cliente==null){
-		FacesContext.getCurrentInstance().addMessage("Erro",new FacesMessage(FacesMessage.SEVERITY_INFO,"Contrato sem Cliente encontrado! Prossiga!",null));
-	}else{
-	FacesContext.getCurrentInstance().addMessage("Erro",new FacesMessage(FacesMessage.SEVERITY_ERROR,"O número de contrato possui cliente, vá até a opção Editar > Cliente!",null));
-	}
-}else if(verifica==null){
-	FacesContext.getCurrentInstance().addMessage("Erro",new FacesMessage(FacesMessage.SEVERITY_ERROR,"O contrato não está cadastrado, vá até a opção: Cadastro > Recadastrar Contrato",null));
-}	
-}
 public void pesquisaBen(AjaxBehaviorEvent event){
 	BeneficiarioDao bd=new BeneficiarioDaoImplementation();
 	boolean existe=bd.pesquisa(beneficiario);
@@ -464,7 +448,7 @@ public void validaAniversarioCli(AjaxBehaviorEvent event){
 		    FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Data de nascimento inválida!",  null));
 	}
 }
-public void validaCPF(AjaxBehaviorEvent event){System.out.println(cliente.toString());
+public void validaCPF(AjaxBehaviorEvent event){
 	boolean valida=ValidaCPF.valida(cliente);
 	if(!valida){
 		FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Número de CPF inválido! Informe novamente!",  null));
@@ -507,8 +491,8 @@ public void atendimento(){
 	MensalidadeDao md=new MensalidadeDaoImplementation();
 	Calendar c=Calendar.getInstance();
 	int contrato=contratoNovo.getnContrato();
-	cliente=cd.buscar(contrato);
-	if(cliente==null){
+	cliente=cd.buscar(contrato);System.out.println(cliente.toString());
+	if(cliente.getNumeroContrato()==0){
 		FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_INFO, "Não há cliente cadastrado com este número!",  null));
 	}
 	mensalidades=new ArrayList<Mensalidade>();
@@ -542,15 +526,5 @@ public void atendimento(){
 	}
 	
 }
-public void adicionarCliente(){
-	ClienteDao cli=new ClienteDaoImplementation();
-	boolean retorno=cli.adicionar(cliente);System.out.println("Adicionar Contratomb: "+cliente.toString());
-	if(retorno==true){
-		FacesContext.getCurrentInstance().addMessage("Sucesso", new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente adicionado com sucesso!",  null));
-	}else{
-		FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao adicionar cliente!",  null));
-	}
-	cliente=new Cliente();
-	
-}
+
 }

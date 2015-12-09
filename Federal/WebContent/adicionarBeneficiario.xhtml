@@ -14,15 +14,11 @@
 <h:body><br></br>
 <center>
 
-<h:form>
-<p:growl id="message" sticky="true" showDetail="true" life="8000"  autoUpdate="true" showSummary="false"/>
-<p:panel header="Adicionar Beneficiário">
-<p:messages/>
+<h:form><p:growl id="message" autoUpdate="true" showSummary="false"/>
+<p:panel header="Adicionar Beneficiário"><p:messages/><p:growl id="msgs" />
 <table align="center">
 <tr><td width="200"><p:outputLabel for="numContrato" value="Contrato" style="font-weight:bold"/></td>
-<td colspan="3">
-<p:inputText id="numContrato" title="Insira o número do contrato" required="true" maxlenght="30" size="10"
- value="#{beneficiario.beneficiarioNovo.contrato}" update="message titular" onfocus="this.value=''">
+<td colspan="3"><p:inputText id="numContrato" title="Insira o número do contrato" required="true" maxlenght="30" size="10" value="#{beneficiario.beneficiarioNovo.contrato}" update="message titular" onfocus="this.value=''">
 <p:ajax event="blur" listener="#{beneficiario.pesquisa}" update="message titular" />
 </p:inputText>
 </td></tr>
@@ -34,21 +30,15 @@
 </tr>
 <tr><td><p:outputLabel for="nome" value="Nome" style="font-weight:bold"/></td>
 
-<td colspan="3"><p:inputText id="nome" title="Digite o Nome"	required="true" maxlength="100" size="60" 
-value="#{beneficiario.beneficiarioNovo.nome}" colspan="2"  onfocus="#{beneficiario.buscarContrato()}" update="message"/></td></tr>
+<td colspan="3"><p:inputText id="nome" title="Digite o Nome"	required="true" maxlength="100" size="60" value="#{beneficiario.beneficiarioNovo.nome}" colspan="2"  onfocus="#{beneficiario.buscarContrato()}" update="msgs"/></td></tr>
 
 <tr><td><p:outputLabel for="email" value="Email" style="font-weight:bold"/></td>
 
-<td colspan="3"><p:inputText id="email" title="Digite o Email" required="" maxlength="100" size="40" 
-value="#{beneficiario.beneficiarioNovo.email}" colspan="2"/></td></tr>
+<td colspan="3"><p:inputText id="email" title="Digite o Email" required="" maxlength="100" size="40" value="#{beneficiario.beneficiarioNovo.email}" colspan="2"/></td></tr>
 
 <tr><td><p:outputLabel for="nascimento" value="Data de Nascimento" style="font-weight:bold"/></td>
 
-<td><p:inputMask id="nascimento" required="true" requiredMessage="A data de nascimento deve ser preenchida" 
-value="#{beneficiario.beneficiarioNovo.dataNascimento}" maxlenght="10" size="20" mask="99/99/9999" pattern="dd/MM/yyyy">
-<f:convertDateTime locale="pt_BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
-	<p:ajax event="blur" update="message" listener="#{beneficiario.validaAniversarioBen}"/>
-</p:inputMask></td>
+<td><p:inputMask id="nascimento" value="#{beneficiario.beneficiarioNovo.dataNascimento}" maxlenght="10" size="13" mask="99/99/9999" pattern="dd/MM/yyyy"/></td>
 
 <td><p:outputLabel for="classificacao" value="Classificação" style="font-weight:bold"/></td> 
 
@@ -102,17 +92,13 @@ value="#{beneficiario.beneficiarioNovo.dataNascimento}" maxlenght="10" size="20"
 
 <tr><td><p:outputLabel for="observacao" value="Observação" style="font-weight:bold"/></td>
 
-<td colspan="3"><p:inputTextarea id="observacao" title="Digite observações a serem feitas" 
-value="#{beneficiario.beneficiarioNovo.observacao}" maxlength="200" counterTemplate="{0} caracteres restantes" 
-size="98" autoResize="true" rows="4" cols="62"/></td></tr>
+<td colspan="3"><p:inputTextarea id="observacao" title="Digite observações a serem feitas" value="#{beneficiario.beneficiarioNovo.observacao}" maxlength="200" counterTemplate="{0} caracteres restantes" size="98" autoResize="true" rows="4" cols="62"/></td></tr>
 </table><br></br>
 <p:separator style="width:100%; height:5px"/>
 <table align="center">
 
 					
-<tr><td align="center"><p:commandButton id="Adicionar" value="Adicionar"	icon="ui-icon-disk" 
-update="message" title="Adicionar Beneficiário" action="#{beneficiario.adicionar()}"/></td>
-
+<tr><td align="center"><p:commandButton id="Adicionar" value="Adicionar"	icon="ui-icon-disk" update="message" title="Adicionar Beneficiário" action="#{beneficiario.adicionar()}"/></td>
 <td align="center"><p:commandButton id="cancelar" value="Cancelar" icon="ui-icon-trash" title="Cancelar" action="/index.xhtml"/></td></tr>
 
 </table></p:panel>

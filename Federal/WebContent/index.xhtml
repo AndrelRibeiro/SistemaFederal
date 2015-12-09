@@ -25,7 +25,7 @@
         <p:commandButton value="Imprimir Lista" type="button" icon="ui-icon-print" style="display:block;margin-bottom: 20px">
     <p:printer target="listar" />
 </p:commandButton>
-        <p:dataTable id="listar" style="width:99%" value="#{infoMB.listar()}" var="inf" rows="500">
+        <p:dataTable id="listar" value="#{infoMB.listar()}" var="inf" rows="500">
         <p:column width="40">
 			<f:facet name="header">
 				<h:outputText value="Relevância" />

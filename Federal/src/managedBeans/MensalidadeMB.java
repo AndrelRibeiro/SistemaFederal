@@ -608,20 +608,17 @@ public List<Cliente> exibeClientesImprimir(){
 	mensais=md.listarCarnes();
 	for(Mensalidade m:mensais){
 		cliente=cd.buscar(m.getContrato());
-		if(cliente!=null){
-		if(cliente.getCpfok()==1){
-			cliente.setSituacao("CPF OK");
-			System.out.println("CPF OK: "+cliente.toString());
-		}else{
-			cliente.setSituacao("CPF INVÁLIDO");
-			System.out.println("CPF INVÁLIDO: "+cliente.toString());
-		}
-		}else{
+		if(cliente==null){
 			cliente=new Cliente();
 			cliente.setNumeroContrato(m.getContrato());
 			cliente.setNome("Cliente não cadastrado");
 			cliente.setCpf("-----------");
 			cliente.setSituacao("Necessário cadastrar os dados do cliente");
+		}else{
+			if(cliente.getCpfok()==0){
+				cliente.setSituacao("CPF INVÁLIDO");
+				System.out.println("CPF INVÁLIDO: "+cliente.toString());
+			}
 		}
 		clientes.add(cliente);
 	}

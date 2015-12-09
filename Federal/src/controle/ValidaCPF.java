@@ -72,20 +72,19 @@ public static boolean valida(Cliente c){
 public static void main(String[]args){
 	ClienteDao cd=new ClienteDaoImplementation();
 	List<Cliente>clientes=new ArrayList<Cliente>();
-	boolean valido=false;
 	boolean retorno=false;
 	clientes=cd.listarAtivos();
 	Cliente cliente;
 	List<Cliente> clientesvalidos=new ArrayList<Cliente>();
 			
 	for(int i=0;clientes.size()>i;i++){
-		valido=valida(clientes.get(i));
-		if(valido){
+		
+		if(valida(clientes.get(i))){
 			cliente=new Cliente();
 			cliente=clientes.get(i);
 			cliente.setCpfok(1);
 			retorno=cd.atualizar(cliente);
-			clientesvalidos.add(clientes.get(i));
+			clientesvalidos.add(cliente);
 			System.out.println("CPF válido: "+cliente.getCpf());
 		}else{
 			cliente=new Cliente();
@@ -94,11 +93,11 @@ public static void main(String[]args){
 			retorno=cd.atualizar(cliente);
 			System.out.println("CPF inválido: "+cliente.getCpf());
 		}
-		if(retorno){
+		/*if(retorno){
 			System.out.println("Cliente atualizado: "+cliente.toString());
 		}else{
 			System.out.println("Cliente não atualizado: "+cliente.toString());
-		}
+		}*/
 	}
 	/*int clientesvalidos[]=new int[clientes.size()];System.out.println("Lista de clientes: "+clientes.size());
 	for(int i=0;clientes.size()>i;i++){

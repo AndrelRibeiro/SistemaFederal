@@ -27,7 +27,7 @@ private String profissao;
 private String pontoRef;
 private String email;
 private String situacao;
-private int idFuncionario; 
+private int idFuncionario;
 private String observacao;
 private String estadoCivil;
 private String naturalidade;

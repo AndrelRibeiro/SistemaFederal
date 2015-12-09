@@ -49,9 +49,11 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel for="cpf" value="CPF" /></td>
-						<td><p:inputMask id="cpf" title="Digite o CPF" maxlength="14"
-								size="19" required="" mask="999.999.999-99"
-								value="#{cliente.clienteNovo.cpf}" /></td>
+						<td><p:inputMask id="cpf" title="Digite o CPF" maxlength="14" size="19" required="" mask="999.999.999-99"
+								value="#{cliente.clienteNovo.cpf}" >
+								<p:ajax event="blur" update="message" listener="#{cliente.validaCPF}"/>
+								</p:inputMask>
+								</td>
 						<td><p:outputLabel for="rg" value="RG" /></td>
 						<td colspan="2"><p:inputMask id="rg" title="Digite o RG"
 								maxlength="12" size="19" required="" 
@@ -62,6 +64,7 @@
 								value="Data de Nascimento" /></td>
 						<td><p:inputMask id="nascimento" required="true" value="#{cliente.clienteNovo.nascimento}"   mask="99/99/9999"	pattern="dd/MM/yyyy" maxlenght="10" size="14" >
 								<f:convertDateTime locale="pt_BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+								<p:ajax event="blur" update="message" listener="#{cliente.validaAniversarioCli}"/>
 								</p:inputMask></td>
 								
 								<td><p:outputLabel for="natural" value="Naturalidade"/></td>

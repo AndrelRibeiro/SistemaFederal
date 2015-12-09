@@ -14,10 +14,12 @@ import dao.FuncionarioDaoImplementation;
 import beans.Funcionario;
 
 
+@ManagedBean
+@SessionScoped
 public class FuncionarioMB implements Serializable{
 	/**
 	 * 
-	 */   
+	 */ 
 	private static final long serialVersionUID = 1L;
 private Funcionario funcionarioNovo = new Funcionario();
 private List<Funcionario>funcionarios; 
