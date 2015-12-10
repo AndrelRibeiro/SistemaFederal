@@ -110,7 +110,8 @@ CalculoDatas cd=new CalculoDatas();
 		    ps.setString(22, cliente.getNaturalidade().toUpperCase());
 		    ps.setString(23,cliente.getSexo().toUpperCase());
 		    Calendar c=Calendar.getInstance();
-		    ps.setDate(24, (Date) c.getTime());
+		    java.util.Date dt=c.getTime();
+		    ps.setDate(24,new java.sql.Date( dt.getTime()));
 		    ps.execute();
 		    ps.close();
 			con.close();
@@ -362,9 +363,9 @@ CalculoDatas cd=new CalculoDatas();
 	public Cliente buscar (int contrato){
 		String sql="SELECT * FROM CLIENTE WHERE CONTRATO =?";
 		Cliente cliente=null;
-		PreparedStatement ps;
+		PreparedStatement ps=null;
 		Connection con=null;
-		ResultSet rs;
+		ResultSet rs=null;
 		try{
 			new ConnectionFactory();
 			con=ConnectionFactory.getConnection();
@@ -397,16 +398,22 @@ CalculoDatas cd=new CalculoDatas();
 			cliente.setSexo(rs.getString("SEXO"));
 			cliente.setNumeroContrato(rs.getInt("CONTRATO"));
 			cliente.setNaturalidade(rs.getString("NATURALIDADE"));
-			ps.close();
-			rs.close();
-			con.close();}
+			}
 		}catch(SQLException e){
 			System.out.println(e.getMessage());	
 		
 	    }catch(Exception e) {
 	    	System.out.println(e.getMessage());
 	    	}
-	    
+		try {
+			ps.close();
+			rs.close();
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return cliente;
 	}	
 	

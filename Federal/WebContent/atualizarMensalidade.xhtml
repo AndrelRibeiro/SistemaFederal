@@ -21,25 +21,12 @@
 					<p:panel>
 					<table>
 						<tr>
-						<td width="200"><p:outputLabel for="cnr" value="Nosso número:" /></td>
-						<td width="600"><p:inputText id="cnr" value="#{mensalidade.mensalidadeNova.nossoNumero}"
-							actionListener="#{mensalidade.buscarNN}" update="listaMensalidades Inpcontrato Inpcliente growl"	onfocus="this.value=''"/> 
-						<p:commandButton
-										id="buscar" value="Buscar" action="#{mensalidade.buscarNN}"	update="listaMensalidades Inpcontrato Inpcliente growl" />
-						<p:selectOneRadio id="cl" rendered="false" value="#{mensalidade.listar}">
-    	      				  <f:selectItem  itemValue="1"  />
-           				 </p:selectOneRadio> </td>
-							</tr>
-						</table>
-					</p:panel>
-					<p:panel>
-					<table>
-						<tr>
 						<td width="200"><p:outputLabel for="contrato" value="Contrato:" /></td>
-						<td width="600"><p:inputText id="contrato" value="#{mensalidade.mensalidadeNova.contrato}"
-							actionListener="#{mensalidade.listarContrato()}" update="listaMensalidades Inpcontrato Inpcliente growl"	onfocus="this.value=''"/> 
+						<td width="600"><p:inputText id="contrato" value="#{contrato.contratoNovo.contrato}"
+							actionListener="#{contrato.listarContrato()}" update="listaMensalidades Inpcontrato Inpcliente growl"
+								onfocus="this.value=''"/> 
 						<p:commandButton
-										id="buscarContrato" value="Buscar" action="#{mensalidade.listarContrato()}"	update="listaMensalidades Inpcontrato Inpcliente growl" />
+										id="buscarContrato" value="Buscar" action="#{contrato.listarContrato()}"	update="listaMensalidades Inpcontrato Inpcliente growl" />
 						<p:selectOneRadio id="cl2" rendered="false" value="#{mensalidade.listar}">
     	      				  <f:selectItem  itemValue="1"  />
            				 </p:selectOneRadio> </td>
@@ -52,16 +39,38 @@
 							<tr>
 								<td width="200"><p:outputLabel for="Inpcontrato" value="Contrato" /></td>
 								
-								<td width="600"><p:inputText id="Inpcontrato" value="#{mensalidade.cliente.numeroContrato}" readonly="true" maxlenght="10"
+								<td width="600"><p:inputText id="Inpcontrato" value="#{contrato.cliente.numeroContrato}" readonly="true" maxlenght="10"
 										size="20" title="Número do contrato" /></td>
 							</tr>
 
 							<tr>
 								<td><p:outputLabel for="Inpcliente" value="Cliente" /></td>
-								<td><p:inputText id="Inpcliente" value="#{mensalidade.cliente.nome}"  readonly="true" maxlength="200" size="55"
+								<td><p:inputText id="Inpcliente" value="#{contrato.cliente.nome}"  readonly="true" maxlength="200" size="55"
 										title="Nome do cliente" /></td>
 							</tr>
-							
+							<tr>
+								<td><p:outputLabel for="InpValor" value="Valor " /></td>
+								<td><p:inputText id="InpValor" value="#{contrato.contratoNovo.vParcelas}"  onfocus="this.value=''" maxlength="20" size="20"
+										title="Nome do cliente" >
+										<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="pt_BR"/>
+										</p:inputText> * Altere em caso de valor diferente!</td>
+							</tr>
+							<tr>
+									<td><p:outputLabel for="periodicidade"	value="Forma de Pagamento:" /></td>
+								</tr>
+								<p:selectOneRadio id="periodicidade" value="#{contrato.mensal}" layout="custom">
+									<f:selectItem itemValue="1" />
+									<f:selectItem itemValue="2" />
+									<f:selectItem itemValue="3" />
+								</p:selectOneRadio>
+								<tr>
+									<td><p:radioButton id="opt10" for="periodicidade" itemIndex="0" /> 
+									<h:outputLabel for="opt10" value="Mensal" style="margin-right:70px" /></td>
+									<td><p:radioButton id="opt20" for="periodicidade" itemIndex="1" /> 
+									<h:outputLabel for="opt20" value="Bimestral" style="margin-right:70px" /></td>
+									<td><p:radioButton id="opt30" for="periodicidade" itemIndex="2" /> 
+									<h:outputLabel for="opt30" value="Trimestral" /></td>
+								</tr>
 						</table>
 					</p:panel>
 					<br></br>
@@ -69,7 +78,7 @@
 						<table>
 						<tr><td></td>
 								<td> 
-										<p:commandButton id="gerar" value="Gerar Boleto" action="#{mensalidade.via2Mensalidade}" icon="ui-icon-disk"/>
+										<p:commandButton id="gerar" value="Gerar Boleto" action="#{contrato.atualizar}" icon="ui-icon-disk"/>
 										<p:commandButton id="cancelar" value="Cancelar" icon="ui-icon-trash" title="Cancelar" action="/index.xhtml" /></td>
 							</tr>
 						</table>
@@ -78,9 +87,9 @@
 					<p:panel>
 						<p:dataTable id="listaMensalidades" style="width:100%"
 							
-							value="#{mensalidade.mensalidades}" var="men">
+							value="#{contrato.mensalidades}" var="men">
 							<f:facet name="header">
-					Outras mensalidades do mesmo cliente  #{fn:length(mensalidade.mensalidades)}
+					Outras mensalidades do mesmo cliente  #{fn:length(contrato.mensalidades)}
 					</f:facet>
 							<p:column width="15">
 								<f:facet name="header">

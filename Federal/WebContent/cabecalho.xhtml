@@ -18,14 +18,17 @@
 <ui:insert name="cabecalho">
 <p:menubar id="menu" update="messages">
 <p:submenu label="Cadastro" icon="ui-icon-pencil">
-<p:menuitem value="Contrato" url="contratoNovo.xhtml" />
+<p:menuitem value="Contrato Novo" url="contratoNovo.xhtml" />
+<p:menuitem value="Cliente sem Contrato" url="clienteSemContrato.xhtml" />
+<p:menuitem value="Contrato sem Cliente" url="Provisorio.xhtml" />
 <p:menuitem value="Beneficiários" url="adicionarBeneficiario.xhtml"/>
 <p:menuitem value="Vendedores" url="adicionarVendedor.xhtml"/>
-<p:menuitem value="Registrar Atendimento" url="registrarAtendimento.xhtml"/>
+<p:menuitem value="*Registrar Atendimento*" url="registrarAtendimento.xhtml"/>
 <p:menuitem value="Adicionar Preços" url="adicionarPreco.xhtml"/>
 </p:submenu>
 <p:submenu label="Editar" icon="ui-icon-search">
 <p:menuitem value="Cliente" url="alterarCliente.xhtml" />
+<p:menuitem value="Contrato" url="atualizaContrato.xhtml"/>
 <p:menuitem value="Beneficiário" url="alterarBeneficiario.xhtml"/>
 <p:menuitem value="Vendedor" url="alterarVendedor.xhtml"/>
 </p:submenu>
@@ -41,9 +44,7 @@
 <p:menuitem value="Imprimir Carnês" url="ImprimirCarnes.xhtml"/>
 </p:submenu>
 <p:menuitem value="Baixa manual de CNRs" url="baixaManual.xhtml"/>
-<p:menuitem value="Extorno de CNRs" url=""/>
 <p:menuitem value="Consulta a CNRs" url="consultaCNR.xhtml"/>
-<p:menuitem value="CNRs antigas" url=""/>
 <p:menuitem value="Exclusão de CNRs" url="excluirCNR.xhtml"/>
 </p:submenu>
 <p:submenu label="Exibir">
@@ -63,7 +64,7 @@
 </p:submenu>
 <p:submenu label="Opções">
 <p:menuitem value="Arquivo de Retorno" url="importarArquivo.xhtml"/>
-<p:menuitem value="Arquivo de Remessa" url="exportarArquivo.xhtml"/>
+<p:menuitem value="*Arquivo de Remessa*" url="exportarArquivo.xhtml"/>
 <p:menuitem value="Imprimir Etiquetas" url="listarClienteParaEtiqueta.xhtml"/>
 <p:menuitem value="Comunicar Erro" url="informe.xhtml"/>
 <p:menuitem value="Início" url="index.xhtml"/>

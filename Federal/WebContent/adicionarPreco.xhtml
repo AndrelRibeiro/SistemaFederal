@@ -26,7 +26,7 @@ table#t01 th	{
 		<h:body>
 			<center> 
 			<h:form>
-				<p:growl id="message" sticky="true" showDetail="true" />
+				<p:growl id="message" sticky="true" showSummary="false" showDetail="true" />
 		
 			<p:panel header="Adicionar Preços">
 			<table id="t01" cellspacing="5" >
@@ -37,45 +37,6 @@ table#t01 th	{
 			<td><p:outputLabel for="Adesao" value="Adesão R$"/></td>
 			<td><p:inputText id="Adesao" value="#{preco.precoNovo.sadesao}" onkeypress="mascara(this,valor)" title="Valor da Adesão" width="10" size="10" required="true" onfocus="this.value=''"/></td></tr>
 			
-			<tr><td><p:outputLabel for="salario" value="Salário Mímimo R$" /></td>
-			<td><p:inputText id="salario" value="#{preco.precoNovo.sminimo}"  onkeypress="mascara(this,valor)" title="Insira o valor do salário mínimo" width="10" size="10" required="true" onfocus="this.value=''"/></td>
-			<td><p:outputLabel for="crematorio" value="Crematório R$"/></td>
-			<td><p:inputText id="crematorio" value="#{preco.precoNovo.scrematorio}" onkeypress="mascara(this,valor)" title="Valor da Urna Especial" width="10" size="10" required="true" onfocus="this.value=''"/></td></tr>
-			
-			<tr><td><p:outputLabel for="especial" value="Plano Especial R$"/></td>
-			<td><p:inputText id="especial" value="#{preco.precoNovo.sespecial}" onkeypress="mascara(this,valor)" title="Valor do Plano Especial" width="10" size="10" required="true" onfocus="this.value=''"/></td>
-			<td><p:outputLabel for="urna" value="Urna Especial R$"/></td>
-			<td><p:inputText id="urna" value="#{preco.precoNovo.surna}" onkeypress="mascara(this,valor)" title="Valor da Urna Especial" width="10" size="10" required="true" onfocus="this.value=''"/></td></tr>
-			
-			<tr><td><p:outputLabel for="executivo" value="Executivo R$"/></td>
-			<td><p:inputText id="executivo" value="#{preco.precoNovo.sexecutivo}" onkeypress="mascara(this,valor)" title="Valor do Plano Executivo" width="10" size="10" required="true" onfocus="this.value=''"/></td>
-			<td><p:outputLabel for="sepulta" value="Sepultamento R$"/></td>
-			<td><p:inputText id="sepulta" value="#{preco.precoNovo.ssepultamento}" onkeypress="mascara(this,valor)" title="Valor do Sepultamento" width="10" size="10" required="true" onfocus="this.value=''"/></td></tr>
-			<tr><td colspan="4"><p:separator style="width:100%; height:10px"/></td></tr>
-			<tr><td colspan="2" align="center"><p:outputLabel value="Dependentes:"/></td><td colspan="2" align="center"> <p:outputLabel value="Avulsos:"/></td></tr>
-			<tr><td colspan="4"><p:separator style="width:100%; height:5px"/></td></tr>
-			<tr><td></td><td></td><td><p:outputLabel for="a65" value="Até 65 anos R$"/></td>
-			<td><p:inputText id="a65" value="#{preco.precoNovo.savu65}" onkeypress="mascara(this,valor)" title="" width="10" size="10" required="true" onfocus="this.value=''"/></td></tr>
-			
-			<tr><td><p:outputLabel for="d66" value="De 66 à 75 anos R$"/></td>
-			<td><p:inputText id="d66" value="#{preco.precoNovo.sdep66}" onkeypress="mascara(this,valor)" title="" width="10" size="10" required="true" onfocus="this.value=''"/></td>
-			<td><p:outputLabel for="a66" value="De 66 à 75 anos R$"/></td>
-			<td><p:inputText id="a66" value="#{preco.precoNovo.savu66}" onkeypress="mascara(this,valor)" title="" width="10" size="10" required="true" onfocus="this.value=''"/></td></tr>
-			
-			<tr><td><p:outputLabel for="d76" value="De 76 à 85 anos R$"/></td>
-			<td><p:inputText id="d76" value="#{preco.precoNovo.sdep76}" onkeypress="mascara(this,valor)" title="" width="10" size="10" required="true" onfocus="this.value=''"/></td>
-			<td><p:outputLabel for="a76" value="De 76 à 85 anos R$"/></td>
-			<td><p:inputText id="a76" value="#{preco.precoNovo.savu76}" onkeypress="mascara(this,valor)" title="" width="10" size="10" required="true" onfocus="this.value=''"/></td></tr>
-			
-			<tr><td><p:outputLabel for="d86" value="De 86 à 90 anos R$"/></td>
-			<td><p:inputText id="d86" value="#{preco.precoNovo.sdep86}" onkeypress="mascara(this,valor)" title="" width="10" size="10" required="true" onfocus="this.value=''"/></td>
-			<td><p:outputLabel for="a86" value="De 86 à 90 anos R$"/></td>
-			<td><p:inputText id="a86" value="#{preco.precoNovo.savu86}" onkeypress="mascara(this,valor)" title="" width="10" size="10" required="true" onfocus="this.value=''"/></td></tr>
-			
-			<tr><td><p:outputLabel for="d91" value="Apartir de 91 anos R$"/></td>
-			<td><p:inputText id="d91" value="#{preco.precoNovo.sdep91}" onkeypress="mascara(this,valor)" title="" width="10" size="10" required="true" onfocus="this.value=''"/></td>
-			<td><p:outputLabel for="a91" value="Apartir de 91 anos R$"/></td>
-			<td><p:inputText id="a91" value="#{preco.precoNovo.savu91}" onkeypress="mascara(this,valor)" title="" width="10" size="10" required="true" onfocus="this.value=''"/></td></tr>
 			<tr><td colspan="4"><p:separator style="width:100%; height:5px"/></td></tr>
 			<tr><td></td><td colspan="2" align="center"><p:commandButton id="gravar" value="Gravar" update="message" icon="ui-icon-disk" action="#{preco.adicionar}"/><p:commandButton id="voltar" value="Voltar" icon="ui-icon-arrowreturnthick-1-w" action="/index.xhtml"/></td><td></td></tr>
 			</table>

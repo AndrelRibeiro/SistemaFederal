@@ -261,16 +261,16 @@ public class SegundaVia {
 		String data=new SimpleDateFormat("dd/MM/yyyy").format(m.getDataVencimento());
 		String dataVenc[]=data.split("/");
 		Calendar c=Calendar.getInstance();
-		c.set(2000, 07, 3);
+		c.set(1997, 10, 7,0,0);
 		Calendar d=Calendar.getInstance();
-		int dia=Integer.parseInt(dataVenc[0])+1;
+		int dia=Integer.parseInt(dataVenc[0]);
 		d.set(Integer.parseInt(dataVenc[2]),Integer.parseInt(dataVenc[1]),dia);
 		
 		//GregorianCalendar base=new GregorianCalendar(2000,Calendar.JULY,3);//=1000
 		//GregorianCalendar vencimento=new GregorianCalendar(Integer.parseInt(dataVenc[2]),Integer.parseInt(dataVenc[1]),Integer.parseInt(dataVenc[0]));
 		long diferenca=d.getTimeInMillis()-c.getTimeInMillis();
+		diferenca+=82800000;
 		fator=diferenca/(24*60*60*1000);
-		fator=fator+1000;
 		String fatorString=String.valueOf(fator);
 		int fatorV[]=new int[4];
 		for(int i=0;i<4;i++){

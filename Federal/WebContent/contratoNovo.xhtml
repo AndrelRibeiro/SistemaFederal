@@ -16,7 +16,7 @@
 			
 <p:wizard style="width:100%" id="cad" backLabel="Voltar" nextLabel="Avançar">
 <p:tab id="Pessoal" title="Pessoal">
-<p:panel header="Dados Pessoais" id="panel0"><p:focus context="panel0"/>
+<p:panel header="Dados Pessoais - Cadastro apenas para CONTRATO NOVO" id="panel0"><p:focus context="panel0"/>
 <p:growl id="growl" sticky="true" showDetail="true" life="8000"  autoUpdate="true" showSummary="false"/>
 <p:messages >
 <p:effect type="pulsate" event="load" delay="1000" />
@@ -397,11 +397,11 @@
 								<tr>
 									<td><p:outputLabel for="dtContrato"	value="Data do Contrato"/></td>
 									
-									<td><p:inputMask id="dtContrato"	value="#{contrato.contratoNovo.dataContrato}" label="Data do Contrato" required="true" requiredMessage="Informe a data de cadastro"  mask="99/99/9999"	pattern="dd/MM/yyyy" >
+									<td><p:calendar id="dtContrato"	value="#{contrato.contratoNovo.dataContrato}" label="Data do Contrato" required="true" requiredMessage="Informe a data de cadastro"  showOn="focus" locale="pt" onblur="true"	pattern="dd/MM/yyyy" >
 									<f:convertDateTime locale="pt_BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
-											<f:ajax event="blur" update="growl4 dtCarencia" render="dtCarencia" listener="#{contrato.calculaCarencia}"/>
-									</p:inputMask>
-									</td>
+											<f:ajax event="blur" update="grow"  listener="#{contrato.calculaCarencia}"/>
+									</p:calendar>
+									</td>					
 								</tr>
 								<tr>
 									<td><p:outputLabel for="dtCarencia"	value="Data limite da carência"/></td>
@@ -525,7 +525,7 @@
 										<h:outputLabel for="opt31" value="Taxa de Sepultamento e quadra geral" /></td>
 								</tr>
 								<tr>
-									<td><p:selectBooleanCheckbox id="opt41" value="#{contrato.plano.crematorio}"/>
+									<td><p:selectBooleanCheckbox id="opt41" value="#{contrato.plano.crematorio}" />
 										<h:outputLabel for="opt41" value="Crematório" style="margin-right:70px" /></td>
 											</tr>
 											<tr>

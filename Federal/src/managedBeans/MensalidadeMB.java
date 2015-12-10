@@ -229,11 +229,14 @@ public class MensalidadeMB implements Serializable {
 			if (mensalidadeNova.getContrato() != 0) {
 				ClienteDao cd = new ClienteDaoImplementation();
 				cliente = cd.buscar(mensalidadeNova.getContrato());System.out.println("Cliente antes de imprimir"+cliente.toString());
+				if(cliente==null){
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Erro!","O cliente não foi encontrado, adicione o cliente com esse número de contrato!"));
+				}else{
 				if(opc==1){
 					// outras mensalidades do mesmo contrato.
 					mensalidades = new ArrayList<Mensalidade>();
 					mensalidades = md.listar(cliente.getNumeroContrato());
-				}
+				}}
 				
 			}else{
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Erro!","O registro com o Nosso Número informado não foi encontrado!"));
@@ -285,7 +288,7 @@ public class MensalidadeMB implements Serializable {
 		MensalidadeDao md = new MensalidadeDaoImplementation();
 		ClienteDao cd=new ClienteDaoImplementation();
 		cliente=cd.buscar(mensalidadeNova.getContrato());
-		if(cliente.getNumeroContrato()==0){
+		if(cliente==null||cliente.getNumeroContrato()==0){
 			FacesMessage msg = new FacesMessage("Aviso!","Não foi encontrado cliente com este número de contrato!");
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 		}else{
@@ -558,6 +561,7 @@ public class MensalidadeMB implements Serializable {
 				nd.alterar(nosso);				
 			}
 		}
+		md.alterar(mensalidadeNova);
 		cliente=cd.buscar(mensalidadeNova.getContrato());
 		SegundaVia gr=new SegundaVia();
 		gr.exibeBoleto2(mensalidadeNova, cliente);
@@ -599,7 +603,7 @@ public class MensalidadeMB implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Sucesso!","Arquivo gerado com sucesso!"));
 			}		
 	}
-public List<Cliente> exibeClientesImprimir(){
+	public List<Cliente> exibeClientesImprimir(){
 	ClienteDao cd=new ClienteDaoImplementation();
 	List<Cliente>clientes=new ArrayList<Cliente>();
 	Cliente cliente =new Cliente();
@@ -677,8 +681,8 @@ public List<Cliente> exibeClientesImprimir(){
 		}
 		return clientes;
 	}
-	public void cadastrarBarras(){
-		File file=new File("C:/Federal/app/CadastraCNR.jar");
+	public void cadastrar(){
+		File file=new File("C:/Federal/Cadastrar/Cadastrar.jar");
 		java.awt.Desktop desktop=java.awt.Desktop.getDesktop();
 		try {
 			desktop.open(file);
@@ -726,4 +730,5 @@ public List<Cliente> exibeClientesImprimir(){
 	public static void main(String[] args){
 		atualizaMensalidades();
 	}
+	
 }

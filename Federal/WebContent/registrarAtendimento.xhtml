@@ -14,6 +14,7 @@
 	<ui:define name="conteudo">
 		<h:body><br></br><center>
 			<h:form id="busca">
+			<p:growl id="growl" sticky="true" showDetail="true" life="10000" autoUpdate="true" showSummary="false"/>
 				<p:panel id="formulario" header="Registrar Atendimento">
 				<table align="center">
 					<tr>
@@ -73,7 +74,7 @@
 				<table align="center">
 					<tr><td></td>
 					
-					<td><p:commandButton id="gravar" value="Gravar" title="Registrar Atendimento" action="#{atendimento.atender()}" ajax="true"/>
+					<td><p:commandButton id="gravar" value="Gravar" title="Registrar Atendimento" icon="ui-icon-disk" actionListener="#{atendimento.atender()}" ajax="true" update="growl"	process="@this"/>
 					<p:commandButton value="Limpar" update="formulario" process="@this">
 					<p:resetInput target="busca"/>
 					</p:commandButton>

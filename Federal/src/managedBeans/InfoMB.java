@@ -10,9 +10,12 @@ import javax.faces.bean.RequestScoped;
 
 import dao.ClienteDao;
 import dao.ClienteDaoImplementation;
+import dao.ContratoDao;
+import dao.ContratoDaoImplementation;
 import dao.MensalidadeDao;
 import dao.MensalidadeDaoImplementation;
 import beans.Cliente;
+import beans.Contrato;
 import beans.Notificacao;
 import beans.Mensalidade;
 @ManagedBean
@@ -46,11 +49,13 @@ public void setLista(List<Notificacao> lista) {
 }
 
 public List<Notificacao> listar(){
+	System.out.println("Mensalidades");
 	lista=new ArrayList<Notificacao>();
 	MensalidadeDao md=new MensalidadeDaoImplementation();
 	List<Mensalidade>mens=new ArrayList<Mensalidade>();
 	Cliente c=null;
 	ClienteDao cd=new ClienteDaoImplementation();
+	ContratoDao cod=new ContratoDaoImplementation();
 	mens=md.listar("ATRASADO");
 	for(Mensalidade m:mens){
 		informacaoNova=new Notificacao();
@@ -59,26 +64,40 @@ public List<Notificacao> listar(){
 		String vencimento=new SimpleDateFormat("dd/MM/yyyy").format(m.getDataVencimento());
 		informacaoNova.setDescricao("Mensalidade em atraso! Contrato: "+m.getContrato()+" - Vencimento: "+vencimento);
 		lista.add(informacaoNova);
-	}
+	}System.out.println("Carnes");
 	List<Mensalidade>carnes=new ArrayList<Mensalidade>();
-	carnes=md.listarCarnes();
+	carnes=md.listarCarnes();System.out.println("Listar carnês");
+	if(!carnes.isEmpty()){
 	for(Mensalidade mg:carnes){ 
 		informacaoNova=new Notificacao();
-		c=new Cliente();
-		c=cd.buscar(mg.getContrato());
-		if(c==null){
+		c=null;
+		Contrato contrato=null;
+		c=cd.buscar(mg.getContrato());System.out.println("Buscar Cliente");
+		
+		contrato=cod.buscar(mg.getContrato());System.out.println("Buscar Contrato");
+		if(c==null&&contrato==null){			
+			md.excluirMensalGerada(mg.getContrato());
+			System.out.println("Remover geracarne");
+		}else if(c==null&&contrato!=null){
 			informacaoNova.setDescricao("Contrato não possui cliente, Para gerar mensalidades o cliente deve ser cadastrado, Contrato: "+mg.getContrato());
-		}else{
-		if(c.getCpfok()==0){
-			informacaoNova.setDescricao("CPF inválido! Atualize o CPF para gerar o carnê! Contrato: "+c.getNumeroContrato());
-		}else{
-		informacaoNova.setDescricao("O carnê do contrato: "+mg.getContrato()+" "+mg.getSituacao());
-		}	}	
+		}else if(c!=null&&contrato==null){
+			if(c.getCpfok()==0){
+				informacaoNova.setDescricao("CPF inválido! Atualize o CPF e cadastre o CONTRATO para gerar o carnê! Contrato: "+c.getNumeroContrato());
+			}else{
+				informacaoNova.setDescricao("Cadastre o CONTRATO para gerar o carnê! Contrato: "+c.getNumeroContrato());
+			}
+			
+		}else if(c!=null&&contrato!=null){
+			if(c.getCpfok()==0){
+				informacaoNova.setDescricao("CPF inválido! Atualize o CPF para gerar o carnê! Contrato: "+c.getNumeroContrato());	
+			}
+		}
 		informacaoNova.setTipo("Importante");
 		informacaoNova.setTitulo("Carnê");
 		lista.add(informacaoNova);
 		
-	}
+		
+	}}
 	/*List<Mensalidade>cnrs=new ArrayList<Mensalidade>();
 	cnrs=md.listarSemCNR();
 	for(Mensalidade cnr:cnrs){

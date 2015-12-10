@@ -183,15 +183,9 @@
 								action="#{cliente.atualizar()}" icon="ui-icon-disk"/></td>
 								
 								<td><p:growl id="message" showDetail="false" autoUpdate="true"/>
-     <p:commandButton value="Excluir"  update="message" icon="ui-icon-trash">
-        <p:confirm header="Confirmação" message="Deseja excluir este cliente?" icon="ui-icon-alert" />
-    </p:commandButton> 
-    <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">    
-        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" action="#{cliente.remover()}"/>
-        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" action="/index.xhtml"/>
-    </p:confirmDialog></td>
-						
-						<td align="center"><p:commandButton value="Cancelar" title="Cancelar" action="/index.xhtml" icon="ui-icon-arrowreturnthick-1-w"/></td>
+     <p:commandButton value="Excluir"  update="message" icon="ui-icon-trash" actionListener="#{cliente.remover}"/>
+       </td>				
+			<td align="center"><p:commandButton value="Cancelar" title="Cancelar" action="/index.xhtml" icon="ui-icon-arrowreturnthick-1-w"/></td>
 					</tr>
 					<tr><td><h:inputHidden value="#{cliente.clienteNovo.numeroContrato}"/></td><td><h:inputHidden value="#{cliente.clienteNovo.idCliente}"/></td></tr>
 					<tr><td><h:inputHidden value="#{cliente.clienteNovo.situacao}"/></td><td></td></tr>

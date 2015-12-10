@@ -17,9 +17,12 @@ import controle.ValidaCPF;
 import beans.Beneficiario;
 import beans.Cliente;
 import beans.Contrato;
+import beans.Endereco;
 import beans.Mensalidade;
 import dao.BeneficiarioDao;
 import dao.BeneficiarioDaoImplementation;
+import dao.CepDao;
+import dao.CepDaoImplementation;
 import dao.ClienteDao;
 import dao.ClienteDaoImplementation;
 import dao.ContratoDao;
@@ -35,6 +38,7 @@ public class ClienteMB implements Serializable{
 	private static final long serialVersionUID = -6816511926054713256L;
 private List<Cliente>clientes;
 Cliente clienteNovo=new Cliente();
+private Endereco endereco=new Endereco();
 private String tipo;
 private String mensagem;
 public ClienteMB(){
@@ -57,6 +61,13 @@ public Cliente getClienteNovo() {
 public void setClienteNovo(Cliente clienteNovo) {
 	this.clienteNovo = clienteNovo;
 }
+
+public Endereco getEndereco() {
+	return endereco;
+}
+public void setEndereco(Endereco endereco) {
+	this.endereco = endereco;
+}
 public void adicionar(){
 	ClienteDao cli=new ClienteDaoImplementation();
 	boolean retorno=cli.adicionar(clienteNovo);
@@ -70,7 +81,19 @@ public void adicionar(){
 	clienteNovo=new Cliente();
 	addMessage(tipo,mensagem);
 }
-
+public void adicionarContratoSemCliente(){
+	ClienteDao cli=new ClienteDaoImplementation();
+	boolean retorno=cli.adicionar(clienteNovo);
+	if(retorno==true){
+		mensagem=" Cliente adicionado com sucesso!";
+		tipo="Sucesso!";
+	}else{
+		mensagem="Erro ao adicionar cliente!";
+		tipo="Erro!";
+	}
+	clienteNovo=new Cliente();
+	addMessage(tipo,mensagem);
+}
 public Cliente buscar(){
 	ClienteDao cli=new ClienteDaoImplementation();
 	clienteNovo=cli.buscar(clienteNovo.getNumeroContrato());
@@ -116,15 +139,29 @@ public List<Cliente> listarParaImprimirEtiquetas(){
 }
 public void imprimir(){
 	Impressao imp=new Impressao();
-	try {
-		imp.sendTextToPrinter("Etiquetas", clientes);
+	try {	
+		imp.sendTextToPrinter("Etiquetas", clientes);		
 	} catch (PrintException e) {
-		// TODO Auto-generated catch block
+		FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Houve um erro com a impressora!",null));
 		e.printStackTrace();
 	} catch (InterruptedException e) {
-		// TODO Auto-generated catch block
+		FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Houve um problema de conexão coma impressora!",null));
 		e.printStackTrace();
 	}
+}
+public void confirmarImpressao(){
+	MensalidadeDao md=new MensalidadeDaoImplementation();
+	
+		int t=0;	
+		for(Cliente c:clientes){
+			if(!md.excluirMensalGerada(c.getNumeroContrato())){
+				t++;
+		}
+			}
+		if(t==0){
+			FacesContext.getCurrentInstance().addMessage("Sucesso", new FacesMessage(FacesMessage.SEVERITY_INFO,"Confirmação registrada com sucesso!",null));
+		}
+	
 }
 public void atualizar(){
 	ClienteDao cli=new ClienteDaoImplementation();System.out.println("Chamada de atualização: "+clienteNovo.toString());
@@ -140,40 +177,71 @@ public void atualizar(){
 	clienteNovo=null;
 }
 
-public String remover(){
-	ClienteDao cli=new ClienteDaoImplementation();System.out.println("Excluir: "+clienteNovo.toString());
-	BeneficiarioDao ben=new BeneficiarioDaoImplementation();
-	ContratoDao cd=new ContratoDaoImplementation();
-	List<Beneficiario>beneficiarios=new ArrayList<Beneficiario>();
-	beneficiarios=ben.buscar(clienteNovo.getNumeroContrato());
-	Contrato contrato=new Contrato();
-	contrato=cd.buscar(clienteNovo.getNumeroContrato());
-	String pagina="";
-	boolean retornoBen=false;
-	for(Beneficiario beneficiario:beneficiarios){		
-		retornoBen=ben.remover(beneficiario);
-		}	
-	if(retornoBen){
-		boolean retorno=cli.remover(clienteNovo);	
-		boolean retornoCont=cd.excluir(contrato);
-	if(retorno&&retornoCont){
-		clienteNovo=null;
-		contrato=null;
-		beneficiarios=null;		
-		FacesContext.getCurrentInstance().addMessage("Sucesso", new FacesMessage(FacesMessage.SEVERITY_INFO,"Cliente excluído com sucesso!",null));
-		pagina= "/index.xhtml";
-	}else{
-		FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_INFO,"Erro ao excluir Cliente!",null));
-		pagina="/informe.xhtml";
+	public String remover() {
+		ClienteDao cli = new ClienteDaoImplementation();
+		System.out.println("Excluir: " + clienteNovo.toString());
+		BeneficiarioDao ben = new BeneficiarioDaoImplementation();
+		MensalidadeDao md=new MensalidadeDaoImplementation();
+		List<Mensalidade>mensalidades=null;
+		ContratoDao cd = new ContratoDaoImplementation();
+		List<Beneficiario> beneficiarios = null;
+		beneficiarios = ben.buscar(clienteNovo.getNumeroContrato());
+		Contrato contrato = null;
+		contrato = cd.buscar(clienteNovo.getNumeroContrato());
+		mensalidades=md.listar(clienteNovo.getNumeroContrato());
+		String pagina = "";
+		boolean retornoBen = false;
+		boolean retornoCont = false;
+		if (!beneficiarios.isEmpty()) {
+			for (Beneficiario beneficiario : beneficiarios) {
+				retornoBen = ben.remover(beneficiario);
+				System.out.println("Excluir beneficiario: "+ beneficiario.toString());
+			}
+		} else {
+			retornoBen = true;
+		}
+		if(!mensalidades.isEmpty()){
+			for(Mensalidade m:mensalidades){
+				if(md.excluir(m)){
+					
+				}else{
+					FacesContext.getCurrentInstance().addMessage("Erro",
+							new FacesMessage(FacesMessage.SEVERITY_ERROR,"Erro ao excluir mensalidade!", null));
+				}
+			}
+		}
+		if (retornoBen) {
+			boolean retorno = cli.remover(clienteNovo);
+			if (contrato != null) {
+				retornoCont = cd.excluir(contrato);
+			} else {
+				retornoCont = true;
+			}
+
+			if (retorno && retornoCont) {
+				clienteNovo = null;
+				contrato = null;
+				beneficiarios = null;
+				FacesContext.getCurrentInstance().addMessage(
+						"Sucesso",
+						new FacesMessage(FacesMessage.SEVERITY_INFO,"Cliente excluído com sucesso!", null));
+				pagina = "/index.xhtml";
+			} else {
+				FacesContext.getCurrentInstance().addMessage(
+						"Erro",
+						new FacesMessage(FacesMessage.SEVERITY_INFO,"Erro ao excluir Cliente!", null));
+				pagina = "/informe.xhtml";
+			}
+		} else {
+			FacesContext.getCurrentInstance().addMessage(
+					"Erro",
+					new FacesMessage(FacesMessage.SEVERITY_INFO,"Erro ao excluir Cliente!", null));
+			pagina = "/informe.xhtml";
+		}
+
+		return pagina;
+
 	}
-	}else{
-		FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_INFO,"Erro ao excluir Cliente!",null));
-		pagina="/informe.xhtml";
-	}
-	
-	return pagina;
-	
-}
 public void addMessage(String tipo, String mensagem) {
     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, mensagem,  null);
     FacesContext.getCurrentInstance().addMessage(tipo, message);
@@ -207,4 +275,33 @@ public void validaCPF(AjaxBehaviorEvent event){
 	}
 	
 }
+public void endereco(){
+	if(endereco.getCep().isEmpty()||endereco.getCep().length()!=8){
+		FacesContext.getCurrentInstance().addMessage("Aviso", new FacesMessage(FacesMessage.SEVERITY_INFO,"Informe um cep válido",null));
+	}else{
+	System.out.println(endereco.toString());
+	//FacesContext.getCurrentInstance().addMessage("Aviso", new FacesMessage(FacesMessage.SEVERITY_INFO,"Aguarde!",null));
+	CepDao cep=new CepDaoImplementation();
+	endereco=cep.buscar(endereco.getCep());
+	clienteNovo.setBairro(endereco.getBairro());
+	clienteNovo.setCep(endereco.getCep());
+	clienteNovo.setCidade(endereco.getCidade());
+	clienteNovo.setEstado(endereco.getEstado());
+	clienteNovo.setLogradouro(endereco.getLogradouro());
+	if(endereco.getLogradouro()==null||endereco.getLogradouro().equalsIgnoreCase("")){
+		FacesContext.getCurrentInstance().addMessage("Aviso", new FacesMessage(FacesMessage.SEVERITY_INFO,"Informe um cep válido",null));
+	}
+	}
 }
+public void pesquisa(AjaxBehaviorEvent event){
+	int contrato=clienteNovo.getNumeroContrato();
+	ContratoDao cd=new ContratoDaoImplementation();
+	Contrato ver=cd.buscar(contrato);	//System.out.println(ver.toString());
+		if(ver==null){
+		FacesContext.getCurrentInstance().addMessage("Erro",new FacesMessage(FacesMessage.SEVERITY_ERROR,"O número de contrato não existe, para cadastrar Contrato novo vá até Cadastro > Contrato Novo!",null));
+	}	else if(ver.getnContrato()==0){
+		FacesContext.getCurrentInstance().addMessage("Erro",new FacesMessage(FacesMessage.SEVERITY_ERROR,"O número de contrato não pode ser igual a zero!",null));
+	}	
+	}
+	}
+

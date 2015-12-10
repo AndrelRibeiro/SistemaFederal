@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+
+</h:head>
+<ui:composition template="/cabecalho.xhtml">
+	<ui:define name="conteudo">
+		<h:body>
+			<center> <h:form>
+			
+<p:wizard style="width:100%" id="cad" backLabel="Voltar" nextLabel="Avançar">
+<p:tab id="contrato" title="Contrato">
+<p:panel header="Dados do Contrato  - Cadastro apenas para CLIENTE SEM CONTRATO NO SISTEMA" id="pcont"><p:focus context="pcont"/>
+<h:panelGrid id="cont" columns="2" columnClasses="grid,grid">
+<h:panelGrid id="cont1" columnClasses="label,value">
+<p:growl id="grow" sticky="true" showDetail="true" life="10000" autoUpdate="true" showSummary="false"/>
+<p:messages>
+<p:effect type="pulsate" event="load" delay="1000" />
+</p:messages>
+									
+<table id="table1">
+<tr>
+<td width="200"><p:outputLabel for="numContrato" value="Contrato" style="font-weight:bold" /></td>
+<td><p:inputText id="numContrato"	title="Insira o número do contrato" required="true" requiredMessage="O número do contrato deve ser preenchido"	
+		onfocus="this.value=''" maxlenght="20"	value="#{contrato.contratoNovo.nContrato}">
+	<f:validateLength minimum="1" maximum="20" />
+	<p:ajax event="blur" listener="#{contrato.buscar}" update="grow @all mensal adesao periodicidade dtContrato vendedor diaPagamento plano"/>
+	</p:inputText></td>
+							</tr>
+						</table>
+
+
+						<p:panel id="panAdesao">
+							<table>
+								<tr>
+									<td><p:outputLabel value="Valor da Adesão: " /></td>
+									<td><p:outputLabel value="#{preco.precoNovo.adesao}">
+											<f:convertNumber currencyCode="BRL" type="currency" />
+										</p:outputLabel></td>
+								</tr>
+								<tr>
+									<td><p:outputLabel for="adesao"	value="Valor da Adesão:" /></td>
+									
+									<td><p:inputText id="adesao" value="#{contrato.contratoNovo.valorContrato}"	label="Adesão" title="Valor da adesão" onfocus="this.value=''">
+										
+											<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="pt_BR"/>
+										</p:inputText></td>
+								</tr>								
+								<tr>
+									<td><p:outputLabel value="Valor da Mensalidade:" for="mensal" /></td>
+									
+									<td><p:inputText id="mensal" value="#{contrato.contratoNovo.mensalidade}" onfocus="this.value=''">
+											
+											<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="pt_BR"/>
+										</p:inputText></td>
+								</tr>
+							</table>
+						</p:panel>
+						<p:panel id="formaPagamento">
+							<table>
+								<tr>
+									<td><p:outputLabel for="periodicidade"	value="Forma de Pagamento:" /></td>
+								</tr>
+								<p:selectOneRadio id="periodicidade" value="#{contrato.mensal}" layout="custom">
+									<f:selectItem itemValue="1" />
+									<f:selectItem itemValue="2" />
+									<f:selectItem itemValue="3" />
+								</p:selectOneRadio>
+								<tr>
+									<td><p:radioButton id="opt10" for="periodicidade" itemIndex="0" /> 
+									<h:outputLabel for="opt10" value="Mensal" style="margin-right:70px" /></td>
+									<td><p:radioButton id="opt20" for="periodicidade" itemIndex="1" /> 
+									<h:outputLabel for="opt20" value="Bimestral" style="margin-right:70px" /></td>
+									<td><p:radioButton id="opt30" for="periodicidade" itemIndex="2" /> 
+									<h:outputLabel for="opt30" value="Trimestral" /></td>
+								</tr>
+							</table>
+						</p:panel>
+						<p:panel id="outros">
+							<table>
+								<tr>
+									<td><p:outputLabel for="dtContrato"	value="Data do Contrato"/></td>
+									
+									<td><p:calendar id="dtContrato"	value="#{contrato.contratoNovo.dataContrato}" label="Data do Contrato" required="true" requiredMessage="Informe a data de cadastro"  showOn="focus" locale="pt" onblur="true"	pattern="dd/MM/yyyy" >
+									<f:convertDateTime locale="pt_BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+											<f:ajax event="blur" update="grow"  listener="#{contrato.calculaCarencia}"/>
+									</p:calendar>
+									</td>					
+								</tr>
+								
+							<tr>
+								<td><p:outputLabel for="vendedor" value="Vendedor" /></td>
+								<td colspan="2"><p:selectOneMenu id="vendedor"	value="#{contrato.contratoNovo.idVendedor}">
+										<f:selectItem itemLabel="Selecione" itemValue="" />
+										<f:selectItems value="#{vendedor.listar()}" var="ven" itemValue="#{ven.idVendedor}" itemLabel="#{ven.nome}" />
+									</p:selectOneMenu></td>
+							</tr>
+								<tr>
+									<td></td>
+									<td></td>
+								</tr>
+							</table>
+						</p:panel>
+						
+					</h:panelGrid>
+
+
+
+					<h:panelGrid id="cont2" columnClasses="label,value">
+						
+						<p:panel id="diaPg">
+							<table>
+								<tr>
+									<td><p:outputLabel value="Dia de pagamento: " for="diaPagamento" /></td>
+									<td></td>
+								</tr>
+								<p:selectOneRadio id="diaPagamento"	value="#{contrato.contratoNovo.diaVencimento}"	layout="custom">
+									<f:selectItem itemValue="02" itemLabel="02" />
+									<f:selectItem itemValue="08" itemLabel="08" />
+									<f:selectItem itemValue="12" itemLabel="12" />
+									<f:selectItem itemValue="18" itemLabel="18" />
+									<f:selectItem itemValue="22" itemLabel="22" />
+									<f:selectItem itemValue="28" itemLabel="28" />
+
+								</p:selectOneRadio>
+
+								<tr>
+									<td><p:radioButton id="opt100" for="diaPagamento" itemIndex="0" /> 
+									<h:outputLabel for="opt100" value="02" style="margin-right:70px" /></td>
+									
+									<td><p:radioButton id="opt200" for="diaPagamento" itemIndex="1" /> 
+									<h:outputLabel for="opt200" value="08" style="margin-right:70px" /></td>
+									
+									<td><p:radioButton id="opt300" for="diaPagamento" itemIndex="2" />
+									 <h:outputLabel for="opt300" value="12" /></td>
+								</tr>
+								<tr>
+									<td><p:radioButton id="opt400" for="diaPagamento" itemIndex="3" />
+									 <h:outputLabel for="opt400" value="18"	style="margin-right:70px" /></td>
+									
+									<td><p:radioButton id="opt500" for="diaPagamento" itemIndex="4" />
+									 <h:outputLabel for="opt500" value="22"	style="margin-right:70px" /></td>
+									
+									<td><p:radioButton id="opt600" for="diaPagamento" itemIndex="5" />
+									 <h:outputLabel for="opt600" value="28" /></td>
+								</tr>
+							</table>
+						</p:panel>
+						<p:panel id="tipoPlano">
+							<table>
+								<tr>
+									<td><p:outputLabel value="Plano" title="Escolha o tipo de plano" for="plano" /></td>
+								</tr>
+								<p:selectOneRadio id="plano" value="#{contrato.contratoNovo.plano}" layout="custom">
+									<f:selectItem itemValue="0"/>
+									<f:selectItem itemValue="1"/>
+									
+								</p:selectOneRadio>
+
+								<tr>
+									<td><p:radioButton id="opt11" for="plano" itemIndex="0" />
+										<h:outputLabel for="opt11" value="Executivo" style="margin-right:70px" /></td>
+								</tr>
+								<tr>
+									<td><p:radioButton id="opt21" for="plano" itemIndex="1" />
+										<h:outputLabel for="opt21"  value="Especial"	style="margin-right:70px" /></td>
+								</tr>
+								<tr>
+									<td><p:selectBooleanCheckbox id="opt31" value="#{contrato.plano.sepultamento}"/>
+										<h:outputLabel for="opt31" value="Taxa de Sepultamento e quadra geral" /></td>
+								</tr>
+								<tr>
+									<td><p:selectBooleanCheckbox id="opt41" value="#{contrato.plano.crematorio}" />
+										<h:outputLabel for="opt41" value="Crematório" style="margin-right:70px" /></td>
+											</tr>
+											<tr>
+												<td><p:selectBooleanCheckbox id="opt51" value="#{contrato.plano.urna}"/>
+													<h:outputLabel for="opt51"	value="Urna gorda, Super gorda e Comprida" /></td>
+											</tr>
+
+										</table>
+									</p:panel>
+								</h:panelGrid>
+							</h:panelGrid>
+						</p:panel>
+						
+					</p:tab>
+
+					<p:tab id="confirmacao" title="Confirmação">
+						<p:panel header="Dados para Confirmação">
+							<p:growl id="growl5" sticky="true" showDetail="true" life="8000" autoUpdate="true" showSummary="false"/>
+							<h3>Contrato</h3>
+								<p:dataTable id="confContrato" value="#{contrato.contratoNovo}"  emptyMessage="Sem Registro" var="cont" scrollable="true" scrollWidth="98%">
+									<p:column headerText="Número do Contrato"  width="100">
+									<h:outputText value="#{cont.nContrato}"/>
+									</p:column>
+									<p:column headerText="Valor do Contrato" width="100">
+									<h:outputText value="#{cont.valorContrato}">
+									<f:convertNumber currencyCode="BRL" type="currency" />
+									</h:outputText>
+									</p:column>
+									<p:column headerText="Entrada" width="100">
+									<h:outputText value="#{cont.entrada}">
+									<f:convertNumber currencyCode="BRL" type="currency" />
+									</h:outputText>
+									</p:column>
+									<p:column headerText="Parcelas" width="100">
+									<h:outputText value="#{cont.parcEntrada}"/>
+									</p:column>
+									<p:column headerText="Valor das Parcelas" width="100">
+									<h:outputText value="#{cont.vParcelas}">
+									<f:convertNumber currencyCode="BRL" type="currency" />
+									</h:outputText>
+									</p:column>
+									<p:column headerText="Plano" width="100">
+									<h:outputText value="#{cont.plano}"/>
+									</p:column>
+									<p:column headerText="Periodicidade" width="100">
+									<h:outputText value="#{cont.periodicidade}"/>
+									</p:column>
+									<p:column headerText="Dia de pagamento" width="100">
+									<h:outputText value="#{cont.diaVencimento}">
+									<f:convertNumber integerOnly="true"/> 
+									</h:outputText>
+									</p:column>
+									<p:column headerText="Valor da Mensalidade" width="200">
+									<h:outputText value="#{cont.mensalidade}">
+									<f:convertNumber currencyCode="BRL" type="currency" />
+									</h:outputText>
+									</p:column>
+								</p:dataTable>
+					<p:commandButton id="Adicionar" icon="ui-icon-disk"	value="Adicionar" title="Adicionar Cliente"
+									actionListener="#{contrato.adicionarClienteSemContrato()}" update="growl5"	process="@this" />
+									
+					<p:commandButton id="cancelar" icon="ui-icon-trash"	value="Cancelar" title="Cancelar" action="/index.xhtml" />
+
+						</p:panel>
+					</p:tab>
+				</p:wizard>
+
+			</h:form></center>
+		</h:body>
+	</ui:define>
+</ui:composition>
+</html>

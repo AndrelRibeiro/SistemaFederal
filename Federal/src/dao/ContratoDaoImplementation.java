@@ -21,7 +21,7 @@ public class ContratoDaoImplementation implements ContratoDao, Serializable{
 		Connection con=null;
 		boolean retorno=false;
 		PreparedStatement ps;
-		String sql="INSERT INTO CONTRATO (NUM_CONTRATO,VALOR_CONTRATO,ADESAO, PARCELAS, VALOR_PARCELAS, MENSALIDADE, QTAXA1,QTAXA2,QTAXA3,QTAXA4,QTAXA5,VTAXA1,VTAXA2,VTAXA3,VTAXA4,VTAXA5,DATA_CONTRATO,PERIODICIDADE,SITUACAO,CARENCIA,VALOR_TOTAL, PLANO, DIA_PAGAMENTO,ID_FUNCIONARIO, ID_VENDEDOR)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql="INSERT INTO CONTRATO (NUM_CONTRATO,VALOR_CONTRATO,ADESAO, PARCELAS, VALOR_PARCELAS, MENSALIDADE, QTAXA1,QTAXA2,QTAXA3,QTAXA4,QTAXA5,VTAXA1,VTAXA2,VTAXA3,VTAXA4,VTAXA5,DATA_CONTRATO,PERIODICIDADE,SITUACAO,CARENCIA,VALOR_TOTAL, PLANO, DIA_PAGAMENTO,ID_FUNCIONARIO, ID_VENDEDOR, ATUALIZADO)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		try {
 		    new ConnectionFactory();
 		    con=ConnectionFactory.getConnection();
@@ -51,6 +51,7 @@ public class ContratoDaoImplementation implements ContratoDao, Serializable{
 		    ps.setInt(23, c.getDiaVencimento());
 		    ps.setInt(24, c.getIdFuncionario());
 		    ps.setInt(25, c.getIdVendedor());
+		    ps.setInt(26, c.getAtualizado());
 		    ps.execute();
 		    ps.close();
 			con.close();
@@ -142,10 +143,10 @@ public class ContratoDaoImplementation implements ContratoDao, Serializable{
 
 	@Override
 	public Contrato buscar(int contrato) {
-		Contrato c=new Contrato();
+		Contrato c=null;
 		Connection con=null;
-		PreparedStatement ps;
-		ResultSet rs;
+		PreparedStatement ps=null;
+		ResultSet rs=null;
 		String sql="SELECT * FROM CONTRATO WHERE NUM_CONTRATO=?";
 		try{
 			new ConnectionFactory();
@@ -153,8 +154,9 @@ public class ContratoDaoImplementation implements ContratoDao, Serializable{
 			ps=con.prepareStatement(sql);
 			ps.setInt(1, contrato);
 			rs=ps.executeQuery();
-			c=new Contrato();
+			
 			if(rs.next()){
+			c=new Contrato();
 			c.setnContrato(rs.getInt("NUM_CONTRATO"));
 			c.setValorContrato(rs.getDouble("VALOR_CONTRATO"));
 			c.setEntrada(rs.getDouble("ADESAO"));
@@ -180,9 +182,8 @@ public class ContratoDaoImplementation implements ContratoDao, Serializable{
 			c.setDiaVencimento(rs.getInt("DIA_PAGAMENTO"));
 			c.setIdFuncionario(rs.getInt("ID_FUNCIONARIO"));
 			c.setIdVendedor(rs.getInt("ID_VENDEDOR"));
-			ps.close();
-			rs.close();
-			con.close();}
+			c.setAtualizado(rs.getInt("ATUALIZADO"));
+			}
 		}catch(SQLException e){ 
 			System.out.println(e.getMessage());
 			
@@ -190,6 +191,14 @@ public class ContratoDaoImplementation implements ContratoDao, Serializable{
 		  
 		   System.out.println(e.getMessage());
 		    
+		}
+		try {
+			ps.close();
+			rs.close();
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return c;
 	}
@@ -199,7 +208,7 @@ public class ContratoDaoImplementation implements ContratoDao, Serializable{
 		Connection con=null;
 		boolean retorno;
 		PreparedStatement ps;
-		String sql="UPDATE CONTRATO SET VALOR_CONTRATO=?,ADESAO=?, PARCELAS=?, VALOR_PARCELAS=?, MENSALIDADE=?, QTAXA1=? ,QTAXA2=? ,QTAXA3=? ,QTAXA4=? ,QTAXA5=? ,VTAXA1=? ,VTAXA2=? ,VTAXA3=? ,VTAXA4=? ,VTAXA5=? ,DATA_CONTRATO=? ,PERIODICIDADE=? ,SITUACAO=? ,CARENCIA=? ,VALOR_TOTAL=? , PLANO=? DIA_PAGAMENTO=?,ID_FUNCIONARIO=? ,ID_VENDEDOR=? WHERE NUM_CONTRATO=?)";
+		String sql="UPDATE CONTRATO SET VALOR_CONTRATO=?,ADESAO=?, PARCELAS=?, VALOR_PARCELAS=?, MENSALIDADE=?, QTAXA1=? ,QTAXA2=? ,QTAXA3=? ,QTAXA4=? ,QTAXA5=? ,VTAXA1=? ,VTAXA2=? ,VTAXA3=? ,VTAXA4=? ,VTAXA5=? ,DATA_CONTRATO=? ,PERIODICIDADE=? ,SITUACAO=? ,CARENCIA=? ,VALOR_TOTAL=? , PLANO=?, DIA_PAGAMENTO=?,ID_FUNCIONARIO=? ,ID_VENDEDOR=?, ATUALIZADO=? WHERE NUM_CONTRATO=?";
 		try {
 		    new ConnectionFactory();
 		    con=ConnectionFactory.getConnection();
@@ -228,7 +237,8 @@ public class ContratoDaoImplementation implements ContratoDao, Serializable{
 		    ps.setInt(22, c.getDiaVencimento());
 		    ps.setInt(23, c.getIdFuncionario());
 		    ps.setInt(24, c.getIdVendedor());
-		    ps.setInt(25, c.getnContrato());
+		    ps.setInt(25, c.getAtualizado());
+		    ps.setInt(26, c.getnContrato());
 		    ps.execute();
 		    ps.close();
 			con.close();
@@ -289,6 +299,7 @@ public class ContratoDaoImplementation implements ContratoDao, Serializable{
 			c.setDiaVencimento(rs.getInt("DIA_PAGAMENTO"));
 			c.setIdFuncionario(rs.getInt("ID_FUNCIONARIO"));
 			c.setIdVendedor(rs.getInt("ID_VENDEDOR"));
+			c.setAtualizado(rs.getInt("ATUALIZADO"));
 			contratos.add(c);
 			}
 			ps.close();

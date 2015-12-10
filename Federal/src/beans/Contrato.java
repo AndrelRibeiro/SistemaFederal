@@ -35,6 +35,7 @@ private String plano;
 private int idFuncionario;
 private int diaVencimento;
 private int idVendedor;
+private int atualizado;
 public Contrato(){
 	//valorContrato=450;
 	//parcEntrada=1;
@@ -65,12 +66,6 @@ public void setParcEntrada(int parcEntrada) {
 	this.parcEntrada = parcEntrada;
 }
 public double getvParcelas() {
-	if(parcEntrada==0){
-		vParcelas=valorContrato;
-	}else{
-		vParcelas=(valorContrato-entrada)/parcEntrada;
-	}
-	
 	return vParcelas;
 }
 public void setvParcelas(double vParcelas) {
@@ -203,6 +198,13 @@ public int getIdVendedor() {
 public void setIdVendedor(int idVendedor) {
 	this.idVendedor = idVendedor;
 }
+
+public int getAtualizado() {
+	return atualizado;
+}
+public void setAtualizado(int atualizado) {
+	this.atualizado = atualizado;
+}
 @Override
 public String toString() {
 	return "Contrato [nContrato=" + nContrato + ", valorContrato="
@@ -217,7 +219,8 @@ public String toString() {
 			+ ", situacao=" + situacao + ", carencia=" + carencia
 			+ ", valorTotal=" + valorTotal + ", plano=" + plano
 			+ ", idFuncionario=" + idFuncionario + ", diaVencimento="
-			+ diaVencimento + ", idVendedor=" + idVendedor + "]";
+			+ diaVencimento + ", idVendedor=" + idVendedor + ", atualizado="
+			+ atualizado + "]";
 }
 
 }

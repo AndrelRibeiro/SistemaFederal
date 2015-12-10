@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+
+</h:head>
+<ui:composition template="/cabecalho.xhtml">
+	<ui:define name="conteudo">
+		<h:body><br></br>
+			<center> <h:form>
+			
+<p:wizard style="width:100%" id="cad" backLabel="Voltar" nextLabel="Avançar">
+<p:tab id="Pessoal" title="Pessoal">
+<p:panel header="Dados Pessoais - Cadastro apenas para CONTRATO SEM CLIENTE NO SISTEMA" id="panel0"><p:focus context="panel0"/>
+<h2>Opção disponível temporariamente através do botão abaixo:</h2>
+<p:commandButton actionListener="#{mensalidade.cadastrar}" id="cadastrar" value="Cadastrar Cliente em Contrato sem Cliente" ajax="true"/>
+</p:panel>
+					</p:tab>
+<p:tab id="dadosendereco" title="Endereço">
+<p:panel header="Dados de Endereço" id="end"><p:focus context="end"/>
+<p:growl id="growl2" sticky="true" showDetail="true" life="8000" autoUpdate="true" showSummary="false"/>
+<p:messages>
+<p:effect type="pulsate" event="load" delay="1000" />
+</p:messages>
+							<table>
+								<tr>
+									<td><p:outputLabel for="cep" value="CEP" /></td>
+									<td colspan="3"><p:inputMask id="cep" title="Digite o CEP"
+											maxlenght="9" size="14" mask="99999999" required="true" requiredMessage="Insira o CEP corretamente" label="CEP"
+											value="#{cliente.endereco.cep}" />
+											<p:commandButton  action="#{cliente.endereco}" update="endereco cidade estado bairro" id="buscaEnd" value="Buscar"/></td>
+								</tr>
+								<tr>
+									<td><p:outputLabel for="endereco" value="Endereço"/></td>
+									<td colspan="3"><p:inputText id="endereco" requiredMessage="Informe o Endereço"
+											title="Digite o Endereco" required="false" maxlength="255" label="Endereço"
+											size="60" value="#{cliente.clienteNovo.logradouro}" colspan="2" /></td>
+								</tr>
+								<tr><td><p:outputLabel for="numero" value="Número"/></td>
+									<td colspan="3"><p:inputText id="numero" requiredMessage="Informe o número"
+											 required="false" maxlength="10" label="Numero"
+											size="10" value="#{cliente.clienteNovo.numero}" colspan="2" /></td></tr>
+								<tr>
+									<td><p:outputLabel for="complemento" value="Complemento" /></td>
+									<td colspan="3"><p:inputText id="complemento" label="Complemento"
+											maxlenght="60" size="30" required=""
+											title="Insira um complemento do endereço"
+											value="#{cliente.clienteNovo.complemento}" /></td>
+								</tr>
+								<tr>
+									<td><p:outputLabel for="bairro" value="Bairro" /></td>
+									<td colspan="3"><p:inputText id="bairro"
+											title="Digite o Bairro" required="false" maxlength="50" requiredMessage="Informe o Bairro"
+											size="40" value="#{cliente.clienteNovo.bairro}" colspan="2" /></td>
+								</tr>
+
+								<tr>
+						<td><p:outputLabel for="estado" value="Estado" /></td>
+						<td><p:inputText id="estado" value="#{cliente.clienteNovo.estado}" size="30" required="false" requiredMessage="Informe o Estado" label="Estado"/>
+					</td></tr><tr>
+			<td><p:outputLabel for="cidade" value="Cidade" /></td>
+			<td><p:inputText id="cidade" value="#{cliente.clienteNovo.cidade}" size="30" required="false"  requiredMessage="Informe a Cidade" label="Cidade"/>
+				</td></tr>
+								<tr>
+									<td><p:outputLabel for="ponto" value="Ponto Ref." /></td>
+			<td colspan="3"><p:inputText id="ponto" 	title="Digite um ponto de referência" maxlength="100"
+											size="60" value="#{cliente.clienteNovo.pontoRef}" /></td>
+								</tr>
+							</table>
+						</p:panel>
+						<p:messages />
+					</p:tab>
+
+
+					<p:tab id="confirmacao" title="Confirmação">
+						<p:panel header="Dados para Confirmação">
+							<p:growl id="growl5" sticky="true" showDetail="true" life="8000" autoUpdate="true" showSummary="false"/>
+							<h3>Cliente</h3>						
+								<p:dataTable id="confCliente" value="#{cliente.clienteNovo}"  emptyMessage="Sem Registro" var="cli" scrollable="true" scrollWidth="100%">
+									<p:column headerText="Nome:"  width="300">
+									<h:outputText value="#{cli.nome}"/>
+									</p:column>
+									<p:column headerText="Email:" width="250">
+									<h:outputText value="#{cli.email}"/>
+									</p:column>
+									<p:column headerText="CPF:" width="160">
+									<h:outputText value="#{cli.cpf}" />
+									</p:column>
+									<p:column headerText="RG:" width="150">
+									<h:outputText value="#{cli.rg}"/>
+									</p:column>
+									<p:column headerText="Nascimento:" width="120">
+									<h:outputText value="#{cli.nascimento}">
+									<f:convertDateTime locale="pt_BR" dateStyle="long" pattern="dd/MM/yyyy" /> 
+									</h:outputText>
+									</p:column>
+									<p:column headerText="Naturalidade:" width="120">
+									<h:outputText value="#{cli.naturalidade}"/>
+									</p:column>
+									<p:column headerText="Estado Civil:" width="100">
+									<h:outputText value="#{cli.estadoCivil}"/>
+									</p:column>
+									<p:column headerText="Sexo:" width="80">
+									<h:outputText value="#{cli.sexo}"/>
+									</p:column>
+									<p:column headerText="Celular:" width="160">
+									<h:outputText value="#{cli.celular}"/>
+									</p:column>
+									<p:column headerText="Telefone:" width="160">
+									<h:outputText value="#{cli.telefone}"/>
+									</p:column>
+									<p:column headerText="Religião:" width="200">
+									<h:outputText value="#{cli.religiao}"/>
+									</p:column>
+									<p:column headerText="Profissão:" width="200">
+									<h:outputText value="#{cli.profissao}"/>
+									</p:column>
+									<p:column headerText="Observação:" width="400">
+									<h:outputText value="#{cli.observacao}"/>
+									</p:column>
+								</p:dataTable>
+					<p:commandButton id="Adicionar" icon="ui-icon-disk"	value="Adicionar" title="Adicionar Cliente"
+									actionListener="#{cliente.adicionarContratoSemCliente}" update="growl5"	process="@this" />
+									
+					<p:commandButton id="cancelar" icon="ui-icon-trash"	value="Cancelar" title="Cancelar" action="/index.xhtml" />
+
+						</p:panel>
+					</p:tab>
+				</p:wizard>
+
+			</h:form></center>
+		</h:body>
+	</ui:define>
+</ui:composition>
+</html>

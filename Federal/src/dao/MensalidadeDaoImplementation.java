@@ -129,7 +129,7 @@ CalculoDatas cp=new CalculoDatas();
 	public boolean alterar(Mensalidade m) {
 		Connection con=null;
 		boolean retorno;
-		PreparedStatement ps;
+		PreparedStatement ps=null;
 		String sql="UPDATE MENSALIDADE SET CONTRATO=?, PARCELA=?, VENCIMENTO=?, VALOR=?, SITUACAO=?, NOSSO_NUMERO=?, DAC_NOSSO_NUMERO=?, COD_BARRAS=?, PAGAMENTO=?, PARCELA_CARNE_ANO=?, CARENCIA=?,PERIODICIDADE=?, ID_FUNCIONARIO=? WHERE ID_MENSALIDADE=?";
 		try {
 		    new ConnectionFactory();
@@ -159,13 +159,19 @@ CalculoDatas cp=new CalculoDatas();
 		    ps.setInt(13, m.getIdFuncionario());
 		    ps.setInt(14, m.getIdMensalidade());
 		    ps.executeUpdate();
-		    ps.close();
-			con.close();
+		    
 			retorno=true;
 		} catch (Exception e) {
 		  
 		    e.printStackTrace();
 		    retorno=false;
+		}
+		try {
+			ps.close();
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return retorno;
 		
@@ -515,8 +521,8 @@ CalculoDatas cp=new CalculoDatas();
 	@Override
 	public List<Mensalidade> listarCarnes() {
 		Connection con=null;
-		PreparedStatement ps;
-		ResultSet rs;
+		PreparedStatement ps=null;
+		ResultSet rs=null;
 		List<Mensalidade>mensalidades=new ArrayList<Mensalidade>();
 		Mensalidade m=null;
 		String sql="SELECT * FROM GERACARNE";
@@ -541,12 +547,17 @@ CalculoDatas cp=new CalculoDatas();
 				}
 				mensalidades.add(m);
 			}
-			ps.close();
-			rs.close();
-			con.close();
 			
 		}catch(Exception e){
 			System.out.println(e.getMessage());
+		}
+		try {
+			ps.close();
+			rs.close();
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return mensalidades;
 	}
@@ -607,16 +618,16 @@ CalculoDatas cp=new CalculoDatas();
 		return mensalidades;
 	}
 	@Override
-	public boolean excluirMensalGerada(Mensalidade m) {
+	public boolean excluirMensalGerada(int contrato) {
 		Connection con=null;
 		PreparedStatement ps;
-		String sql="DELETE FROM GERACARNE WHERE CONTRATO=?";System.out.println("Exclusão DAO:"+m.toString());
+		String sql="DELETE FROM GERACARNE WHERE CONTRATO=?";System.out.println("Exclusão GERACARNE DAO:"+contrato);
 		boolean retorno=false;
 		try{
 			new ConnectionFactory();
 			con=ConnectionFactory.getConnection();
 			ps=con.prepareStatement(sql);
-			ps.setInt(1, m.getContrato());
+			ps.setInt(1, contrato);
 			ps.executeUpdate();
 			ps.close();
 			con.close();

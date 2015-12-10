@@ -221,11 +221,39 @@ public void excluir(){
 }
 public void alterar(){
 	ContratoDao cd=new ContratoDaoImplementation();
+	MensalidadeDao md=new MensalidadeDaoImplementation();
+	contratoNovo.setPlano(plano.configuraPlanos(contratoNovo.getPlano()));
+	contratoNovo.setAtualizado(1);
+	mensalidades=md.listar(contratoNovo.getnContrato());
+	for(Mensalidade m:mensalidades){
+		m.setValorParcela(contratoNovo.getMensalidade());
+		Calendar calendar= Calendar.getInstance();
+		calendar.setTime(m.getDataVencimento());
+		calendar.set(Calendar.DAY_OF_MONTH, contratoNovo.getDiaVencimento());
+		m.setDataVencimento(calendar.getTime());
+		md.alterar(m);
+	}
+	boolean retorno=cd.alterar(contratoNovo);
+	if(retorno==true){
+		addMensagem("Sucesso","Contrato atualizado com sucesso!");
+	}else{
+		addMensagem("Erro","Erro ao Alterar contrato");
+	}
+}
+public void adicionarClienteSemContrato(){
+	ContratoDao cd=new ContratoDaoImplementation();
+	contratoNovo.setPlano(plano.configuraPlanos(contratoNovo.getPlano()));
+	contratoNovo.setAtualizado(1);
+	contratoNovo.setIdFuncionario(cliente.getIdFuncionario());
+	Calendar c=Calendar.getInstance();
+	c.setTime(contratoNovo.getDataContrato());
+	c.add(Calendar.MONTH, 3);
+	contratoNovo.setCarencia(c.getTime());
 	boolean retorno=cd.alterar(contratoNovo);
 	if(retorno==true){
 		addMensagem("Sucesso","Contrato adicionado com sucesso!");
 	}else{
-		addMensagem("Erro","Erro ao Alterar contrato");
+		addMensagem("Erro","Erro ao Adicionar contrato");
 	}
 }
 public void buscar(){
@@ -235,7 +263,11 @@ public void buscar(){
 		addMensagem("Erro", "Número de contrato inválido!");
 	}else{
     cliente=cli.buscar(contratoNovo.getnContrato());
-	contratoNovo=cd.buscar(contratoNovo.getnContrato());}
+	contratoNovo=cd.buscar(contratoNovo.getnContrato());
+	if(contratoNovo==null){
+		addMensagem("Erro", "Número de contrato não cadastrado!");
+	}
+	}
     	
 }//Gera novas mensalidades
 	public void geraM() {
@@ -382,6 +414,7 @@ public void addMensagem(String tipo,String mensagem){
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage("Aviso!","Esta operação não pode ser efetuada, as mensalidades não foram geradas!"));
 				
 			}else{
+				mensalidadeNova=mensalidades.get(0);
 			for (Mensalidade m : mensalidades) {
 				retorno = md.adicionar(m);
 				if (retorno) {
@@ -391,6 +424,7 @@ public void addMensagem(String tipo,String mensagem){
 			if (cont == mensalidades.size()) {
 				FacesMessage msg = new FacesMessage("Sucesso","Mensalidades Gravadas com sucesso!");
 				FacesContext.getCurrentInstance().addMessage(null, msg);
+				md.geraCarne(mensalidadeNova);
 			} else {
 				FacesMessage msg = new FacesMessage("Erro",	"Erro ao criar novas mensalidades!");
 				FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -491,15 +525,15 @@ public void atendimento(){
 	MensalidadeDao md=new MensalidadeDaoImplementation();
 	Calendar c=Calendar.getInstance();
 	int contrato=contratoNovo.getnContrato();
-	cliente=cd.buscar(contrato);System.out.println(cliente.toString());
-	if(cliente.getNumeroContrato()==0){
-		FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_INFO, "Não há cliente cadastrado com este número!",  null));
+	cliente=cd.buscar(contrato);
+	if(cliente==null){
+		FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_INFO, "Não há cliente cadastrado com este número! Cadastrar Cliente",  null));
 	}
 	mensalidades=new ArrayList<Mensalidade>();
 	mensalidades=md.listar(contrato);
 	contratoNovo=cont.buscar(contrato);System.out.println(contratoNovo.toString());
 	if(contratoNovo.getnContrato()==0){
-		FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente sem contrato em sistema!",  null));
+		FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage(FacesMessage.SEVERITY_INFO, "Cliente sem contrato em sistema! Cadastrar Contrato ou excluir cliente",  null));
 	}else if(contratoNovo.getDataCancelamento()!=null){
 		String dt=cc.converteUtilToString(contratoNovo.getDataCancelamento());
 		situacao="Contrato cancelado. Cancelamento: "+dt+" \n- ";
